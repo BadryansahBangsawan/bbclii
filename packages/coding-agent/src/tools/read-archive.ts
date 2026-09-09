@@ -1,11 +1,11 @@
-import type { AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import type { TextContent } from "@oh-my-pi/pi-ai";
+import type { AgentToolResult } from "@bbcli/pi-agent-core";
+import type { TextContent } from "@bbcli/pi-ai";
 import {
 	type ArchiveReader,
 	formatArchiveEntryLines,
 	openArchive,
 	parseArchivePathCandidates,
-} from "@oh-my-pi/pi-utils/ar";
+} from "@bbcli/pi-utils/ar";
 import type { ToolSession } from "../sdk";
 import { truncateHead } from "../session/streaming-output";
 import { applyListLimit } from "./list-limit";

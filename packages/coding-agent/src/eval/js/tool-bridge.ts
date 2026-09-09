@@ -1,7 +1,7 @@
-import type { AgentTool, AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { toolWireSchema, validateToolArguments } from "@oh-my-pi/pi-ai";
-import { isRecord } from "@oh-my-pi/pi-utils";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+import type { AgentTool, AgentToolResult } from "@bbcli/pi-agent-core";
+import { toolWireSchema, validateToolArguments } from "@bbcli/pi-ai";
+import { isRecord } from "@bbcli/pi-utils";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 import type { ToolSession } from "../../tools";
 import { ToolError } from "../../tools/tool-errors";
 import { schemaDeclaresIntentField } from "../../utils/tool-schema";

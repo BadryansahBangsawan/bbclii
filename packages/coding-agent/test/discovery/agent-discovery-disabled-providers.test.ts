@@ -13,12 +13,12 @@ import {
 	disableUserSource,
 	enableProvider,
 	enableUserSource,
-} from "@oh-my-pi/pi-coding-agent/capability";
-import { clearCache as clearFsCache } from "@oh-my-pi/pi-coding-agent/capability/fs";
-import { resolveAgentModelPatterns } from "@oh-my-pi/pi-coding-agent/config/model-resolver";
-import { clearClaudePluginRootsCache } from "@oh-my-pi/pi-coding-agent/discovery/helpers";
-import { discoverAgents } from "@oh-my-pi/pi-coding-agent/task/discovery";
-import { removeSyncWithRetries } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/capability";
+import { clearCache as clearFsCache } from "@bbcli/pi-coding-agent/capability/fs";
+import { resolveAgentModelPatterns } from "@bbcli/pi-coding-agent/config/model-resolver";
+import { clearClaudePluginRootsCache } from "@bbcli/pi-coding-agent/discovery/helpers";
+import { discoverAgents } from "@bbcli/pi-coding-agent/task/discovery";
+import { removeSyncWithRetries } from "@bbcli/pi-utils";
 import { restoreEnvValue } from "../helpers/settings-test-state";
 const PLUGIN_AGENT_MD = [
 	"---",

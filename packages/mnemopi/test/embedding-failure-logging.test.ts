@@ -3,9 +3,9 @@ import {
 	embed,
 	resetEmbeddingProviderForTests,
 	setLocalModelInitializerForTests,
-} from "@oh-my-pi/pi-mnemopi/core/embeddings";
-import { withMnemopiRuntimeOptions } from "@oh-my-pi/pi-mnemopi/core/runtime-options";
-import { logger } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-mnemopi/core/embeddings";
+import { withMnemopiRuntimeOptions } from "@bbcli/pi-mnemopi/core/runtime-options";
+import { logger } from "@bbcli/pi-utils";
 
 const ENV_KEYS = [
 	"NODE_ENV",

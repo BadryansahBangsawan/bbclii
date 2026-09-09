@@ -1,9 +1,9 @@
 import { Database } from "bun:sqlite";
 import { describe, expect, test } from "bun:test";
-import { AuthStorage, SqliteAuthCredentialStore } from "@oh-my-pi/pi-ai/auth-storage";
-import { getProviderDefinition } from "@oh-my-pi/pi-ai/registry/registry";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { MUSE_CODE_STATIC_MODELS } from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
+import { AuthStorage, SqliteAuthCredentialStore } from "@bbcli/pi-ai/auth-storage";
+import { getProviderDefinition } from "@bbcli/pi-ai/registry/registry";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { MUSE_CODE_STATIC_MODELS } from "@bbcli/pi-catalog/provider-models/openai-compat";
 
 const encodedMuseCredential = JSON.stringify({
 	oauthAccessToken: "meta-account-access",

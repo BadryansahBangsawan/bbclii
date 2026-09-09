@@ -1,18 +1,18 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import type { CompactionPreparation } from "@oh-my-pi/pi-agent-core/compaction";
-import * as compactionModule from "@oh-my-pi/pi-agent-core/compaction";
-import type { AssistantMessage } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionMaintenance } from "@oh-my-pi/pi-coding-agent/session/session-maintenance";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import { Agent } from "@bbcli/pi-agent-core";
+import type { CompactionPreparation } from "@bbcli/pi-agent-core/compaction";
+import * as compactionModule from "@bbcli/pi-agent-core/compaction";
+import type { AssistantMessage } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { createMockModel } from "@bbcli/pi-ai/providers/mock";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AgentSession, type AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionMaintenance } from "@bbcli/pi-coding-agent/session/session-maintenance";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
 
 /** #9235: byte/media HTTP 413s must not route into token-context compaction. */
 

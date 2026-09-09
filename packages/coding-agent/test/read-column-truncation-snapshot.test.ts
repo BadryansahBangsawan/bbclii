@@ -13,14 +13,14 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it } from "bun:test
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EditTool } from "@oh-my-pi/pi-coding-agent/edit";
-import { getEditStore } from "@oh-my-pi/pi-coding-agent/edit/store";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import type { ReadToolDetails } from "@oh-my-pi/pi-coding-agent/tools/read";
-import { ReadTool } from "@oh-my-pi/pi-coding-agent/tools/read";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+import type { AgentToolResult } from "@bbcli/pi-agent-core";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { EditTool } from "@bbcli/pi-coding-agent/edit";
+import { getEditStore } from "@bbcli/pi-coding-agent/edit/store";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import type { ReadToolDetails } from "@bbcli/pi-coding-agent/tools/read";
+import { ReadTool } from "@bbcli/pi-coding-agent/tools/read";
+import { removeWithRetries } from "@bbcli/pi-utils";
 
 const HASHLINE_HEADER_LINE = /^\[([^#\r\n]+)#([0-9A-F]{4})\]$/m;
 const COLUMN_CAP = 64;

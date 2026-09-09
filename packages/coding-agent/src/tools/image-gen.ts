@@ -1,7 +1,7 @@
 import * as os from "node:os";
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import type { AgentToolResult } from "@oh-my-pi/pi-agent-core";
+import { type } from "@bbcli/omptype";
+import type { AgentToolResult } from "@bbcli/pi-agent-core";
 import {
 	type ApiKey,
 	type FetchImpl,
@@ -10,8 +10,8 @@ import {
 	isOfficialCodexApiUrl,
 	type Model,
 	withAuth,
-} from "@oh-my-pi/pi-ai";
-import { ProviderHttpError } from "@oh-my-pi/pi-ai/error";
+} from "@bbcli/pi-ai";
+import { ProviderHttpError } from "@bbcli/pi-ai/error";
 import {
 	applyCodexResidencyHeader,
 	CODEX_BASE_URL,
@@ -19,8 +19,8 @@ import {
 	OPENAI_HEADER_VALUES,
 	OPENAI_HEADERS,
 	URL_PATHS,
-} from "@oh-my-pi/pi-catalog/wire/codex";
-import { getAntigravityUserAgent } from "@oh-my-pi/pi-catalog/wire/gemini-headers";
+} from "@bbcli/pi-catalog/wire/codex";
+import { getAntigravityUserAgent } from "@bbcli/pi-catalog/wire/gemini-headers";
 import {
 	$env,
 	isEnoent,
@@ -31,7 +31,7 @@ import {
 	Snowflake,
 	USER_AGENT,
 	untilAborted,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import { isAuthenticated, type ModelRegistry } from "../config/model-registry";
 import { settings } from "../config/settings";
 import type { CustomTool } from "../extensibility/custom-tools/types";

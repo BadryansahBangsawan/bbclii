@@ -7,12 +7,12 @@ import {
 	Markdown,
 	renderInlineMarkdown,
 	urlTokenPossible,
-} from "@oh-my-pi/pi-tui/components/markdown";
-import { setTerminalTextSizing, TERMINAL } from "@oh-my-pi/pi-tui/terminal-capabilities";
-import { type Component, TUI } from "@oh-my-pi/pi-tui/tui";
-import { visibleWidth } from "@oh-my-pi/pi-tui/utils";
-import { Chalk } from "@oh-my-pi/pi-utils/chalk";
-import { mathStartIndex } from "@oh-my-pi/pi-utils/math-delimiters";
+} from "@bbcli/pi-tui/components/markdown";
+import { setTerminalTextSizing, TERMINAL } from "@bbcli/pi-tui/terminal-capabilities";
+import { type Component, TUI } from "@bbcli/pi-tui/tui";
+import { visibleWidth } from "@bbcli/pi-tui/utils";
+import { Chalk } from "@bbcli/pi-utils/chalk";
+import { mathStartIndex } from "@bbcli/pi-utils/math-delimiters";
 import { defaultMarkdownTheme } from "./test-themes.js";
 import { VirtualTerminal } from "./virtual-terminal.js";
 

@@ -1,20 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test";
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import { Agent, type AgentMessage, type AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, Context, ImageContent } from "@oh-my-pi/pi-ai";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { IrcBridge, type IrcBridgeHost } from "@oh-my-pi/pi-coding-agent/session/irc-bridge";
-import { convertToLlm, USER_INTERRUPT_LABEL } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionAdvisors } from "@oh-my-pi/pi-coding-agent/session/session-advisors";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import * as imageLoading from "@oh-my-pi/pi-coding-agent/utils/image-loading";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import { Agent, type AgentMessage, type AgentTool } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, Context, ImageContent } from "@bbcli/pi-ai";
+import { createMockModel } from "@bbcli/pi-ai/providers/mock";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { IrcBridge, type IrcBridgeHost } from "@bbcli/pi-coding-agent/session/irc-bridge";
+import { convertToLlm, USER_INTERRUPT_LABEL } from "@bbcli/pi-coding-agent/session/messages";
+import { SessionAdvisors } from "@bbcli/pi-coding-agent/session/session-advisors";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import * as imageLoading from "@bbcli/pi-coding-agent/utils/image-loading";
+import { TempDir } from "@bbcli/pi-utils";
 
 const zeroUsage = {
 	input: 0,

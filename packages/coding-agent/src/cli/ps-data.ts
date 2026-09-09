@@ -16,8 +16,8 @@ import {
 	getGlobalDaemonRuntimeRoot,
 	getProjectDir,
 	isEnoent,
-} from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+} from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import { createDaemonBrokerClient, type DaemonBrokerClient } from "../launch/client";
 import { canonicalProjectDir, daemonRuntimeDir, readDaemonScopeMeta } from "../launch/paths";
 import { readLiveDaemonBrokerPid } from "../launch/presence";

@@ -6,7 +6,7 @@
  */
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { getPluginsDir, getPluginsLockfile, isEnoent, logger } from "@oh-my-pi/pi-utils";
+import { getPluginsDir, getPluginsLockfile, isEnoent, logger } from "@bbcli/pi-utils";
 import { getConfigDirPaths } from "../../config";
 import { registerPluginCacheInvalidator, resolveActiveProjectRegistryPath } from "../../discovery/helpers";
 import { installLegacyPiSpecifierShim } from "./legacy-pi-compat";
@@ -39,7 +39,7 @@ registerPluginCacheInvalidator(clearEnabledPluginsCache);
 /**
  * Load plugin runtime config from lock file.
  *
- * `home` controls which `<plugins>/omp-plugins.lock.json` is read — pass it
+ * `home` controls which `<plugins>/bbcli-plugins.lock.json` is read — pass it
  * through whenever the caller is loading plugins for a tempdir-rooted
  * scenario (tests, discovery sub-surfaces that need to mirror an alternate
  * `LoadContext.home`).
@@ -70,7 +70,7 @@ async function loadProjectOverrides(cwd: string): Promise<ProjectPluginOverrides
 }
 /**
  * Per-root enumeration of plugins from `<root>/node_modules`,
- * `<root>/package.json#dependencies`, and `<root>/omp-plugins.lock.json#plugins`.
+ * `<root>/package.json#dependencies`, and `<root>/bbcli-plugins.lock.json#plugins`.
  * Honors `projectOverrides.disabled` and `projectOverrides.features`. Returns an
  * empty array when the root has no `node_modules` yet.
  */
@@ -95,7 +95,7 @@ async function collectPluginsAtRoot(
 		if (!isEnoent(err)) throw err;
 	}
 
-	const lockPath = path.join(root, "omp-plugins.lock.json");
+	const lockPath = path.join(root, "bbcli-plugins.lock.json");
 	let runtimeConfig: PluginRuntimeConfig;
 	try {
 		runtimeConfig = normalizePluginRuntimeConfig(await Bun.file(lockPath).json());
@@ -186,7 +186,7 @@ async function collectPluginsAtRoot(
  * (`getPluginsDir(home)`) and, when a project anchor (`.omp/` or `.git/`)
  * exists at or above `cwd`, the project root
  * (`<projectAnchor>/.omp/plugins`). Each root contributes the union of its
- * `package.json#dependencies` and `omp-plugins.lock.json#plugins`. Project
+ * `package.json#dependencies` and `bbcli-plugins.lock.json#plugins`. Project
  * entries shadow user entries with the same package name, matching the
  * shadow semantics of `MarketplaceManager.listInstalledPlugins`.
  *

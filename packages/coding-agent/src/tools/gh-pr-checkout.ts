@@ -1,10 +1,10 @@
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import type { IsoBackendKind, VcsGitRepo, VcsWorktreeEntry } from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { getWorktreeDir, hashPath, isEnoent, logger } from "@oh-my-pi/pi-utils";
+import type { AgentToolResult } from "@bbcli/pi-agent-core";
+import type { IsoBackendKind, VcsGitRepo, VcsWorktreeEntry } from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { getWorktreeDir, hashPath, isEnoent, logger } from "@bbcli/pi-utils";
 import { github } from "../utils/github";
 import { formatIsolationBackend, parseIsolationBackend } from "../task/worktree";
 import { withRepoLock } from "../utils/repo-lock";

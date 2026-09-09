@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { streamOpenAICompletions } from "@oh-my-pi/pi-ai/providers/openai-completions";
-import { streamOpenAIResponses } from "@oh-my-pi/pi-ai/providers/openai-responses";
-import type { Context, FetchImpl, Model, ModelSpec } from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { USER_AGENT } from "@oh-my-pi/pi-utils";
+import { streamOpenAICompletions } from "@bbcli/pi-ai/providers/openai-completions";
+import { streamOpenAIResponses } from "@bbcli/pi-ai/providers/openai-responses";
+import type { Context, FetchImpl, Model, ModelSpec } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { USER_AGENT } from "@bbcli/pi-utils";
 import { resolveOpenAIRequestSetup } from "../src/providers/openai-shared";
 
 const context: Context = {

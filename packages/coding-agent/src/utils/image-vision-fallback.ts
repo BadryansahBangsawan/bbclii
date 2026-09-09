@@ -17,9 +17,9 @@ import {
 	type AgentTelemetryConfig,
 	instrumentedCompleteSimple,
 	resolveTelemetry,
-} from "@oh-my-pi/pi-agent-core";
-import type { Api, completeSimple, ImageContent, Model, TextContent } from "@oh-my-pi/pi-ai";
-import { logger, prompt, toError } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-agent-core";
+import type { Api, completeSimple, ImageContent, Model, TextContent } from "@bbcli/pi-ai";
+import { logger, prompt, toError } from "@bbcli/pi-utils";
 import { extractTextContent } from "../commit/utils";
 import type { ModelRegistry } from "../config/model-registry";
 import { expandRoleAlias, getModelMatchPreferences, resolveModelFromString } from "../config/model-resolver";

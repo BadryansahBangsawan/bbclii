@@ -12,18 +12,18 @@
  * delivered through the newly installed subscription.
  */
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import type { ToolResultMessage } from "@oh-my-pi/pi-ai";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EventController } from "@oh-my-pi/pi-coding-agent/modes/controllers/event-controller";
-import { SessionFocusController } from "@oh-my-pi/pi-coding-agent/modes/controllers/session-focus-controller";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { UiHelpers } from "@oh-my-pi/pi-coding-agent/modes/utils/ui-helpers";
-import { AgentLifecycleManager } from "@oh-my-pi/pi-coding-agent/registry/agent-lifecycle";
-import { AgentRegistry, MAIN_AGENT_ID } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import type { AgentSession, AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import type { SessionContext } from "@oh-my-pi/pi-coding-agent/session/session-context";
-import type { AgentProgress, TaskToolDetails } from "@oh-my-pi/pi-coding-agent/task/types";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import type { ToolResultMessage } from "@bbcli/pi-ai";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { EventController } from "@bbcli/pi-coding-agent/modes/controllers/event-controller";
+import { SessionFocusController } from "@bbcli/pi-coding-agent/modes/controllers/session-focus-controller";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { UiHelpers } from "@bbcli/pi-coding-agent/modes/utils/ui-helpers";
+import { AgentLifecycleManager } from "@bbcli/pi-coding-agent/registry/agent-lifecycle";
+import { AgentRegistry, MAIN_AGENT_ID } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import type { AgentSession, AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import type { SessionContext } from "@bbcli/pi-coding-agent/session/session-context";
+import type { AgentProgress, TaskToolDetails } from "@bbcli/pi-coding-agent/task/types";
 import { createInteractiveModeContext } from "./helpers/interactive-mode-context";
 
 const usage = {

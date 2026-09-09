@@ -1,4 +1,4 @@
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+import { removeWithRetries } from "@bbcli/pi-utils";
 /**
  * Large-paste menu: when a paste reaches the configured `paste.largeMenuThreshold` line count,
  * the editor's `onLargePaste` hook routes through `InputController.handleLargePaste`, which offers
@@ -10,10 +10,10 @@ import { afterEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { CustomEditor } from "@oh-my-pi/pi-coding-agent/modes/components/custom-editor";
-import { InputController } from "@oh-my-pi/pi-coding-agent/modes/controllers/input-controller";
-import { getEditorTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { InteractiveModeContext } from "@oh-my-pi/pi-coding-agent/modes/types";
+import { CustomEditor } from "@bbcli/pi-coding-agent/modes/components/custom-editor";
+import { InputController } from "@bbcli/pi-coding-agent/modes/controllers/input-controller";
+import { getEditorTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { InteractiveModeContext } from "@bbcli/pi-coding-agent/modes/types";
 
 function createContext(options?: {
 	threshold?: number;

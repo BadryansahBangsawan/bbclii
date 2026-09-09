@@ -9,9 +9,9 @@ import {
 	type ToolCall,
 	type ToolResultMessage,
 	type Usage,
-} from "@oh-my-pi/pi-ai";
-import { classifyModel } from "@oh-my-pi/pi-catalog/compat/taxonomy";
-import { getSessionsDir, isEnoent, readLines } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { classifyModel } from "@bbcli/pi-catalog/compat/taxonomy";
+import { getSessionsDir, isEnoent, readLines } from "@bbcli/pi-utils";
 import type {
 	AgentType,
 	MessageStats,

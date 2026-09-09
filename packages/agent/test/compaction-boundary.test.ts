@@ -5,9 +5,9 @@ import {
 	createFileOps,
 	DEFAULT_COMPACTION_SETTINGS,
 	generateSummary,
-} from "@oh-my-pi/pi-agent-core/compaction";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
+} from "@bbcli/pi-agent-core/compaction";
+import type { Model } from "@bbcli/pi-ai";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
 
 function getModel(): Model {
 	const model = getBundledModel("anthropic", "claude-sonnet-4-5");

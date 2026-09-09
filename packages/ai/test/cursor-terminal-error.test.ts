@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from "bun:test";
 import * as http2 from "node:http2";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { streamCursor } from "@oh-my-pi/pi-ai/providers/cursor";
-import type { Context, CursorToolResultHandler, Model, ToolResultMessage } from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
+import * as AIError from "@bbcli/pi-ai/error";
+import { streamCursor } from "@bbcli/pi-ai/providers/cursor";
+import type { Context, CursorToolResultHandler, Model, ToolResultMessage } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
 import {
 	AgentServerMessageSchema,
 	ExecServerMessageSchema,
@@ -15,8 +15,8 @@ import {
 	TurnEndedUpdateSchema,
 	UpdateTodosArgsSchema,
 	UpdateTodosToolCallSchema,
-} from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
-import { create, toBinary } from "@oh-my-pi/pi-catalog/discovery/protobuf";
+} from "@bbcli/pi-catalog/discovery/cursor-proto";
+import { create, toBinary } from "@bbcli/pi-catalog/discovery/protobuf";
 
 const CONNECT_END_STREAM_FLAG = 0b00000010;
 

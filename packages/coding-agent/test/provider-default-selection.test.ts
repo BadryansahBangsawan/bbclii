@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import type { Api, Model } from "@oh-my-pi/pi-ai";
-import { getBundledModels } from "@oh-my-pi/pi-catalog/models";
-import { DEFAULT_MODEL_PER_PROVIDER } from "@oh-my-pi/pi-catalog/provider-models";
-import { pickDefaultAvailableModel } from "@oh-my-pi/pi-coding-agent/config/model-resolver";
+import type { Api, Model } from "@bbcli/pi-ai";
+import { getBundledModels } from "@bbcli/pi-catalog/models";
+import { DEFAULT_MODEL_PER_PROVIDER } from "@bbcli/pi-catalog/provider-models";
+import { pickDefaultAvailableModel } from "@bbcli/pi-coding-agent/config/model-resolver";
 
 describe("provider default selection", () => {
 	/**

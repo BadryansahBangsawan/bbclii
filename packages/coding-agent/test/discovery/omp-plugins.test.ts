@@ -16,27 +16,27 @@ import { afterEach, beforeEach, expect, test } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { getCapability, loadCapability } from "@oh-my-pi/pi-coding-agent/capability";
-import { clearCache } from "@oh-my-pi/pi-coding-agent/capability/fs";
-import { hookCapability } from "@oh-my-pi/pi-coding-agent/capability/hook";
-import { mcpCapability } from "@oh-my-pi/pi-coding-agent/capability/mcp";
-import { promptCapability } from "@oh-my-pi/pi-coding-agent/capability/prompt";
-import { ruleCapability } from "@oh-my-pi/pi-coding-agent/capability/rule";
-import { skillCapability } from "@oh-my-pi/pi-coding-agent/capability/skill";
-import { slashCommandCapability } from "@oh-my-pi/pi-coding-agent/capability/slash-command";
-import { toolCapability } from "@oh-my-pi/pi-coding-agent/capability/tool";
-import type { LoadContext, Provider } from "@oh-my-pi/pi-coding-agent/capability/types";
+import { getCapability, loadCapability } from "@bbcli/pi-coding-agent/capability";
+import { clearCache } from "@bbcli/pi-coding-agent/capability/fs";
+import { hookCapability } from "@bbcli/pi-coding-agent/capability/hook";
+import { mcpCapability } from "@bbcli/pi-coding-agent/capability/mcp";
+import { promptCapability } from "@bbcli/pi-coding-agent/capability/prompt";
+import { ruleCapability } from "@bbcli/pi-coding-agent/capability/rule";
+import { skillCapability } from "@bbcli/pi-coding-agent/capability/skill";
+import { slashCommandCapability } from "@bbcli/pi-coding-agent/capability/slash-command";
+import { toolCapability } from "@bbcli/pi-coding-agent/capability/tool";
+import type { LoadContext, Provider } from "@bbcli/pi-coding-agent/capability/types";
 // Register all discovery providers as a side effect.
-import "@oh-my-pi/pi-coding-agent/discovery";
+import "@bbcli/pi-coding-agent/discovery";
 import {
 	clearOmpExtensionCliRoots,
 	injectOmpExtensionCliRoots,
 	listOmpExtensionRoots,
 	setInvocationConfiguredExtensions,
 	withOmpExtensionRootScope,
-} from "@oh-my-pi/pi-coding-agent/discovery/omp-extension-roots";
-import { discoverExtensionPaths } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/loader";
-import { getConfigRootDir, removeSyncWithRetries, setAgentDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/discovery/omp-extension-roots";
+import { discoverExtensionPaths } from "@bbcli/pi-coding-agent/extensibility/extensions/loader";
+import { getConfigRootDir, removeSyncWithRetries, setAgentDir } from "@bbcli/pi-utils";
 
 const PROVIDER_ID = "omp-plugins";
 
@@ -641,7 +641,7 @@ test("project-scoped installed plugins surface project-level sub-discovery", asy
 	fs.mkdirSync(installed, { recursive: true });
 	fs.cpSync(ext, installed, { recursive: true });
 	writeFile(
-		path.join(pluginsDir, "omp-plugins.lock.json"),
+		path.join(pluginsDir, "bbcli-plugins.lock.json"),
 		JSON.stringify({
 			plugins: { "my-project-ext": { version: "1.0.0", enabled: true, enabledFeatures: null } },
 			settings: {},
@@ -666,7 +666,7 @@ test("disabled installed plugins do not contribute sub-discovery", async () => {
 		JSON.stringify({ name: "omp-plugins", dependencies: { "my-disabled-ext": "1.0.0" } }),
 	);
 	writeFile(
-		path.join(pluginsDir, "omp-plugins.lock.json"),
+		path.join(pluginsDir, "bbcli-plugins.lock.json"),
 		JSON.stringify({ plugins: { "my-disabled-ext": { enabled: false } }, settings: {} }),
 	);
 
@@ -689,7 +689,7 @@ test("linked plugins (only in lockfile, not in package.json#dependencies) are su
 	// Intentionally NO `<plugins>/package.json` — matches a fresh `plugin link`
 	// against a setup that has never run `plugin install`.
 	writeFile(
-		path.join(pluginsDir, "omp-plugins.lock.json"),
+		path.join(pluginsDir, "bbcli-plugins.lock.json"),
 		JSON.stringify({
 			plugins: { "my-linked-ext": { version: "1.0.0", enabled: true, enabledFeatures: null } },
 			settings: {},

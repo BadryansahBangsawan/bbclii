@@ -1,5 +1,5 @@
 import { fileURLToPath } from "node:url";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
+import type { ImageContent } from "@bbcli/pi-ai";
 import {
 	addKeyAliases,
 	canonicalKeyId,
@@ -11,8 +11,8 @@ import {
 	parseKey,
 	parseKittySequence,
 	TUI,
-} from "@oh-my-pi/pi-tui";
-import { BracketedPasteHandler } from "@oh-my-pi/pi-tui/bracketed-paste";
+} from "@bbcli/pi-tui";
+import { BracketedPasteHandler } from "@bbcli/pi-tui/bracketed-paste";
 import type { AppKeybinding } from "../../config/keybindings";
 import { isVideoPath, videoPreviewSource } from "../../utils/video";
 import {

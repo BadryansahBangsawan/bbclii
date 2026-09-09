@@ -2,14 +2,14 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, mock,
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { AuthStorage } from "@oh-my-pi/pi-ai";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { createAgentSession } from "@oh-my-pi/pi-coding-agent/sdk";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { removeSyncWithRetries, Snowflake } from "@oh-my-pi/pi-utils";
-import { getAgentDir, setAgentDir } from "@oh-my-pi/pi-utils/dirs";
+import { AuthStorage } from "@bbcli/pi-ai";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { createAgentSession } from "@bbcli/pi-coding-agent/sdk";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { removeSyncWithRetries, Snowflake } from "@bbcli/pi-utils";
+import { getAgentDir, setAgentDir } from "@bbcli/pi-utils/dirs";
 import {
 	BOUNDED_GUIDANCE_MODE,
 	CONTEXT_MODE_NO_INSTRUCTIONS_MODE,

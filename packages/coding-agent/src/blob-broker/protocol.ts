@@ -17,16 +17,16 @@ import type { DestinationRuntimeConfig } from "./uploader-runtime";
 export const BLOB_BROKER_WORKER_ARG = "__omp_worker_blob_broker";
 
 /** Environment key carrying the control socket path the worker listens on. */
-export const BLOB_BROKER_SOCKET_ENV = "OMP_BLOB_BROKER_SOCKET";
+export const BLOB_BROKER_SOCKET_ENV = "BBCLI_BLOB_BROKER_SOCKET";
 
 /** Environment key carrying the JSON {@link BlobBrokerWorkerConfig}. */
-export const BLOB_BROKER_CONFIG_ENV = "OMP_BLOB_BROKER_CONFIG";
+export const BLOB_BROKER_CONFIG_ENV = "BBCLI_BLOB_BROKER_CONFIG";
 
 /** Stable broker daemon name for the shared blob broker. */
-export const BLOB_BROKER_DAEMON_NAME = "omp.blob.broker";
+export const BLOB_BROKER_DAEMON_NAME = "bbcli.blob.broker";
 
 /** Broker readiness regex matched against the banner printed by the worker. */
-export const BLOB_BROKER_READY_PATTERN = String.raw`omp blob broker serving \S+`;
+export const BLOB_BROKER_READY_PATTERN = String.raw`bbcli blob broker serving \S+`;
 
 /** Banner printed on stdout once the exposure is up and control is listening. */
 export function blobBrokerReadyBanner(baseUrl: string): string {

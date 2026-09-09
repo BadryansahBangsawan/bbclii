@@ -1,14 +1,14 @@
 import { beforeAll, describe, expect, type Mock, test, vi } from "bun:test";
 import { stripVTControlCharacters } from "node:util";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import type { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { ModelPickerComponent, type ModelPickerOptions } from "@oh-my-pi/pi-coding-agent/modes/components/model-picker";
-import { resolveSegmentPalette } from "@oh-my-pi/pi-coding-agent/modes/components/segment-track";
-import { getThemeByName, setThemeInstance, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { ResolvedRoleModel } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import type { TUI } from "@oh-my-pi/pi-tui";
+import type { Model } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import type { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { ModelPickerComponent, type ModelPickerOptions } from "@bbcli/pi-coding-agent/modes/components/model-picker";
+import { resolveSegmentPalette } from "@bbcli/pi-coding-agent/modes/components/segment-track";
+import { getThemeByName, setThemeInstance, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { ResolvedRoleModel } from "@bbcli/pi-coding-agent/session/agent-session";
+import type { TUI } from "@bbcli/pi-tui";
 
 function normalize(lines: readonly string[]): string {
 	return stripVTControlCharacters(lines.join("\n")).replace(/\s+/g, " ").trim();

@@ -1,5 +1,5 @@
 {
-	"name": "@oh-my-pi/pi-utils",
+	"name": "@bbcli/pi-utils",
 	"version": "18.1.15",
 	"description": "Shared utilities for pi packages",
 	"keywords": [
@@ -8,7 +8,7 @@
 		"streams",
 		"utilities"
 	],
-	"homepage": "https://omp.sh",
+	"homepage": "https://github.com/BadryansahBangsawan/bbclii",
 	"bugs": {
 		"url": "https://github.com/can1357/oh-my-pi/issues"
 	},
@@ -51,7 +51,7 @@
 		"fmt": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts'"
 	},
 	"dependencies": {
-		"@oh-my-pi/pi-natives": "catalog:"
+		"@bbcli/pi-natives": "catalog:"
 	},
 	"devDependencies": {
 		"@types/bun": "catalog:"

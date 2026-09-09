@@ -10,9 +10,9 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { Transform } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { $env, $which, APP_NAME, compareVersions, isEnoent, VERSION } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
-import { withFileLock } from "@oh-my-pi/pi-utils/file-lock";
+import { $env, $which, APP_NAME, compareVersions, isEnoent, VERSION } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
+import { withFileLock } from "@bbcli/pi-utils/file-lock";
 import { $ } from "bun";
 import { settings } from "../config/settings";
 import { theme } from "../modes/theme/theme";
@@ -23,10 +23,10 @@ import {
 	withTimeoutSignal,
 } from "../utils/fetch-timeout";
 
-const REPO = "can1357/oh-my-pi";
-const PACKAGE = "@oh-my-pi/pi-coding-agent";
+const REPO = "BadryansahBangsawan/bbclii";
+const PACKAGE = "@bbcli/pi-coding-agent";
 const HOMEBREW_FORMULA = "can1357/tap/omp";
-const MISE_TOOL = "github:can1357/oh-my-pi";
+const MISE_TOOL = "github:BadryansahBangsawan/bbclii";
 const NIX_STORE_DIR = "/nix/store";
 /**
  * Official npm registry origin.
@@ -50,11 +50,11 @@ const BINARY_DOWNLOAD_TIMEOUT_MS = 15 * 60_000;
  * disk; see {@link buildBunInstallArgs} for why this must be installed
  * explicitly rather than inherited as a transitive dependency.
  */
-const NATIVES_PACKAGE = "@oh-my-pi/pi-natives";
+const NATIVES_PACKAGE = "@bbcli/pi-natives";
 
 /**
  * Platform tags the release pipeline publishes as
- * `@oh-my-pi/pi-natives-<tag>` leaves. Mirrors `SUPPORTED_PLATFORMS` in
+ * `@bbcli/pi-natives-<tag>` leaves. Mirrors `SUPPORTED_PLATFORMS` in
  * `packages/natives/native/loader-state.js` and `LEAF_TARGETS` in
  * `packages/natives/scripts/gen-npm-packages.ts`; kept here as the local
  * source of truth so the update path stays free of cross-package imports.
@@ -167,7 +167,7 @@ function majorVersion(version: string): number {
  * An explicit `omp.dist` wins in both directions. Without one, a release with
  * a higher major than the running build is assumed not npm-installable: the
  * runtime may have changed out from under the package layout, and the pinned
- * `@oh-my-pi/pi-natives*` companions ({@link buildBunInstallArgs}) may not
+ * `@bbcli/pi-natives*` companions ({@link buildBunInstallArgs}) may not
  * exist at that version, which would strand bun/npm-managed installs behind a
  * hard install failure. Homebrew and mise installs are unaffected — both
  * already pull GitHub release binaries.
@@ -1371,11 +1371,11 @@ function buildVersionedPackageInstallArgs(
  * lookup the version check just performed. See #1686.
  *
  * Also pins {@link NATIVES_PACKAGE} and the platform-specific
- * `@oh-my-pi/pi-natives-<tag>` leaf to `expectedVersion`. `bun install -g`
+ * `@bbcli/pi-natives-<tag>` leaf to `expectedVersion`. `bun install -g`
  * does not reliably refresh transitive `optionalDependencies` when the
  * top-level package is the only one bumped, so the native addon and its
  * version sentinel can drift out of sync with the freshly installed
- * `@oh-my-pi/pi-coding-agent` and the loader aborts at
+ * `@bbcli/pi-coding-agent` and the loader aborts at
  * `validateLoadedBindings` on the next launch
  * (`The .node file on disk is from a different release than this loader`).
  * Listing the natives explicitly forces bun to replace them in lock-step.
@@ -1544,16 +1544,28 @@ export async function migrateRenamedInstall(release: ReleaseInfo, steps: RenameM
  */
 async function updateViaBun(release: ReleaseInfo): Promise<InstalledVersionVerification | undefined> {
 	console.log(chalk.dim("Updating via bun..."));
+	const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-update-"));
 	let verification: InstalledVersionVerification | undefined;
-	if (release.packages.pkg !== PACKAGE) {
-		await migrateRenamedInstall(release, packageManagerMigrationSteps("bun", release));
-	} else {
-		const args = buildBunInstallArgs(release.version, currentNativeTag(), release.packages);
-		const result = await $`bun ${args}`.nothrow();
+	try {
+		const tag = `v${release.version}`;
+		const repoUrl = `https://github.com/${REPO}.git`;
+		const shallow = await $`git clone --depth 1 --branch ${tag} ${repoUrl} ${tmpDir}`.quiet().nothrow();
+		if (shallow.exitCode !== 0) {
+			const full = await $`git clone ${repoUrl} ${tmpDir}`.nothrow();
+			if (full.exitCode !== 0) throw new Error(`git clone failed with exit code ${full.exitCode}`);
+			const checkout = await $`git checkout ${tag}`.cwd(tmpDir).nothrow();
+			if (checkout.exitCode !== 0) {
+				throw new Error(`git checkout ${tag} failed with exit code ${checkout.exitCode}`);
+			}
+		}
+		const pkgPath = path.join(tmpDir, "packages", "coding-agent");
+		const result = await $`bun install -g ${pkgPath}`.nothrow();
 		if (result.exitCode !== 0) {
 			throw new Error(`bun install failed with exit code ${result.exitCode}`);
 		}
 		verification = await verifyInstalledVersion(release.version);
+	} finally {
+		fs.rmSync(tmpDir, { recursive: true, force: true });
 	}
 	try {
 		const pruneResult = await pruneBunCacheAfterGlobalInstall();
@@ -1679,23 +1691,6 @@ export async function updateViaManager(
 			`This install is no longer managed by ${steps.manager}. Removing the old global package may delete this launcher; if it does, reinstall with: ${installerHint()}`,
 		),
 	);
-}
-
-async function updateViaHomebrew(expectedVersion: string, force: boolean): Promise<void> {
-	console.log(chalk.dim("Updating Homebrew formulae..."));
-	const update = await $`brew update`.nothrow();
-	if (update.exitCode !== 0) {
-		throw new Error(`brew update failed with exit code ${update.exitCode}`);
-	}
-
-	console.log(chalk.dim("Updating via Homebrew..."));
-	const args = buildHomebrewUpdateArgs(force);
-	const result = await $`brew ${args}`.nothrow();
-	if (result.exitCode !== 0) {
-		throw new Error(`brew ${args[0]} failed with exit code ${result.exitCode}`);
-	}
-
-	await printVerification(expectedVersion);
 }
 
 async function updateViaMise(expectedVersion: string, force: boolean): Promise<void> {
@@ -1947,8 +1942,8 @@ export async function updateViaShimTakeover(
  */
 function installerHint(): string {
 	return process.platform === "win32"
-		? "& ([scriptblock]::Create((irm https://omp.sh/install.ps1))) -Binary"
-		: "curl -fsSL https://omp.sh/install | sh -s -- --binary";
+		? "& ([scriptblock]::Create((irm https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scripts/install.ps1))) -Binary"
+		: "curl -fsSL https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scripts/install.sh | sh -s -- --binary";
 }
 
 /** Persisted channel, or undefined when settings are unavailable (SDK/test embedding without `Settings.init()`). */
@@ -2034,13 +2029,17 @@ export async function runUpdateCommand(opts: {
 		}
 		if (target.method === "nix") {
 			console.log(chalk.yellow("This installation is managed by Nix and cannot update itself."));
-			console.log(chalk.dim("Update the flake input or profile that provides omp, then rebuild."));
+			console.log(chalk.dim("Update the flake input or profile that provides bbcli, then rebuild."));
 			return;
 		} else if (target.method === "brew") {
-			await updateViaHomebrew(release.version, opts.force);
+			console.log(chalk.yellow("bbcli is not distributed via Homebrew; re-run the installer."));
+			return;
 		} else if (target.method === "mise") {
 			await updateViaMise(release.version, opts.force);
-		} else if (target.method === "bun" || target.method === "npm") {
+		} else if (target.method === "npm") {
+			console.log(chalk.yellow("bbcli is not published to npm; use bun or --binary."));
+			return;
+		} else if (target.method === "bun") {
 			if (forceBinary) {
 				// Reachable in forced mode only through a Windows script
 				// launcher resolved from PATH (the bun/npm bin-dir probes are

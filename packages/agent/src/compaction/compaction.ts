@@ -22,22 +22,22 @@ import {
 	type Tool,
 	type Usage,
 	withAuth,
-} from "@oh-my-pi/pi-ai";
-import type { Dialect } from "@oh-my-pi/pi-ai/dialect";
-import * as AIError from "@oh-my-pi/pi-ai/error";
+} from "@bbcli/pi-ai";
+import type { Dialect } from "@bbcli/pi-ai/dialect";
+import * as AIError from "@bbcli/pi-ai/error";
 import {
 	buildTransformedCodexRequestBody,
 	createOpenAICodexCompactionRequestContext,
 	type OpenAICodexCompactionBody,
-} from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
-import type { InputItem as CodexInputItem } from "@oh-my-pi/pi-ai/providers/openai-codex/request-transformer";
-import { convertTools } from "@oh-my-pi/pi-ai/providers/openai-responses";
-import { buildResponsesInput, resolveOpenAICompatPolicy } from "@oh-my-pi/pi-ai/providers/openai-shared";
-import { stripOpenAIResponsesOutputOnlyStatusesForReplay } from "@oh-my-pi/pi-ai/utils";
-import { preferredDialect } from "@oh-my-pi/pi-catalog/identity";
-import { clampThinkingLevelForModel } from "@oh-my-pi/pi-catalog/model-thinking";
-import { isRecord, logger, prompt } from "@oh-my-pi/pi-utils";
-import * as snapcompact from "@oh-my-pi/snapcompact";
+} from "@bbcli/pi-ai/providers/openai-codex-responses";
+import type { InputItem as CodexInputItem } from "@bbcli/pi-ai/providers/openai-codex/request-transformer";
+import { convertTools } from "@bbcli/pi-ai/providers/openai-responses";
+import { buildResponsesInput, resolveOpenAICompatPolicy } from "@bbcli/pi-ai/providers/openai-shared";
+import { stripOpenAIResponsesOutputOnlyStatusesForReplay } from "@bbcli/pi-ai/utils";
+import { preferredDialect } from "@bbcli/pi-catalog/identity";
+import { clampThinkingLevelForModel } from "@bbcli/pi-catalog/model-thinking";
+import { isRecord, logger, prompt } from "@bbcli/pi-utils";
+import * as snapcompact from "@bbcli/snapcompact";
 import { type AgentTelemetry, instrumentedCompleteSimple } from "../telemetry";
 import { ThinkingLevel } from "../thinking";
 import { Tokenizer } from "../tokenizer";

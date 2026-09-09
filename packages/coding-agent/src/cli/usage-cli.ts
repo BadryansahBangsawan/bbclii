@@ -16,11 +16,11 @@ import {
 	type UsageLimit,
 	type UsageReport,
 	type UsageUnit,
-} from "@oh-my-pi/pi-ai";
-import { AuthBrokerClient } from "@oh-my-pi/pi-ai/auth-broker";
-import type { ClientUsageClientSummary } from "@oh-my-pi/pi-ai/usage";
-import { formatDuration, formatNumber, sanitizeText } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+} from "@bbcli/pi-ai";
+import { AuthBrokerClient } from "@bbcli/pi-ai/auth-broker";
+import type { ClientUsageClientSummary } from "@bbcli/pi-ai/usage";
+import { formatDuration, formatNumber, sanitizeText } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import { ModelRegistry } from "../config/model-registry";
 import { discoverAuthStorage } from "../sdk";
 import { resolveAuthBrokerConfig } from "../session/auth-broker-config";

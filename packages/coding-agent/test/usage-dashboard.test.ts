@@ -1,14 +1,14 @@
 import * as os from "node:os";
 import { beforeAll, describe, expect, it } from "bun:test";
-import type { DailyActivityPoint } from "@oh-my-pi/omp-stats/shared-types";
-import type { UsageReport } from "@oh-my-pi/pi-ai";
+import type { DailyActivityPoint } from "@bbcli/stats/shared-types";
+import type { UsageReport } from "@bbcli/pi-ai";
 import {
 	buildHeatmapLayout,
 	buildProviderCards,
 	formatActivityErrorDetail,
 	UsageDashboardComponent,
-} from "@oh-my-pi/pi-coding-agent/modes/components/usage-dashboard";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
+} from "@bbcli/pi-coding-agent/modes/components/usage-dashboard";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
 
 function day(day: string, cost: number, requests = 1): DailyActivityPoint {
 	return { day, cost, requests, totalTokens: 0 };

@@ -14,10 +14,10 @@ import {
 	hasResolvableTranscript,
 	registerArtifactsDir,
 	resetRegisteredArtifactDirsForTests,
-} from "@oh-my-pi/pi-coding-agent/internal-urls/registry-helpers";
-import { AgentRegistry } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/internal-urls/registry-helpers";
+import { AgentRegistry } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { removeWithRetries } from "@bbcli/pi-utils";
 
 function fakeLiveSession(): AgentSession {
 	return { messages: [] } as unknown as AgentSession;

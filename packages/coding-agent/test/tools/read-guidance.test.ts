@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { ReadTool } from "@oh-my-pi/pi-coding-agent/tools/read";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { ReadTool } from "@bbcli/pi-coding-agent/tools/read";
 
 function createSession(): ToolSession {
 	return {

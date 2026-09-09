@@ -4,10 +4,10 @@
 
 import * as os from "node:os";
 import * as path from "node:path";
-import type { AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { ToolExample, TSchema } from "@oh-my-pi/pi-ai";
-import { renderToolInventory } from "@oh-my-pi/pi-ai/dialect";
-import type { DelegationBias } from "@oh-my-pi/pi-catalog/compat/delegation";
+import type { AgentTool } from "@bbcli/pi-agent-core";
+import type { ToolExample, TSchema } from "@bbcli/pi-ai";
+import { renderToolInventory } from "@bbcli/pi-ai/dialect";
+import type { DelegationBias } from "@bbcli/pi-catalog/compat/delegation";
 import {
 	$env,
 	getAgentDir,
@@ -17,7 +17,7 @@ import {
 	isEnoent,
 	logger,
 	prompt,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import { contextFileCapability } from "./capability/context-file";
 import { systemPromptCapability } from "./capability/system-prompt";
 import { findConfigFile } from "./config";

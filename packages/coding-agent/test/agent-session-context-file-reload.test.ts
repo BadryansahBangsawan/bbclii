@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import type { Api, Model, ModelSpec } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { createAgentSession } from "@oh-my-pi/pi-coding-agent/sdk";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import type { Api, Model, ModelSpec } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { createAgentSession } from "@bbcli/pi-coding-agent/sdk";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { TempDir } from "@bbcli/pi-utils";
 
 function buildLocalModel(api: string): Model<Api> {
 	return buildModel({

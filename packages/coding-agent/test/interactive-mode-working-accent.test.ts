@@ -1,13 +1,13 @@
 import { afterAll, afterEach, describe, expect, it, vi } from "bun:test";
 import { stripVTControlCharacters } from "node:util";
-import { resetSettingsForTest, Settings, settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { InteractiveMode } from "@oh-my-pi/pi-coding-agent/modes/interactive-mode";
-import { initTheme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { executeBuiltinSlashCommand } from "@oh-my-pi/pi-coding-agent/slash-commands/builtin-registry";
-import * as sessionColor from "@oh-my-pi/pi-coding-agent/utils/session-color";
-import { adjustHsv, TempDir } from "@oh-my-pi/pi-utils";
+import { resetSettingsForTest, Settings, settings } from "@bbcli/pi-coding-agent/config/settings";
+import { InteractiveMode } from "@bbcli/pi-coding-agent/modes/interactive-mode";
+import { initTheme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { executeBuiltinSlashCommand } from "@bbcli/pi-coding-agent/slash-commands/builtin-registry";
+import * as sessionColor from "@bbcli/pi-coding-agent/utils/session-color";
+import { adjustHsv, TempDir } from "@bbcli/pi-utils";
 
 type Harness = {
 	mode: InteractiveMode;

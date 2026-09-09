@@ -17,11 +17,11 @@
  * so the wire body carries `chat_template_kwargs.enable_thinking` instead.
  */
 import { describe, expect, it } from "bun:test";
-import { streamOpenAICompletions } from "@oh-my-pi/pi-ai/providers/openai-completions";
-import type { Context } from "@oh-my-pi/pi-ai/types";
-import { resolveModelPolicy } from "@oh-my-pi/pi-catalog/compat/resolve";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import type { FetchImpl, Model, ModelSpec } from "@oh-my-pi/pi-catalog/types";
+import { streamOpenAICompletions } from "@bbcli/pi-ai/providers/openai-completions";
+import type { Context } from "@bbcli/pi-ai/types";
+import { resolveModelPolicy } from "@bbcli/pi-catalog/compat/resolve";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import type { FetchImpl, Model, ModelSpec } from "@bbcli/pi-catalog/types";
 
 function sseDoneResponse(): Response {
 	return new Response("data: [DONE]\n\n", {

@@ -1,13 +1,13 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "bun:test";
 import * as path from "node:path";
-import type { AssistantMessage } from "@oh-my-pi/pi-ai";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { AssistantThinkingRenderer } from "@oh-my-pi/pi-coding-agent/extensibility/extensions";
-import { AssistantMessageComponent } from "@oh-my-pi/pi-coding-agent/modes/components/assistant-message";
-import { TranscriptContainer } from "@oh-my-pi/pi-coding-agent/modes/components/transcript-container";
-import { clearMermaidCache } from "@oh-my-pi/pi-coding-agent/modes/theme/mermaid-cache";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { ImageProtocol, setTerminalImageProtocol, TERMINAL, Text } from "@oh-my-pi/pi-tui";
+import type { AssistantMessage } from "@bbcli/pi-ai";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { AssistantThinkingRenderer } from "@bbcli/pi-coding-agent/extensibility/extensions";
+import { AssistantMessageComponent } from "@bbcli/pi-coding-agent/modes/components/assistant-message";
+import { TranscriptContainer } from "@bbcli/pi-coding-agent/modes/components/transcript-container";
+import { clearMermaidCache } from "@bbcli/pi-coding-agent/modes/theme/mermaid-cache";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { ImageProtocol, setTerminalImageProtocol, TERMINAL, Text } from "@bbcli/pi-tui";
 
 const originalImageProtocol = TERMINAL.imageProtocol;
 

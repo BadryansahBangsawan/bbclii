@@ -1,12 +1,12 @@
-import { type AgentMessage, type AgentToolResult, ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { CompactionOutcome } from "@oh-my-pi/pi-agent-core/compaction";
-import { type Model, PASTE_CODE_LOGIN_PROVIDERS, type UsageReport } from "@oh-my-pi/pi-ai";
-import { getOAuthProviders } from "@oh-my-pi/pi-ai/oauth";
-import type { OAuthProvider } from "@oh-my-pi/pi-ai/oauth/types";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import type { Component, OverlayHandle, ResizeScrollbackMode } from "@oh-my-pi/pi-tui";
-import { Loader, Spacer, setTuiTight, Text } from "@oh-my-pi/pi-tui";
-import { getAgentDbPath, getAgentDir, getProjectDir, normalizePathForComparison } from "@oh-my-pi/pi-utils";
+import { type AgentMessage, type AgentToolResult, ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { CompactionOutcome } from "@bbcli/pi-agent-core/compaction";
+import { type Model, PASTE_CODE_LOGIN_PROVIDERS, type UsageReport } from "@bbcli/pi-ai";
+import { getOAuthProviders } from "@bbcli/pi-ai/oauth";
+import type { OAuthProvider } from "@bbcli/pi-ai/oauth/types";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import type { Component, OverlayHandle, ResizeScrollbackMode } from "@bbcli/pi-tui";
+import { Loader, Spacer, setTuiTight, Text } from "@bbcli/pi-tui";
+import { getAgentDbPath, getAgentDir, getProjectDir, normalizePathForComparison } from "@bbcli/pi-utils";
 import {
 	type AdvisorConfigScope,
 	discoverAdvisorConfigs,

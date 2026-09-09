@@ -1,14 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Api, AssistantMessage, Model } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import * as sdkModule from "@oh-my-pi/pi-coding-agent/sdk";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import type { ServingModel } from "@oh-my-pi/pi-coding-agent/session/retry-fallback-chains";
-import { TurnRecovery, type TurnRecoveryHost } from "@oh-my-pi/pi-coding-agent/session/turn-recovery";
-import { runSubprocess } from "@oh-my-pi/pi-coding-agent/task/executor";
-import type { AgentDefinition, AgentProgress } from "@oh-my-pi/pi-coding-agent/task/types";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { Api, AssistantMessage, Model } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import * as sdkModule from "@bbcli/pi-coding-agent/sdk";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import type { ServingModel } from "@bbcli/pi-coding-agent/session/retry-fallback-chains";
+import { TurnRecovery, type TurnRecoveryHost } from "@bbcli/pi-coding-agent/session/turn-recovery";
+import { runSubprocess } from "@bbcli/pi-coding-agent/task/executor";
+import type { AgentDefinition, AgentProgress } from "@bbcli/pi-coding-agent/task/types";
 import { createSessionDefaults } from "./helpers/session-defaults";
 
 function model(provider: string, id: string): Model<Api> {

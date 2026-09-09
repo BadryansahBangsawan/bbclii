@@ -1,14 +1,14 @@
 import { describe, expect, test, vi } from "bun:test";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
 import {
 	DEFAULT_COMPACTION_SETTINGS,
 	findReadableCompactionIndex,
 	generateSummary,
 	type SessionEntry,
-} from "@oh-my-pi/pi-agent-core/compaction";
-import type { AssistantMessage, Model } from "@oh-my-pi/pi-ai";
-import * as ai from "@oh-my-pi/pi-ai";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
+} from "@bbcli/pi-agent-core/compaction";
+import type { AssistantMessage, Model } from "@bbcli/pi-ai";
+import * as ai from "@bbcli/pi-ai";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
 
 function createAssistantMessage(text: string): AssistantMessage {
 	return {

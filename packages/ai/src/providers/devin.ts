@@ -24,12 +24,12 @@ import {
 	type ModelAssignment,
 	PromptCacheOptionsSchema,
 	StopReason,
-} from "@oh-my-pi/pi-catalog/discovery/devin-proto";
-import { create, fromBinary, toBinary } from "@oh-my-pi/pi-catalog/discovery/protobuf";
-import { calculateCost } from "@oh-my-pi/pi-catalog/models";
-import { DEVIN_DEFAULT_BASE_URL, devinCliMetadata } from "@oh-my-pi/pi-catalog/wire/devin";
-import { decodeDevinUnaryMessage } from "@oh-my-pi/pi-catalog/wire/devin-proto";
-import { logger, parseStreamingJson, parseStreamingJsonThrottled } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-catalog/discovery/devin-proto";
+import { create, fromBinary, toBinary } from "@bbcli/pi-catalog/discovery/protobuf";
+import { calculateCost } from "@bbcli/pi-catalog/models";
+import { DEVIN_DEFAULT_BASE_URL, devinCliMetadata } from "@bbcli/pi-catalog/wire/devin";
+import { decodeDevinUnaryMessage } from "@bbcli/pi-catalog/wire/devin-proto";
+import { logger, parseStreamingJson, parseStreamingJsonThrottled } from "@bbcli/pi-utils";
 import * as AIError from "../error";
 import type {
 	Api,

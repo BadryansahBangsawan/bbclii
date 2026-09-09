@@ -1,4 +1,4 @@
-import { fetchWithRetry } from "@oh-my-pi/pi-utils";
+import { fetchWithRetry } from "@bbcli/pi-utils";
 import { compareRevision, parseRevision } from "../compat/revision";
 import { classifyModel } from "../compat/taxonomy";
 import { Effort } from "../effort";

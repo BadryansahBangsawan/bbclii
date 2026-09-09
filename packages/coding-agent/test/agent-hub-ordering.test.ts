@@ -6,15 +6,15 @@
  * agents that appear while the hub is open are appended at the end.
  */
 import { afterEach, beforeAll, describe, expect, it, setSystemTime, vi } from "bun:test";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { IrcBus } from "@oh-my-pi/pi-coding-agent/irc/bus";
-import { type AgentHubDeps, AgentHubOverlayComponent } from "@oh-my-pi/pi-coding-agent/modes/components/agent-hub";
-import { SessionObserverRegistry } from "@oh-my-pi/pi-coding-agent/modes/session-observer-registry";
-import { initTheme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { AgentRegistry } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { visibleWidth } from "@oh-my-pi/pi-tui/utils";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { IrcBus } from "@bbcli/pi-coding-agent/irc/bus";
+import { type AgentHubDeps, AgentHubOverlayComponent } from "@bbcli/pi-coding-agent/modes/components/agent-hub";
+import { SessionObserverRegistry } from "@bbcli/pi-coding-agent/modes/session-observer-registry";
+import { initTheme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { AgentRegistry } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { visibleWidth } from "@bbcli/pi-tui/utils";
 import { AgentActivityIndex, type AgentActivityRow } from "../src/activity";
 
 interface GeometryStub {

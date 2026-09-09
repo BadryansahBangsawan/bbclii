@@ -2,20 +2,20 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test, vi 
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { Effort, type FetchImpl } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { writeModelCache } from "@oh-my-pi/pi-catalog/model-cache";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { resolveModelCacheProviderId } from "@oh-my-pi/pi-catalog/provider-models";
-import { parseArgs } from "@oh-my-pi/pi-coding-agent/cli/args";
-import { ModelRegistry, type ProviderConfigInput } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { getModelMatchPreferences, resolveModelScope } from "@oh-my-pi/pi-coding-agent/config/model-resolver";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { buildSessionOptions as buildCliSessionOptions } from "@oh-my-pi/pi-coding-agent/main";
-import { createAgentSession, type ExtensionFactory } from "@oh-my-pi/pi-coding-agent/sdk";
-import type { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { removeSyncWithRetries, Snowflake } from "@oh-my-pi/pi-utils";
+import { Effort, type FetchImpl } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { writeModelCache } from "@bbcli/pi-catalog/model-cache";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { resolveModelCacheProviderId } from "@bbcli/pi-catalog/provider-models";
+import { parseArgs } from "@bbcli/pi-coding-agent/cli/args";
+import { ModelRegistry, type ProviderConfigInput } from "@bbcli/pi-coding-agent/config/model-registry";
+import { getModelMatchPreferences, resolveModelScope } from "@bbcli/pi-coding-agent/config/model-resolver";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { buildSessionOptions as buildCliSessionOptions } from "@bbcli/pi-coding-agent/main";
+import { createAgentSession, type ExtensionFactory } from "@bbcli/pi-coding-agent/sdk";
+import type { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { removeSyncWithRetries, Snowflake } from "@bbcli/pi-utils";
 import { createInMemoryAuthStorage } from "./helpers/agent-session-setup";
 
 describe("createAgentSession deferred model pattern resolution", () => {

@@ -1,19 +1,19 @@
 import { afterAll, beforeAll, describe, expect, it } from "bun:test";
-import type { AgentMessage, SyntheticToolResultDetails } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, ToolResultMessage } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { kCursorExecResolved } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import type { Model, Usage } from "@oh-my-pi/pi-catalog/types";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
+import type { AgentMessage, SyntheticToolResultDetails } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, ToolResultMessage } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { kCursorExecResolved } from "@bbcli/pi-ai/utils/block-symbols";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import type { Model, Usage } from "@bbcli/pi-catalog/types";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
 import {
 	type RecoveryCompactionResult,
 	TurnRecovery,
 	type TurnRecoveryHost,
-} from "@oh-my-pi/pi-coding-agent/session/turn-recovery";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/session/turn-recovery";
+import { TempDir } from "@bbcli/pi-utils";
 import { createProviderErrorMessage } from "../../ai/src/providers/error-message";
 
 const USAGE: Usage = {

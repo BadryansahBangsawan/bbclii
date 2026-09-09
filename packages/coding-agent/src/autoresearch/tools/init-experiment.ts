@@ -1,7 +1,7 @@
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { Text } from "@oh-my-pi/pi-tui";
+import { type } from "@bbcli/omptype";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { Text } from "@bbcli/pi-tui";
 import type { ToolDefinition } from "../../extensibility/extensions";
 import type { Theme } from "../../modes/theme/theme";
 import { replaceTabs, truncateToWidth } from "../../tools/render-utils";

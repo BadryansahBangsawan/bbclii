@@ -1,9 +1,9 @@
 import { describe, expect, it } from "bun:test";
-import { streamOpenAIResponses } from "@oh-my-pi/pi-ai/providers/openai-responses";
-import type { Context } from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { clampThinkingLevelForModel, getSupportedEfforts } from "@oh-my-pi/pi-catalog/model-thinking";
+import { streamOpenAIResponses } from "@bbcli/pi-ai/providers/openai-responses";
+import type { Context } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import { clampThinkingLevelForModel, getSupportedEfforts } from "@bbcli/pi-catalog/model-thinking";
 
 const testContext: Context = {
 	messages: [{ role: "user", content: "hi", timestamp: 0 }],

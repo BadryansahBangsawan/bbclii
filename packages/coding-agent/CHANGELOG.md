@@ -23,6 +23,7 @@
 
 ### Changed
 
+- Rebranded the CLI, installer, and self-update to `bbcli` (`~/.bbcli`, GitHub `BadryansahBangsawan/bbclii`).
 - Approving a plan now tells the executor to fan independent slices through one `task` `{ team: true }` batch when team swarm is enabled.
 
 ## [18.1.15] - 2026-09-08

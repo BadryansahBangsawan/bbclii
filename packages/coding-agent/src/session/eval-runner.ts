@@ -1,5 +1,5 @@
-import type { Agent } from "@oh-my-pi/pi-agent-core";
-import { logger } from "@oh-my-pi/pi-utils";
+import type { Agent } from "@bbcli/pi-agent-core";
+import { logger } from "@bbcli/pi-utils";
 import type { Settings } from "../config/settings";
 import { disposeVmContextsByOwner } from "../eval/js/context-manager";
 import { namespaceSessionId as namespacePythonSessionId } from "../eval/py";

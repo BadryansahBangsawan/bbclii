@@ -53,8 +53,8 @@ function emitToSinks(level: LogLevel, message: string, context: Record<string, u
 	}
 }
 
-const PROCESS_LOG_PATTERN = /^omp\.(\d{4}-\d{2}-\d{2})\.(\d+)\.log(?:\.(\d+))?$/;
-const PROCESS_AUDIT_PATTERN = /^\.omp\.(\d+)-audit\.json$/;
+const PROCESS_LOG_PATTERN = /^bbcli\.(\d{4}-\d{2}-\d{2})\.(\d+)\.log(?:\.(\d+))?$/;
+const PROCESS_AUDIT_PATTERN = /^\.bbcli\.(\d+)-audit\.json$/;
 const RETAINED_STALE_LOGS_PER_PROCESS_DAY = 1;
 const RETAINED_STALE_AUDIT_FILES = 0;
 const RETAINED_STALE_LOG_DAYS = 5;

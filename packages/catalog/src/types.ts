@@ -1,9 +1,9 @@
 import type { ModelIdentity } from "./compat/types";
 import type { Effort } from "./effort";
 
-// Re-exported from @oh-my-pi/pi-utils so the whole workspace shares one
+// Re-exported from @bbcli/pi-utils so the whole workspace shares one
 // `fetch`-compatible signature (tls-fetch's wrappers produce/accept it).
-export type { FetchImpl } from "@oh-my-pi/pi-utils";
+export type { FetchImpl } from "@bbcli/pi-utils";
 export type { KnownProvider } from "./provider-models/descriptors";
 
 export type KnownApi =

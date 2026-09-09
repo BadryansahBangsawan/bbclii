@@ -1,8 +1,8 @@
 import { stripVTControlCharacters } from "node:util";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { type Component, padding, truncateToWidth, visibleWidth } from "@oh-my-pi/pi-tui";
-import { formatNumber, getProjectDir } from "@oh-my-pi/pi-utils";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { type Component, padding, truncateToWidth, visibleWidth } from "@bbcli/pi-tui";
+import { formatNumber, getProjectDir } from "@bbcli/pi-utils";
 import { settings } from "../../config/settings";
 import { theme } from "../../modes/theme/theme";
 import type { AgentSession } from "../../session/agent-session";

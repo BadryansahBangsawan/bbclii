@@ -1,5 +1,5 @@
-import { toNumber } from "@oh-my-pi/pi-catalog/utils";
-import { USER_AGENT } from "@oh-my-pi/pi-utils";
+import { toNumber } from "@bbcli/pi-catalog/utils";
+import { USER_AGENT } from "@bbcli/pi-utils";
 import type {
 	CredentialRankingStrategy,
 	UsageAmount,

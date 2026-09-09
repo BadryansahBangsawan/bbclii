@@ -1,9 +1,9 @@
 {
   "type": "module",
-  "name": "@oh-my-pi/omptype",
+  "name": "@bbcli/omptype",
   "version": "18.1.15",
   "description": "ArkType-compatible runtime schema validation with lazy JIT compilation",
-  "homepage": "https://omp.sh",
+  "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "license": "MIT",
   "repository": {

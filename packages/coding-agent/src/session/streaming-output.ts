@@ -1,5 +1,5 @@
-import type { AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import { formatBytes, materializeString, sanitizeText } from "@oh-my-pi/pi-utils";
+import type { AgentToolUpdateCallback } from "@bbcli/pi-agent-core";
+import { formatBytes, materializeString, sanitizeText } from "@bbcli/pi-utils";
 import { sanitizeWithOptionalSixelPassthrough } from "../utils/sixel";
 
 // =============================================================================

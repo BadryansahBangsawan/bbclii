@@ -45,11 +45,11 @@
  * re-attached to the compaction summary message on every context rebuild.
  */
 
-import type { Api, ImageContent, Message, TextContent } from "@oh-my-pi/pi-ai";
-import { classifyModel, compareRevision, parseRevision } from "@oh-my-pi/pi-catalog/identity";
-import { renderSnapcompactPng, snapcompactSupportedChars } from "@oh-my-pi/pi-natives";
-import { formatGroupedPaths, prompt } from "@oh-my-pi/pi-utils";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+import type { Api, ImageContent, Message, TextContent } from "@bbcli/pi-ai";
+import { classifyModel, compareRevision, parseRevision } from "@bbcli/pi-catalog/identity";
+import { renderSnapcompactPng, snapcompactSupportedChars } from "@bbcli/pi-natives";
+import { formatGroupedPaths, prompt } from "@bbcli/pi-utils";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 import fileOperationsTemplate from "./prompts/file-operations.md" with { type: "text" };
 import snapcompactSummaryPrompt from "./prompts/snapcompact-summary.md" with { type: "text" };
 

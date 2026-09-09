@@ -1,9 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { createModelManager } from "@oh-my-pi/pi-catalog/model-manager";
-import { syntheticModelManagerOptions } from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
-import type { FetchImpl } from "@oh-my-pi/pi-catalog/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import { createModelManager } from "@bbcli/pi-catalog/model-manager";
+import { syntheticModelManagerOptions } from "@bbcli/pi-catalog/provider-models/openai-compat";
+import type { FetchImpl } from "@bbcli/pi-catalog/types";
 
 /**
  * Entries mirror live `https://api.synthetic.new/openai/v1/models` payloads:

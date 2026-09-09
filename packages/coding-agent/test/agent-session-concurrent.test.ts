@@ -7,31 +7,28 @@ import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
 import { scheduler } from "node:timers/promises";
-import { type } from "@oh-my-pi/omptype";
-import { Agent, type AgentMessage, type AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, AssistantMessageEvent, ToolCall } from "@oh-my-pi/pi-ai";
-import {
-	accumulateToolCallArgumentsDelta,
-	finalizeToolCallArgumentsDone,
-} from "@oh-my-pi/pi-ai/providers/openai-shared";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { kStreamingPartialJson } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { AsyncJobManager } from "@oh-my-pi/pi-coding-agent/async";
-import type { Rule } from "@oh-my-pi/pi-coding-agent/capability/rule";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { TtsrManager } from "@oh-my-pi/pi-coding-agent/export/ttsr";
-import { ExtensionRuntime, loadExtensionFromFactory } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/loader";
-import { ExtensionRunner } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/runner";
-import { GoalRuntime } from "@oh-my-pi/pi-coding-agent/goals/runtime";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { convertToLlm, shouldRenderAbortReason } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { EventBus } from "@oh-my-pi/pi-coding-agent/utils/event-bus";
-import { removeSyncWithRetries, Snowflake } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import { Agent, type AgentMessage, type AgentTool } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, AssistantMessageEvent, ToolCall } from "@bbcli/pi-ai";
+import { accumulateToolCallArgumentsDelta, finalizeToolCallArgumentsDone } from "@bbcli/pi-ai/providers/openai-shared";
+import { createMockModel } from "@bbcli/pi-ai/providers/mock";
+import { kStreamingPartialJson } from "@bbcli/pi-ai/utils/block-symbols";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { AsyncJobManager } from "@bbcli/pi-coding-agent/async";
+import type { Rule } from "@bbcli/pi-coding-agent/capability/rule";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { TtsrManager } from "@bbcli/pi-coding-agent/export/ttsr";
+import { ExtensionRuntime, loadExtensionFromFactory } from "@bbcli/pi-coding-agent/extensibility/extensions/loader";
+import { ExtensionRunner } from "@bbcli/pi-coding-agent/extensibility/extensions/runner";
+import { GoalRuntime } from "@bbcli/pi-coding-agent/goals/runtime";
+import { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { convertToLlm, shouldRenderAbortReason } from "@bbcli/pi-coding-agent/session/messages";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { EventBus } from "@bbcli/pi-coding-agent/utils/event-bus";
+import { removeSyncWithRetries, Snowflake } from "@bbcli/pi-utils";
 
 // Mock stream that mimics AssistantMessageEventStream
 

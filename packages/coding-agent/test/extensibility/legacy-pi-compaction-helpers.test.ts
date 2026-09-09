@@ -1,12 +1,12 @@
 import { describe, expect, it } from "bun:test";
-import { Tokenizer } from "@oh-my-pi/pi-agent-core";
-import type { Usage } from "@oh-my-pi/pi-ai";
+import { Tokenizer } from "@bbcli/pi-agent-core";
+import type { Usage } from "@bbcli/pi-ai";
 import {
 	calculateContextTokens,
 	compact,
 	estimateTokens,
 	serializeConversation,
-} from "@oh-my-pi/pi-coding-agent/extensibility/legacy-pi-coding-agent-shim";
+} from "@bbcli/pi-coding-agent/extensibility/legacy-pi-coding-agent-shim";
 
 // Issue #6583: pi extensions import `estimateTokens` from
 // `@earendil-works/pi-coding-agent`, which aliases to this shim. Legacy pi
@@ -29,7 +29,7 @@ describe("legacy shim compaction helpers", () => {
 		expect(tokens).toBeGreaterThan(0);
 	});
 
-	// Issue #7174: `compact` (same `@oh-my-pi/pi-agent-core/compaction` module as
+	// Issue #7174: `compact` (same `@bbcli/pi-agent-core/compaction` module as
 	// `estimateTokens`) was likewise absent from the shim surface, so
 	// `omp plugin install npm:pi-claude-bridge` failed with "Export named
 	// 'compact' not found". Pin the callable re-export.
@@ -45,7 +45,7 @@ describe("legacy shim compaction helpers", () => {
 	});
 
 	// Issue #10278: `calculateContextTokens` is another package-root compaction
-	// helper (same `@oh-my-pi/pi-agent-core/compaction` module) used by
+	// helper (same `@bbcli/pi-agent-core/compaction` module) used by
 	// pi-blackhole. Its absence made `omp plugin install pi-blackhole` fail Bun's
 	// static "Export named 'calculateContextTokens' not found" check.
 	it("re-exports calculateContextTokens with its usage-sizing behavior", () => {

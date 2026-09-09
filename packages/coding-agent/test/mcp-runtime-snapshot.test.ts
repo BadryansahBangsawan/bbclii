@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import type { MCPServer } from "@oh-my-pi/pi-coding-agent/capability/mcp";
-import type { SourceMeta } from "@oh-my-pi/pi-coding-agent/capability/types";
-import type { CustomTool } from "@oh-my-pi/pi-coding-agent/extensibility/custom-tools/types";
-import type { MCPServerConnection, MCPTransport } from "@oh-my-pi/pi-coding-agent/mcp/types";
+import type { MCPServer } from "@bbcli/pi-coding-agent/capability/mcp";
+import type { SourceMeta } from "@bbcli/pi-coding-agent/capability/types";
+import type { CustomTool } from "@bbcli/pi-coding-agent/extensibility/custom-tools/types";
+import type { MCPServerConnection, MCPTransport } from "@bbcli/pi-coding-agent/mcp/types";
 import {
 	applyMcpToggleRuntime,
 	formatMcpHealthLabel,
@@ -12,7 +12,7 @@ import {
 	type MCPRuntimeSource,
 	snapshotMcpRuntime,
 	visibleMcpTools,
-} from "@oh-my-pi/pi-coding-agent/modes/components/extensions/mcp-runtime";
+} from "@bbcli/pi-coding-agent/modes/components/extensions/mcp-runtime";
 
 function stubCustomTool(name: string): CustomTool {
 	return {

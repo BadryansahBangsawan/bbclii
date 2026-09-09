@@ -7,19 +7,19 @@ import {
 	renderGalleryState,
 	renderGallerySurfaceSections,
 	resolveFixture,
-} from "@oh-my-pi/pi-coding-agent/cli/gallery-cli";
+} from "@bbcli/pi-coding-agent/cli/gallery-cli";
 import {
 	type GalleryFixture,
 	getComposerGalleryEntries,
 	getComposerGalleryInventory,
 	getSegmentGalleryEntries,
 	getSegmentGalleryInventory,
-} from "@oh-my-pi/pi-coding-agent/cli/gallery-fixtures";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { getComposerShapeOptions } from "@oh-my-pi/pi-coding-agent/modes/components/composer-shape-registry";
-import { ALL_SEGMENT_IDS } from "@oh-my-pi/pi-coding-agent/modes/components/status-line/segments";
-import { initTheme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { toolRenderers } from "@oh-my-pi/pi-coding-agent/tools/renderers";
+} from "@bbcli/pi-coding-agent/cli/gallery-fixtures";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { getComposerShapeOptions } from "@bbcli/pi-coding-agent/modes/components/composer-shape-registry";
+import { ALL_SEGMENT_IDS } from "@bbcli/pi-coding-agent/modes/components/status-line/segments";
+import { initTheme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { toolRenderers } from "@bbcli/pi-coding-agent/tools/renderers";
 
 beforeAll(async () => {
 	resetSettingsForTest();

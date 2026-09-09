@@ -9,7 +9,7 @@ import {
 	type StreamFn,
 	ThinkingLevel,
 	type Tokenizer,
-} from "@oh-my-pi/pi-agent-core";
+} from "@bbcli/pi-agent-core";
 import {
 	type CompactionResult,
 	compact,
@@ -21,7 +21,7 @@ import {
 	type SessionMessageEntry,
 	shouldCompact,
 	shouldUseProviderNativeCompaction,
-} from "@oh-my-pi/pi-agent-core/compaction";
+} from "@bbcli/pi-agent-core/compaction";
 import type {
 	AssistantMessage,
 	CodexCompactionContext,
@@ -31,11 +31,11 @@ import type {
 	ProviderSessionState,
 	ServiceTier,
 	SimpleStreamOptions,
-} from "@oh-my-pi/pi-ai";
-import { isUsageLimitOutcome, resolveModelServiceTier, streamSimple } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { modelsAreEqual } from "@oh-my-pi/pi-catalog/models";
-import { extractHttpStatusFromError, extractRetryHint, logger, prompt } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { isUsageLimitOutcome, resolveModelServiceTier, streamSimple } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { modelsAreEqual } from "@bbcli/pi-catalog/models";
+import { extractHttpStatusFromError, extractRetryHint, logger, prompt } from "@bbcli/pi-utils";
 import {
 	ADVISOR_DEFAULT_TOOL_NAMES,
 	ADVISOR_DEFAULT_BUDGET_PER_UPDATE,

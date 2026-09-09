@@ -12,9 +12,9 @@ import type {
 	DesktopSessionOptions,
 	DesktopWindow,
 	PointerOptions,
-} from "@oh-my-pi/pi-natives";
-import * as postmortem from "@oh-my-pi/pi-utils/postmortem";
-import { Snowflake } from "@oh-my-pi/pi-utils/snowflake";
+} from "@bbcli/pi-natives";
+import * as postmortem from "@bbcli/pi-utils/postmortem";
+import { Snowflake } from "@bbcli/pi-utils/snowflake";
 import { JsRuntime, type RuntimeHooks } from "../../eval/js/shared/runtime";
 import { cloneSafe, RunOutput } from "../browser/run-output";
 import {
@@ -460,8 +460,7 @@ export class ComputerWorkerCore {
 		try {
 			// The worker must answer its readiness handshake without loading the native
 			// addon; normal CLI startup and selector pings never execute desktop code.
-			const createSession =
-				this.#createSession ?? (await import("@oh-my-pi/pi-natives/desktop")).createDesktopSession;
+			const createSession = this.#createSession ?? (await import("@bbcli/pi-natives/desktop")).createDesktopSession;
 			this.#session = createSession({ display: snapshot.display });
 			return this.#session;
 		} catch (error) {

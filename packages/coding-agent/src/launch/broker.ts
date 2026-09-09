@@ -2,20 +2,26 @@ import * as fs from "node:fs/promises";
 import * as net from "node:net";
 import * as os from "node:os";
 import * as path from "node:path";
-import { Process, type PtyRunResult, PtySession } from "@oh-my-pi/pi-natives";
-import { isEexist, isEnoent, logger, postmortem, procmgr, sanitizeText, setProcessName } from "@oh-my-pi/pi-utils";
-import { TerminalQueryResponder } from "@oh-my-pi/pi-utils/vterm";
+import { Process, type PtyRunResult, PtySession } from "@bbcli/pi-natives";
+import {
+	isEexist,
+	isEnoent,
+	logger,
+	postmortem,
+	procmgr,
+	readBrandedEnv,
+	sanitizeText,
+	setProcessName,
+} from "@bbcli/pi-utils";
+import { TerminalQueryResponder } from "@bbcli/pi-utils/vterm";
 import { hostHasInheritableConsole } from "../eval/py/spawn-options";
 import { truncateHead, truncateHeadBytes, truncateTail, truncateTailBytes } from "../session/streaming-output";
 import { workerEnvFromParent } from "../subprocess/worker-client";
 import { daemonBrokerEndpoint, writeDaemonScopeMeta } from "./paths";
 import { hasLiveDaemonProjectPresence, pruneDeadDaemonRuntimeDirs } from "./presence";
 import {
-	DAEMON_IDLE_GRACE_ENV,
-	DAEMON_PROJECT_DIR_ENV,
 	DAEMON_PTY_COLUMNS,
 	DAEMON_PTY_ROWS,
-	DAEMON_RUNTIME_DIR_ENV,
 	type DaemonCompletionNotification,
 	type DaemonOperation,
 	type DaemonReadySpec,
@@ -1394,13 +1400,16 @@ export interface DaemonBrokerStartOptions {
 
 /** Start the detached project or global daemon broker selected by the CLI worker host. */
 export async function startDaemonBrokerFromEnvironment(options: DaemonBrokerStartOptions = {}): Promise<void> {
-	const projectDir = process.env[DAEMON_PROJECT_DIR_ENV];
-	const runtimeDir = process.env[DAEMON_RUNTIME_DIR_ENV];
+	const projectDir = readBrandedEnv("DAEMON_PROJECT_DIR");
+	const runtimeDir = readBrandedEnv("DAEMON_RUNTIME_DIR");
 	if (!projectDir || !runtimeDir) throw new Error("Daemon broker environment is incomplete");
-	delete process.env[DAEMON_PROJECT_DIR_ENV];
-	delete process.env[DAEMON_RUNTIME_DIR_ENV];
-	const rawGrace = process.env[DAEMON_IDLE_GRACE_ENV];
-	delete process.env[DAEMON_IDLE_GRACE_ENV];
+	delete process.env.BBCLI_DAEMON_PROJECT_DIR;
+	delete process.env.OMP_DAEMON_PROJECT_DIR;
+	delete process.env.BBCLI_DAEMON_RUNTIME_DIR;
+	delete process.env.OMP_DAEMON_RUNTIME_DIR;
+	const rawGrace = readBrandedEnv("DAEMON_IDLE_GRACE_MS");
+	delete process.env.BBCLI_DAEMON_IDLE_GRACE_MS;
+	delete process.env.OMP_DAEMON_IDLE_GRACE_MS;
 	const parsedGrace = rawGrace === undefined ? DEFAULT_IDLE_GRACE_MS : Number.parseInt(rawGrace, 10);
 	const idleGraceMs = Number.isFinite(parsedGrace) && parsedGrace >= 0 ? parsedGrace : DEFAULT_IDLE_GRACE_MS;
 	const requestedRestartBackoffBaseMs = options.restartBackoffBaseMs ?? RESTART_BACKOFF_BASE_MS;

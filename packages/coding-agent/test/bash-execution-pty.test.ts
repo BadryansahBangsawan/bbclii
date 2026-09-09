@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "bun:test";
-import { BashExecutionComponent } from "@oh-my-pi/pi-coding-agent/modes/components/bash-execution";
-import { getThemeByName, setThemeInstance } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { TUI } from "@oh-my-pi/pi-tui";
+import { BashExecutionComponent } from "@bbcli/pi-coding-agent/modes/components/bash-execution";
+import { getThemeByName, setThemeInstance } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { TUI } from "@bbcli/pi-tui";
 
 const ui = { requestRender: () => {}, requestComponentRender: () => {} } as unknown as TUI;
 

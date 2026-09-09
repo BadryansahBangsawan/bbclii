@@ -8,11 +8,11 @@
  * (can1357/oh-my-pi#3639).
  */
 import { describe, expect, it } from "bun:test";
-import type { StreamFn } from "@oh-my-pi/pi-agent-core";
-import type { Context, Model, SimpleStreamOptions } from "@oh-my-pi/pi-ai";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { createSettingsAwareStreamFn } from "@oh-my-pi/pi-coding-agent/session/settings-stream-fn";
+import type { StreamFn } from "@bbcli/pi-agent-core";
+import type { Context, Model, SimpleStreamOptions } from "@bbcli/pi-ai";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { createSettingsAwareStreamFn } from "@bbcli/pi-coding-agent/session/settings-stream-fn";
 
 function captureBase(): { fn: StreamFn; calls: Array<{ options?: SimpleStreamOptions }> } {
 	const calls: Array<{ options?: SimpleStreamOptions }> = [];

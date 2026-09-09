@@ -1,7 +1,7 @@
 /**
  * Regression for the Windows `bun install -g` update path: when an `omp`
  * process is running, bun cannot overwrite a locked
- * `node_modules/@oh-my-pi/pi-natives/native/pi_natives.win32-x64.node` during
+ * `node_modules/@bbcli/pi-natives/native/pi_natives.win32-x64.node` during
  * package update and silently keeps the old binary next to the new ESM
  * wrapper. The next launch then throws `<sym> is not a function` deep inside
  * tool execution (see Discord report, 2026-05-14).
@@ -35,7 +35,7 @@ import packageJson from "../package.json" with { type: "json" };
 
 const winNodeModulesNativeDir = "C:\\Users\\Admin\\node_modules\\@oh-my-pi\\pi-natives\\native";
 const winWorkspaceNativeDir = "C:\\Users\\Admin\\dev\\oh-my-pi\\packages\\natives\\native";
-const posixNodeModulesNativeDir = "/home/u/proj/node_modules/@oh-my-pi/pi-natives/native";
+const posixNodeModulesNativeDir = "/home/u/proj/node_modules/@bbcli/pi-natives/native";
 
 describe("windows native addon staging", () => {
 	it("stages only on Windows node_modules installs", () => {
@@ -117,8 +117,8 @@ describe("windows native addon staging", () => {
 	});
 
 	it("classifies only Windows node_modules paths case-insensitively", () => {
-		const leafPackageDir = "/tmp/node_modules/@oh-my-pi/pi-natives-darwin-arm64";
-		const uppercaseNodeModulesNativeDir = "/tmp/NODE_MODULES/@oh-my-pi/pi-natives/native";
+		const leafPackageDir = "/tmp/node_modules/@bbcli/pi-natives-darwin-arm64";
+		const uppercaseNodeModulesNativeDir = "/tmp/NODE_MODULES/@bbcli/pi-natives/native";
 		const variantCacheKey = "__PI_NATIVE_VARIANT_CACHE";
 		const previousVariantCache = process.env[variantCacheKey];
 		try {
@@ -131,7 +131,7 @@ describe("windows native addon staging", () => {
 			const installed = initLoaderContext({
 				platform: "linux",
 				isCompiledBinary: false,
-				nativeDir: "/tmp/node_modules/@oh-my-pi/pi-natives/native",
+				nativeDir: "/tmp/node_modules/@bbcli/pi-natives/native",
 				leafPackageDir,
 			});
 			const uppercaseWorkspace = initLoaderContext({

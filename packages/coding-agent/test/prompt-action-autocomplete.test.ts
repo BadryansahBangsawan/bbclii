@@ -2,10 +2,10 @@ import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import {
 	KeybindingsManager as AppKeybindingsManager,
 	setKeyHintPlatform,
-} from "@oh-my-pi/pi-coding-agent/config/keybindings";
-import { createPromptActionAutocompleteProvider } from "@oh-my-pi/pi-coding-agent/modes/prompt-action-autocomplete";
-import { getSelectListTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { KeybindingsManager, SelectList, setKeybindings, TUI_KEYBINDINGS } from "@oh-my-pi/pi-tui";
+} from "@bbcli/pi-coding-agent/config/keybindings";
+import { createPromptActionAutocompleteProvider } from "@bbcli/pi-coding-agent/modes/prompt-action-autocomplete";
+import { getSelectListTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { KeybindingsManager, SelectList, setKeybindings, TUI_KEYBINDINGS } from "@bbcli/pi-tui";
 
 describe("prompt action autocomplete", () => {
 	beforeEach(() => {

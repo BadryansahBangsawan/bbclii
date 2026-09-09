@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { FileClaimBoard } from "@oh-my-pi/pi-coding-agent/task/file-claim";
+import { FileClaimBoard } from "@bbcli/pi-coding-agent/task/file-claim";
 import { ClaimTool } from "../../src/tools/claim";
 
 function textOf(result: { content: Array<{ type: string; text?: string }> }): string {

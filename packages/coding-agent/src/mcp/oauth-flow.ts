@@ -5,11 +5,11 @@
  * by providing authorization URL, token URL, and client credentials.
  */
 
-import type { OAuthCallbackFlowOptions } from "@oh-my-pi/pi-ai/oauth/callback-server";
-import { OAuthCallbackFlow } from "@oh-my-pi/pi-ai/oauth/callback-server";
-import type { OAuthController, OAuthCredentials } from "@oh-my-pi/pi-ai/oauth/types";
-import type { FetchImpl } from "@oh-my-pi/pi-ai/types";
-import { getActiveProfile } from "@oh-my-pi/pi-utils/dirs";
+import type { OAuthCallbackFlowOptions } from "@bbcli/pi-ai/oauth/callback-server";
+import { OAuthCallbackFlow } from "@bbcli/pi-ai/oauth/callback-server";
+import type { OAuthController, OAuthCredentials } from "@bbcli/pi-ai/oauth/types";
+import type { FetchImpl } from "@bbcli/pi-ai/types";
+import { getActiveProfile } from "@bbcli/pi-utils/dirs";
 import type { OAuthCredential } from "../session/auth-storage";
 import { buildWellKnownUrls } from "./oauth-discovery";
 

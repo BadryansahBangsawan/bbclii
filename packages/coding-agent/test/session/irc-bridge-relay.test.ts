@@ -1,7 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import { IrcBridge, type IrcBridgeHost } from "@oh-my-pi/pi-coding-agent/session/irc-bridge";
-import type { CustomMessage } from "@oh-my-pi/pi-coding-agent/session/messages";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import { IrcBridge, type IrcBridgeHost } from "@bbcli/pi-coding-agent/session/irc-bridge";
+import type { CustomMessage } from "@bbcli/pi-coding-agent/session/messages";
 
 function makeBridge() {
 	const woken: AgentMessage[][] = [];

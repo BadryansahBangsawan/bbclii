@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { prompt } from "@oh-my-pi/pi-utils";
+import { prompt } from "@bbcli/pi-utils";
 import planModeApprovedPrompt from "../../src/prompts/system/plan-mode-approved.md" with { type: "text" };
 import teamModeActivePrompt from "../../src/prompts/system/team-mode-active.md" with { type: "text" };
 

@@ -1,20 +1,20 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import { Agent, type AgentMessage, type AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, TextContent, ToolCall } from "@oh-my-pi/pi-ai";
-import * as ai from "@oh-my-pi/pi-ai";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentSession, type AgentSessionConfig } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { convertToLlm } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { TodoTool } from "@oh-my-pi/pi-coding-agent/tools";
-import { setInteractiveHost, TempDir } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import { Agent, type AgentMessage, type AgentTool } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, TextContent, ToolCall } from "@bbcli/pi-ai";
+import * as ai from "@bbcli/pi-ai";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AgentSession, type AgentSessionConfig } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { convertToLlm } from "@bbcli/pi-coding-agent/session/messages";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { TodoTool } from "@bbcli/pi-coding-agent/tools";
+import { setInteractiveHost, TempDir } from "@bbcli/pi-utils";
 import { createAssistantMessage } from "./helpers/agent-session-setup";
 
 type ObservedPromptCall = {

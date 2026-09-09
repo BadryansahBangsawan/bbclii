@@ -1,6 +1,6 @@
-import { type } from "@oh-my-pi/omptype";
-import type { AgentTool, AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import type { ToolExample } from "@oh-my-pi/pi-ai";
+import { type } from "@bbcli/omptype";
+import type { AgentTool, AgentToolResult } from "@bbcli/pi-agent-core";
+import type { ToolExample } from "@bbcli/pi-ai";
 import claimDescription from "../prompts/tools/claim.md" with { type: "text" };
 import { FileClaimError, type FileClaimSession } from "../task/file-claim";
 

@@ -1,8 +1,8 @@
-import type { Agent, AgentEvent, AgentMessage, AgentTurnEndContext } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, AssistantMessageEvent, Model, ToolCall } from "@oh-my-pi/pi-ai";
-import { GeminiHeaderRunDetector } from "@oh-my-pi/pi-ai/utils/thinking-loop";
-import { type RepeatedToolCallDetection, ToolCallLoopGuard } from "@oh-my-pi/pi-ai/utils/tool-call-loop-guard";
-import { logger, prompt } from "@oh-my-pi/pi-utils";
+import type { Agent, AgentEvent, AgentMessage, AgentTurnEndContext } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, AssistantMessageEvent, Model, ToolCall } from "@bbcli/pi-ai";
+import { GeminiHeaderRunDetector } from "@bbcli/pi-ai/utils/thinking-loop";
+import { type RepeatedToolCallDetection, ToolCallLoopGuard } from "@bbcli/pi-ai/utils/tool-call-loop-guard";
+import { logger, prompt } from "@bbcli/pi-utils";
 import type { Settings } from "../config/settings";
 import { type LocalProtocolOptions, resolveLocalUrlToPath } from "../internal-urls";
 import geminiToolReminderTemplate from "../prompts/system/gemini-tool-call-reminder.md" with { type: "text" };

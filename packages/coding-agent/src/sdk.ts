@@ -9,7 +9,7 @@ import {
 	AppendOnlyContextManager,
 	filterProviderReplayMessages,
 	type ThinkingLevel,
-} from "@oh-my-pi/pi-agent-core";
+} from "@bbcli/pi-agent-core";
 import type {
 	Context,
 	CredentialDisabledEvent,
@@ -20,15 +20,15 @@ import type {
 	ProviderSessionState,
 	ServiceTier,
 	SimpleStreamOptions,
-} from "@oh-my-pi/pi-ai";
-import { resolveApiKeyOnce } from "@oh-my-pi/pi-ai/auth-retry";
-import type { Dialect } from "@oh-my-pi/pi-ai/dialect";
+} from "@bbcli/pi-ai";
+import { resolveApiKeyOnce } from "@bbcli/pi-ai/auth-retry";
+import type { Dialect } from "@bbcli/pi-ai/dialect";
 import {
 	getOpenAICodexTransportDetails,
 	prewarmOpenAICodexResponses,
-} from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
-import { FALLBACK_DIALECT, preferredDialect } from "@oh-my-pi/pi-catalog/identity";
-import type { Component } from "@oh-my-pi/pi-tui";
+} from "@bbcli/pi-ai/providers/openai-codex-responses";
+import { FALLBACK_DIALECT, preferredDialect } from "@bbcli/pi-catalog/identity";
+import type { Component } from "@bbcli/pi-tui";
 import {
 	$env,
 	$flag,
@@ -39,8 +39,8 @@ import {
 	postmortem,
 	prompt,
 	Snowflake,
-} from "@oh-my-pi/pi-utils";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+} from "@bbcli/pi-utils";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 import {
 	discoverAdvisorConfigs,
 	discoverWatchdogFiles,
@@ -1283,7 +1283,7 @@ export function createAutoLearnCaptureRunner(
  * const { session } = await createAgentSession();
  *
  * // With explicit model
- * import { getModel } from '@oh-my-pi/pi-ai';
+ * import { getModel } from '@bbcli/pi-ai';
  * const { session } = await createAgentSession({
  *   model: getModel('anthropic', 'claude-opus-4-5'),
  *   thinkingLevel: 'high',

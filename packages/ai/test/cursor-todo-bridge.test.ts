@@ -4,10 +4,10 @@ import {
 	processInteractionUpdate,
 	type ToolCallState,
 	type UsageState,
-} from "@oh-my-pi/pi-ai/providers/cursor";
-import type { AssistantMessage, CursorTodoSnapshot, ToolResultMessage } from "@oh-my-pi/pi-ai/types";
-import { kCursorExecResolved } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
+} from "@bbcli/pi-ai/providers/cursor";
+import type { AssistantMessage, CursorTodoSnapshot, ToolResultMessage } from "@bbcli/pi-ai/types";
+import { kCursorExecResolved } from "@bbcli/pi-ai/utils/block-symbols";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
 import {
 	AgentServerMessageSchema,
 	InteractionUpdateSchema,
@@ -28,8 +28,8 @@ import {
 	UpdateTodosResultSchema,
 	UpdateTodosSuccessSchema,
 	UpdateTodosToolCallSchema,
-} from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
-import { create, fromBinary, toBinary } from "@oh-my-pi/pi-catalog/discovery/protobuf";
+} from "@bbcli/pi-catalog/discovery/cursor-proto";
+import { create, fromBinary, toBinary } from "@bbcli/pi-catalog/discovery/protobuf";
 
 /** One `todoSync` invocation, recorded verbatim. */
 interface SyncCall {

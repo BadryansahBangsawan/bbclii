@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { streamBedrock } from "@oh-my-pi/pi-ai/providers/amazon-bedrock";
-import { streamSimple } from "@oh-my-pi/pi-ai/stream";
-import type { Model } from "@oh-my-pi/pi-ai/types";
-import { USER_AGENT } from "@oh-my-pi/pi-utils";
+import { streamBedrock } from "@bbcli/pi-ai/providers/amazon-bedrock";
+import { streamSimple } from "@bbcli/pi-ai/stream";
+import type { Model } from "@bbcli/pi-ai/types";
+import { USER_AGENT } from "@bbcli/pi-utils";
 import {
 	bedrockTestModel,
 	BEDROCK_TEST_CONTEXT,

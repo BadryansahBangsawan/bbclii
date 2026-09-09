@@ -1,18 +1,11 @@
 import { mkdirSync } from "node:fs";
 import * as fsp from "node:fs/promises";
 import * as nodePath from "node:path";
-import { type ApiKey, getOpenRouterHeaders, withAuth } from "@oh-my-pi/pi-ai";
-import { ProviderHttpError } from "@oh-my-pi/pi-ai/error";
-import { hostMatchesUrl } from "@oh-my-pi/pi-catalog/hosts";
-import {
-	$env,
-	$flag,
-	extractHttpStatusFromError,
-	fetchWithRetry,
-	getFastembedCacheDir,
-	logger,
-} from "@oh-my-pi/pi-utils";
-import { LRUCache } from "@oh-my-pi/pi-utils/lru";
+import { type ApiKey, getOpenRouterHeaders, withAuth } from "@bbcli/pi-ai";
+import { ProviderHttpError } from "@bbcli/pi-ai/error";
+import { hostMatchesUrl } from "@bbcli/pi-catalog/hosts";
+import { $env, $flag, extractHttpStatusFromError, fetchWithRetry, getFastembedCacheDir, logger } from "@bbcli/pi-utils";
+import { LRUCache } from "@bbcli/pi-utils/lru";
 import type { EmbeddingModel } from "fastembed";
 import { ensureFastembedModelSidecars } from "./fastembed-model-cache";
 import { loadFastembed } from "./fastembed-runtime";

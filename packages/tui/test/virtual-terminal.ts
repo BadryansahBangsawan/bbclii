@@ -1,4 +1,4 @@
-import type { Terminal, TerminalAppearance } from "@oh-my-pi/pi-tui/terminal";
+import type { Terminal, TerminalAppearance } from "@bbcli/pi-tui/terminal";
 import { CELL_U32, CellFlags, KittyTerminal, loadModuleSync } from "kitty-vt-wasm";
 
 // ---------------------------------------------------------------------------

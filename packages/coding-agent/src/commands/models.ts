@@ -2,8 +2,8 @@
  * List, search, and refresh available models.
  */
 
-import { APP_NAME } from "@oh-my-pi/pi-utils";
-import { Args, Command, Flags } from "@oh-my-pi/pi-utils/cli";
+import { APP_NAME } from "@bbcli/pi-utils";
+import { Args, Command, Flags } from "@bbcli/pi-utils/cli";
 import { modelsHelp as commandHelp } from "../cli/command-help";
 import { resolveModelsArgs, runModelsCommand } from "../cli/models-cli";
 

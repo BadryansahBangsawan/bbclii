@@ -1,6 +1,6 @@
 import * as path from "node:path";
-import { getLastChangelogVersionPath, isEnoent, logger } from "@oh-my-pi/pi-utils";
-import { Lexer } from "@oh-my-pi/pi-utils/marked";
+import { getLastChangelogVersionPath, isEnoent, logger } from "@bbcli/pi-utils";
+import { Lexer } from "@bbcli/pi-utils/marked";
 import type { BunFile } from "bun";
 import bundledChangelogPath from "../../CHANGELOG.md" with { type: "file" };
 import type { SettingValue } from "../config/settings";

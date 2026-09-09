@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import MODELS_JSON from "@oh-my-pi/pi-catalog/models.json" with { type: "json" };
-import { CATALOG_PROVIDERS, DEFAULT_MODEL_PER_PROVIDER } from "@oh-my-pi/pi-catalog/provider-models/descriptors";
-import { buildXaiOAuthStaticSeed } from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
-import type { ModelSpec } from "@oh-my-pi/pi-catalog/types";
+import MODELS_JSON from "@bbcli/pi-catalog/models.json" with { type: "json" };
+import { CATALOG_PROVIDERS, DEFAULT_MODEL_PER_PROVIDER } from "@bbcli/pi-catalog/provider-models/descriptors";
+import { buildXaiOAuthStaticSeed } from "@bbcli/pi-catalog/provider-models/openai-compat";
+import type { ModelSpec } from "@bbcli/pi-catalog/types";
 
 // Pins the invariant: bundled `models.json` carries every entry the runtime
 // curated catalog (XAI_OAUTH_CURATED_MODELS, surfaced via

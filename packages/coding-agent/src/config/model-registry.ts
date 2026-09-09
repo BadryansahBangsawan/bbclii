@@ -1,10 +1,10 @@
 import * as path from "node:path";
-import type { ApiKeyResolver, FetchImpl, UsageProvider } from "@oh-my-pi/pi-ai";
-import { registerCustomApi, unregisterCustomApis } from "@oh-my-pi/pi-ai/api-registry";
-import { registerOAuthProvider, unregisterOAuthProvider, unregisterOAuthProviders } from "@oh-my-pi/pi-ai/oauth";
-import type { OAuthCredentials, OAuthLoginCallbacks } from "@oh-my-pi/pi-ai/oauth/types";
-import { setCodexAttestationProvider } from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
-import { getProviderDefinition } from "@oh-my-pi/pi-ai/registry";
+import type { ApiKeyResolver, FetchImpl, UsageProvider } from "@bbcli/pi-ai";
+import { registerCustomApi, unregisterCustomApis } from "@bbcli/pi-ai/api-registry";
+import { registerOAuthProvider, unregisterOAuthProvider, unregisterOAuthProviders } from "@bbcli/pi-ai/oauth";
+import type { OAuthCredentials, OAuthLoginCallbacks } from "@bbcli/pi-ai/oauth/types";
+import { setCodexAttestationProvider } from "@bbcli/pi-ai/providers/openai-codex-responses";
+import { getProviderDefinition } from "@bbcli/pi-ai/registry";
 import type {
 	Api,
 	Context,
@@ -13,24 +13,24 @@ import type {
 	RemoteCompactionConfig,
 	SimpleStreamOptions,
 	ThinkingConfig,
-} from "@oh-my-pi/pi-ai/types";
-import type { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { collapseBuiltVariants } from "@oh-my-pi/pi-catalog/compat/collapse";
+} from "@bbcli/pi-ai/types";
+import type { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { collapseBuiltVariants } from "@bbcli/pi-catalog/compat/collapse";
 import {
 	clampCodexContextWindow,
 	clampsContextOverride,
 	resolveMaxContextWindow,
-} from "@oh-my-pi/pi-catalog/compat/context-window";
-import { applyCatalogMetrics, CatalogMetricsIndex } from "@oh-my-pi/pi-catalog/identity/metrics";
-import { readModelCache, writeModelCache } from "@oh-my-pi/pi-catalog/model-cache";
+} from "@bbcli/pi-catalog/compat/context-window";
+import { applyCatalogMetrics, CatalogMetricsIndex } from "@bbcli/pi-catalog/identity/metrics";
+import { readModelCache, writeModelCache } from "@bbcli/pi-catalog/model-cache";
 import {
 	createModelManager,
 	fingerprintStaticModels,
 	type ModelManagerOptions,
 	type ModelRefreshStrategy,
-} from "@oh-my-pi/pi-catalog/model-manager";
-import { getBundledModels, getBundledProviders } from "@oh-my-pi/pi-catalog/models";
+} from "@bbcli/pi-catalog/model-manager";
+import { getBundledModels, getBundledProviders } from "@bbcli/pi-catalog/models";
 import {
 	googleAntigravityModelManagerOptions,
 	googleGeminiCliModelManagerOptions,
@@ -41,9 +41,9 @@ import {
 	PROVIDER_DESCRIPTORS,
 	resolveModelCacheProviderId,
 	resolveOllamaModelCacheProviderId,
-} from "@oh-my-pi/pi-catalog/provider-models";
-import { toModelSpec } from "@oh-my-pi/pi-catalog/provider-models/bundled-references";
-import { getAgentDir, isBunTestRuntime, logger, wrapFetchForExtraCa } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-catalog/provider-models";
+import { toModelSpec } from "@bbcli/pi-catalog/provider-models/bundled-references";
+import { getAgentDir, isBunTestRuntime, logger, wrapFetchForExtraCa } from "@bbcli/pi-utils";
 import { resolveProviderModelReference } from "../config/model-resolver";
 import { generateCodexAttestation } from "../live/attestation";
 import type { AuthStorage } from "../session/auth-storage";

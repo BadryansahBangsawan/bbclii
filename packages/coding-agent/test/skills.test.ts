@@ -2,18 +2,18 @@ import { beforeAll, describe, expect, it, spyOn } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { disableUserSource, enableUserSource } from "@oh-my-pi/pi-coding-agent/capability";
-import { type Skill as CapabilitySkill, skillCapability } from "@oh-my-pi/pi-coding-agent/capability/skill";
-import { getCapability } from "@oh-my-pi/pi-coding-agent/discovery";
-import { getWslWindowsHomeCandidate, runHostProbe } from "@oh-my-pi/pi-coding-agent/discovery/agents";
+import { disableUserSource, enableUserSource } from "@bbcli/pi-coding-agent/capability";
+import { type Skill as CapabilitySkill, skillCapability } from "@bbcli/pi-coding-agent/capability/skill";
+import { getCapability } from "@bbcli/pi-coding-agent/discovery";
+import { getWslWindowsHomeCandidate, runHostProbe } from "@bbcli/pi-coding-agent/discovery/agents";
 import {
 	type LoadSkillsResult,
 	loadSkills,
 	loadSkillsFromDir,
 	parseSkillInvocation,
 	type Skill,
-} from "@oh-my-pi/pi-coding-agent/extensibility/skills";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/extensibility/skills";
+import { removeWithRetries } from "@bbcli/pi-utils";
 import { restoreEnvValue } from "./helpers/settings-test-state";
 const fixturesDir = path.resolve(import.meta.dirname, "fixtures/skills");
 const collisionFixturesDir = path.resolve(import.meta.dirname, "fixtures/skills-collision");

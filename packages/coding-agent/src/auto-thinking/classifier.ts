@@ -21,9 +21,9 @@ import {
 	type Model,
 	retryTransientCompletion,
 	type Usage,
-} from "@oh-my-pi/pi-ai";
-import { getSupportedEfforts } from "@oh-my-pi/pi-catalog/model-thinking";
-import { prompt } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { getSupportedEfforts } from "@bbcli/pi-catalog/model-thinking";
+import { prompt } from "@bbcli/pi-utils";
 
 import type { ModelRegistry } from "../config/model-registry";
 import { resolveRoleSelection } from "../config/model-resolver";

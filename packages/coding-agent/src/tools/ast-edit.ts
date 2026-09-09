@@ -1,11 +1,11 @@
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import type { ToolExample } from "@oh-my-pi/pi-ai";
-import { type AstReplaceChange, type AstReplaceFileChange, astEdit } from "@oh-my-pi/pi-natives";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { replaceTabs, Text } from "@oh-my-pi/pi-tui";
-import { $envpos, prompt, untilAborted } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@bbcli/pi-agent-core";
+import type { ToolExample } from "@bbcli/pi-ai";
+import { type AstReplaceChange, type AstReplaceFileChange, astEdit } from "@bbcli/pi-natives";
+import type { Component } from "@bbcli/pi-tui";
+import { replaceTabs, Text } from "@bbcli/pi-tui";
+import { $envpos, prompt, untilAborted } from "@bbcli/pi-utils";
 import { normalizeToLF } from "../edit/normalize";
 import { getEditStore } from "../edit/store";
 import { assertTeamWritable } from "../task/file-claim";

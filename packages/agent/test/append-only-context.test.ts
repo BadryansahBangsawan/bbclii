@@ -1,10 +1,10 @@
 import { describe, expect, it } from "bun:test";
-import { type } from "@oh-my-pi/omptype";
-import { AppendOnlyContextManager, AppendOnlyLog, StablePrefix } from "@oh-my-pi/pi-agent-core/append-only-context";
-import { invalidateMessageCache } from "@oh-my-pi/pi-agent-core/compaction/message-cache";
-import type { AgentContext, AgentTool } from "@oh-my-pi/pi-agent-core/types";
-import type { Message, Tool, ToolExample } from "@oh-my-pi/pi-ai";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+import { type } from "@bbcli/omptype";
+import { AppendOnlyContextManager, AppendOnlyLog, StablePrefix } from "@bbcli/pi-agent-core/append-only-context";
+import { invalidateMessageCache } from "@bbcli/pi-agent-core/compaction/message-cache";
+import type { AgentContext, AgentTool } from "@bbcli/pi-agent-core/types";
+import type { Message, Tool, ToolExample } from "@bbcli/pi-ai";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 
 // ---------------------------------------------------------------------------
 // Helpers

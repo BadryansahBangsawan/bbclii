@@ -1,11 +1,7 @@
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import {
-	coerceServiceTierByFamily,
-	type OpenAIResponsesHistoryPayload,
-	type ServiceTierByFamily,
-} from "@oh-my-pi/pi-ai";
-import * as snapcompact from "@oh-my-pi/snapcompact";
-import { isRecord } from "@oh-my-pi/pi-utils";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import { coerceServiceTierByFamily, type OpenAIResponsesHistoryPayload, type ServiceTierByFamily } from "@bbcli/pi-ai";
+import * as snapcompact from "@bbcli/snapcompact";
+import { isRecord } from "@bbcli/pi-utils";
 import {
 	type CustomMessage,
 	createBranchSummaryMessage,

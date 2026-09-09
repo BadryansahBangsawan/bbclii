@@ -1,4 +1,4 @@
-import { $which } from "@oh-my-pi/pi-utils";
+import { $which } from "@bbcli/pi-utils";
 import { REJECT_PROMPT_COMMAND } from "../exec/non-interactive-env";
 import { ToolAbortError, ToolError, throwIfAborted } from "../tools/tool-errors";
 

@@ -3,20 +3,16 @@ import { $ } from "bun";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import { type AssistantMessage, createAssistantMessageEventStream, getCustomApi, type ToolCall } from "@oh-my-pi/pi-ai";
-import { runCommitAgentSession } from "@oh-my-pi/pi-coding-agent/commit/agentic/agent";
-import * as commitTools from "@oh-my-pi/pi-coding-agent/commit/agentic/tools";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import {
-	type CreateAgentSessionOptions,
-	createAgentSession,
-	type ExtensionFactory,
-} from "@oh-my-pi/pi-coding-agent/sdk";
-import type { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { removeSyncWithRetries, Snowflake } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import { type AssistantMessage, createAssistantMessageEventStream, getCustomApi, type ToolCall } from "@bbcli/pi-ai";
+import { runCommitAgentSession } from "@bbcli/pi-coding-agent/commit/agentic/agent";
+import * as commitTools from "@bbcli/pi-coding-agent/commit/agentic/tools";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { type CreateAgentSessionOptions, createAgentSession, type ExtensionFactory } from "@bbcli/pi-coding-agent/sdk";
+import type { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { removeSyncWithRetries, Snowflake } from "@bbcli/pi-utils";
 import { createAssistantMessage, createInMemoryAuthStorage } from "./helpers/agent-session-setup";
 
 const providerName = "restricted-session-provider";

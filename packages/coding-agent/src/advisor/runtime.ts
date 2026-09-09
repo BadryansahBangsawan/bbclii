@@ -1,9 +1,9 @@
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, ImageContent, TextContent } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { raceWithSignal } from "@oh-my-pi/pi-ai/utils/abort";
-import { type CursorExecResolvedCarrier, kCursorExecResolved } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { logger } from "@oh-my-pi/pi-utils";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, ImageContent, TextContent } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { raceWithSignal } from "@bbcli/pi-ai/utils/abort";
+import { type CursorExecResolvedCarrier, kCursorExecResolved } from "@bbcli/pi-ai/utils/block-symbols";
+import { logger } from "@bbcli/pi-utils";
 import { obfuscateToolArguments } from "../secrets/message-transform";
 import type { SecretObfuscator } from "../secrets/obfuscator";
 import {

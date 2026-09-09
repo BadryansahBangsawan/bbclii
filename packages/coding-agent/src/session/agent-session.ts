@@ -42,7 +42,7 @@ import {
 	TERMINAL_TOOL_RESULT_ABORT_REASON,
 	type ThinkingLevel,
 	type ToolChoiceDirective,
-} from "@oh-my-pi/pi-agent-core";
+} from "@bbcli/pi-agent-core";
 import {
 	type CompactionPreparation,
 	type CompactionResult,
@@ -50,7 +50,7 @@ import {
 	collectEntriesForBranchSummary,
 	generateBranchSummary,
 	type ShakeConfig,
-} from "@oh-my-pi/pi-agent-core/compaction";
+} from "@bbcli/pi-agent-core/compaction";
 import type {
 	AssistantMessage,
 	CodexCompactionContext,
@@ -73,14 +73,14 @@ import type {
 	ToolResultMessage,
 	UsageReport,
 	UserMessage,
-} from "@oh-my-pi/pi-ai";
-import { type Effort, streamSimple } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { resetOpenAICodexHistoryAfterCompaction } from "@oh-my-pi/pi-ai/providers/openai-codex-responses";
-import { toolWireSchema } from "@oh-my-pi/pi-ai/utils/schema";
-import { preferredDialect } from "@oh-my-pi/pi-catalog/identity";
-import { modelsAreEqual } from "@oh-my-pi/pi-catalog/models";
-import { type EditStore, PowerAssertion, type PowerAssertionOptions } from "@oh-my-pi/pi-natives";
+} from "@bbcli/pi-ai";
+import { type Effort, streamSimple } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { resetOpenAICodexHistoryAfterCompaction } from "@bbcli/pi-ai/providers/openai-codex-responses";
+import { toolWireSchema } from "@bbcli/pi-ai/utils/schema";
+import { preferredDialect } from "@bbcli/pi-catalog/identity";
+import { modelsAreEqual } from "@bbcli/pi-catalog/models";
+import { type EditStore, PowerAssertion, type PowerAssertionOptions } from "@bbcli/pi-natives";
 import {
 	$env,
 	escapeXmlText,
@@ -95,7 +95,7 @@ import {
 	Snowflake,
 	stringProperty,
 	withTimeout,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import { type AdvisorConfig, loadAdvisorTranscriptCosts } from "../advisor";
 import { ASYNC_JOB_MANAGER_SHUTDOWN_REASON, type AsyncJob, AsyncJobManager } from "../async";
 import { reset as resetCapabilities } from "../capability";

@@ -4,23 +4,23 @@
  * paid for. Regression guard for issue #2190.
  */
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import type { Rule } from "@oh-my-pi/pi-coding-agent/capability/rule";
-import type { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { parseAgentFields } from "@oh-my-pi/pi-coding-agent/discovery/helpers";
-import type { ToolPathWithSource } from "@oh-my-pi/pi-coding-agent/extensibility/custom-tools";
-import type { LoadExtensionsResult, PreparedExtension } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/types";
-import type { MCPManager } from "@oh-my-pi/pi-coding-agent/mcp/manager";
-import type { CreateAgentSessionResult } from "@oh-my-pi/pi-coding-agent/sdk";
-import * as sdkModule from "@oh-my-pi/pi-coding-agent/sdk";
-import type { AgentSession, AgentSessionEvent, PromptOptions } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { runSubprocess } from "@oh-my-pi/pi-coding-agent/task/executor";
-import type { AgentDefinition } from "@oh-my-pi/pi-coding-agent/task/types";
-import { EventBus } from "@oh-my-pi/pi-coding-agent/utils/event-bus";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { Model } from "@bbcli/pi-ai";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import type { Rule } from "@bbcli/pi-coding-agent/capability/rule";
+import type { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { parseAgentFields } from "@bbcli/pi-coding-agent/discovery/helpers";
+import type { ToolPathWithSource } from "@bbcli/pi-coding-agent/extensibility/custom-tools";
+import type { LoadExtensionsResult, PreparedExtension } from "@bbcli/pi-coding-agent/extensibility/extensions/types";
+import type { MCPManager } from "@bbcli/pi-coding-agent/mcp/manager";
+import type { CreateAgentSessionResult } from "@bbcli/pi-coding-agent/sdk";
+import * as sdkModule from "@bbcli/pi-coding-agent/sdk";
+import type { AgentSession, AgentSessionEvent, PromptOptions } from "@bbcli/pi-coding-agent/session/agent-session";
+import { runSubprocess } from "@bbcli/pi-coding-agent/task/executor";
+import type { AgentDefinition } from "@bbcli/pi-coding-agent/task/types";
+import { EventBus } from "@bbcli/pi-coding-agent/utils/event-bus";
 import { createSessionDefaults } from "../helpers/session-defaults";
 
 function createMockSession(onPrompt: (params: { emit: (event: AgentSessionEvent) => void }) => void): AgentSession {

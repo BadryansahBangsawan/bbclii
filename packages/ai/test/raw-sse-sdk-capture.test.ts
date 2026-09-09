@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { streamAnthropic } from "@oh-my-pi/pi-ai/providers/anthropic";
-import type { AnthropicMessagesClientLike } from "@oh-my-pi/pi-ai/providers/anthropic-client";
-import type { RawMessageStreamEvent } from "@oh-my-pi/pi-ai/providers/anthropic-wire";
-import { streamAzureOpenAIResponses } from "@oh-my-pi/pi-ai/providers/azure-openai-responses";
-import { streamOpenAICompletions } from "@oh-my-pi/pi-ai/providers/openai-completions";
-import { streamOpenAIResponses } from "@oh-my-pi/pi-ai/providers/openai-responses";
-import type { Context, FetchImpl, Model, RawSseEvent } from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
+import { streamAnthropic } from "@bbcli/pi-ai/providers/anthropic";
+import type { AnthropicMessagesClientLike } from "@bbcli/pi-ai/providers/anthropic-client";
+import type { RawMessageStreamEvent } from "@bbcli/pi-ai/providers/anthropic-wire";
+import { streamAzureOpenAIResponses } from "@bbcli/pi-ai/providers/azure-openai-responses";
+import { streamOpenAICompletions } from "@bbcli/pi-ai/providers/openai-completions";
+import { streamOpenAIResponses } from "@bbcli/pi-ai/providers/openai-responses";
+import type { Context, FetchImpl, Model, RawSseEvent } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
 
 const context: Context = {
 	messages: [{ role: "user", content: "Say hello", timestamp: Date.now() }],

@@ -16,7 +16,7 @@
  * itself stays credential-free.
  */
 import * as os from "node:os";
-import { getAppName, getInstallId, readSseJson } from "@oh-my-pi/pi-utils";
+import { getAppName, getInstallId, readSseJson } from "@bbcli/pi-utils";
 import * as AIError from "../error";
 import type {
 	Api,

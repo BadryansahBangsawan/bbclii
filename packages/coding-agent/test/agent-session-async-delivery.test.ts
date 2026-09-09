@@ -6,23 +6,20 @@
  * run quiescence the task executor's barrier is built on.
  */
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { AsyncJobManager } from "@oh-my-pi/pi-coding-agent/async";
-import type { AsyncJob } from "@oh-my-pi/pi-coding-agent/async/job-manager";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { DaemonCompletionNotification } from "@oh-my-pi/pi-coding-agent/launch/protocol";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import {
-	buildAsyncResultBatchMessage,
-	type AsyncResultEntry,
-} from "@oh-my-pi/pi-coding-agent/session/async-job-delivery";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { convertToLlm } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
+import { Agent } from "@bbcli/pi-agent-core";
+import type { ImageContent } from "@bbcli/pi-ai";
+import { createMockModel } from "@bbcli/pi-ai/providers/mock";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { AsyncJobManager } from "@bbcli/pi-coding-agent/async";
+import type { AsyncJob } from "@bbcli/pi-coding-agent/async/job-manager";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { DaemonCompletionNotification } from "@bbcli/pi-coding-agent/launch/protocol";
+import { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { buildAsyncResultBatchMessage, type AsyncResultEntry } from "@bbcli/pi-coding-agent/session/async-job-delivery";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { convertToLlm } from "@bbcli/pi-coding-agent/session/messages";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
 
 function observeAsyncResultEnqueue(session: AgentSession): Promise<void> {
 	const queued = Promise.withResolvers<void>();

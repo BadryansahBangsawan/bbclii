@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { type } from "@oh-my-pi/omptype";
-import type * as TypeBox from "@oh-my-pi/omptype/typebox";
-import * as zod from "@oh-my-pi/omptype/zod";
-import * as piCodingAgent from "@oh-my-pi/pi-coding-agent";
-import { GreenCommand } from "@oh-my-pi/pi-coding-agent/extensibility/custom-commands/bundled/ci-green";
-import type { CustomCommandAPI } from "@oh-my-pi/pi-coding-agent/extensibility/custom-commands/types";
-import type { HookCommandContext } from "@oh-my-pi/pi-coding-agent/extensibility/hooks/types";
-import type { VcsGitRepo } from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
+import { type } from "@bbcli/omptype";
+import type * as TypeBox from "@bbcli/omptype/typebox";
+import * as zod from "@bbcli/omptype/zod";
+import * as piCodingAgent from "@bbcli/pi-coding-agent";
+import { GreenCommand } from "@bbcli/pi-coding-agent/extensibility/custom-commands/bundled/ci-green";
+import type { CustomCommandAPI } from "@bbcli/pi-coding-agent/extensibility/custom-commands/types";
+import type { HookCommandContext } from "@bbcli/pi-coding-agent/extensibility/hooks/types";
+import type { VcsGitRepo } from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
 
 afterEach(() => {
 	vi.restoreAllMocks();

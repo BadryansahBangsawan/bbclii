@@ -1,16 +1,16 @@
 import { beforeAll, describe, expect, test } from "bun:test";
 import * as os from "node:os";
-import { ExtensionList } from "@oh-my-pi/pi-coding-agent/modes/components/extensions/extension-list";
+import { ExtensionList } from "@bbcli/pi-coding-agent/modes/components/extensions/extension-list";
 import {
 	liveToolsForExtension,
 	parseToolFileHeader,
 	projectListHint,
 	toolParamsFromSchema,
-} from "@oh-my-pi/pi-coding-agent/modes/components/extensions/inspector-model";
-import { InspectorPanel } from "@oh-my-pi/pi-coding-agent/modes/components/extensions/inspector-panel";
-import type { Extension } from "@oh-my-pi/pi-coding-agent/modes/components/extensions/types";
-import { initTheme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { shortenPath } from "@oh-my-pi/pi-coding-agent/tools/render-utils";
+} from "@bbcli/pi-coding-agent/modes/components/extensions/inspector-model";
+import { InspectorPanel } from "@bbcli/pi-coding-agent/modes/components/extensions/inspector-panel";
+import type { Extension } from "@bbcli/pi-coding-agent/modes/components/extensions/types";
+import { initTheme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { shortenPath } from "@bbcli/pi-coding-agent/tools/render-utils";
 
 beforeAll(async () => {
 	await initTheme(false);

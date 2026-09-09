@@ -1,14 +1,14 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import * as pythonExecutor from "@oh-my-pi/pi-coding-agent/eval/py/executor";
-import * as bashExecutor from "@oh-my-pi/pi-coding-agent/exec/bash-executor";
-import type { ExtensionRunner } from "@oh-my-pi/pi-coding-agent/extensibility/extensions";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@bbcli/pi-agent-core";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import * as pythonExecutor from "@bbcli/pi-coding-agent/eval/py/executor";
+import * as bashExecutor from "@bbcli/pi-coding-agent/exec/bash-executor";
+import type { ExtensionRunner } from "@bbcli/pi-coding-agent/extensibility/extensions";
+import { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { TempDir } from "@bbcli/pi-utils";
 import { createInMemoryAuthStorage } from "./helpers/agent-session-setup";
 
 const sharedAuthStorage = createInMemoryAuthStorage();

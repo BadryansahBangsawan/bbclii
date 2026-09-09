@@ -2,17 +2,17 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { clearCache as clearFsCache } from "@oh-my-pi/pi-coding-agent/capability/fs";
-import { disableUserSource, enableProvider, loadCapability } from "@oh-my-pi/pi-coding-agent/capability";
+import { clearCache as clearFsCache } from "@bbcli/pi-coding-agent/capability/fs";
+import { disableUserSource, enableProvider, loadCapability } from "@bbcli/pi-coding-agent/capability";
 import {
 	clearClaudePluginRootsCache,
 	listClaudePluginRoots,
 	parseClaudePluginsRegistry,
-} from "@oh-my-pi/pi-coding-agent/discovery/helpers";
-import type { Skill } from "@oh-my-pi/pi-coding-agent/capability/skill";
-import { loadSkills } from "@oh-my-pi/pi-coding-agent/extensibility/skills";
-import { __resetDirsFromEnvForTests, removeWithRetries, setAgentDir } from "@oh-my-pi/pi-utils";
-import "@oh-my-pi/pi-coding-agent/discovery/claude-plugins";
+} from "@bbcli/pi-coding-agent/discovery/helpers";
+import type { Skill } from "@bbcli/pi-coding-agent/capability/skill";
+import { loadSkills } from "@bbcli/pi-coding-agent/extensibility/skills";
+import { __resetDirsFromEnvForTests, removeWithRetries, setAgentDir } from "@bbcli/pi-utils";
+import "@bbcli/pi-coding-agent/discovery/claude-plugins";
 
 describe("parseClaudePluginsRegistry", () => {
 	test("parses valid registry", () => {

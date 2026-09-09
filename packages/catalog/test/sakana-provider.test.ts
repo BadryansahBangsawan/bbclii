@@ -2,14 +2,14 @@ import { afterEach, describe, expect, test, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { getOAuthProviders } from "@oh-my-pi/pi-ai/registry/oauth";
-import { getEnvApiKey } from "@oh-my-pi/pi-ai/stream";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { resolveProviderModels } from "@oh-my-pi/pi-catalog/model-manager";
-import { getBundledModels } from "@oh-my-pi/pi-catalog/models";
-import { DEFAULT_MODEL_PER_PROVIDER, PROVIDER_DESCRIPTORS } from "@oh-my-pi/pi-catalog/provider-models/descriptors";
-import { sakanaModelManagerOptions } from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
-import type { FetchImpl, ModelSpec, ResolvedOpenAIResponsesCompat } from "@oh-my-pi/pi-catalog/types";
+import { getOAuthProviders } from "@bbcli/pi-ai/registry/oauth";
+import { getEnvApiKey } from "@bbcli/pi-ai/stream";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import { resolveProviderModels } from "@bbcli/pi-catalog/model-manager";
+import { getBundledModels } from "@bbcli/pi-catalog/models";
+import { DEFAULT_MODEL_PER_PROVIDER, PROVIDER_DESCRIPTORS } from "@bbcli/pi-catalog/provider-models/descriptors";
+import { sakanaModelManagerOptions } from "@bbcli/pi-catalog/provider-models/openai-compat";
+import type { FetchImpl, ModelSpec, ResolvedOpenAIResponsesCompat } from "@bbcli/pi-catalog/types";
 
 const ORIGINAL_ENV = {
 	SAKANA_API_KEY: Bun.env.SAKANA_API_KEY,

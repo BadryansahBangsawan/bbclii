@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
 import { scheduler } from "node:timers/promises";
-import { Agent } from "@oh-my-pi/pi-agent-core";
+import { Agent } from "@bbcli/pi-agent-core";
 import type {
 	ApiKeyResolveContext,
 	AssistantMessage,
@@ -10,24 +10,24 @@ import type {
 	ThinkingContent,
 	ToolCall,
 	ToolResultMessage,
-} from "@oh-my-pi/pi-ai";
-import { unregisterCustomApis } from "@oh-my-pi/pi-ai/api-registry";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { createMockModel, type MockResponse, registerMockApi } from "@oh-my-pi/pi-ai/providers/mock";
-import * as aiStream from "@oh-my-pi/pi-ai/stream";
-import { kCursorExecResolved } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { SqliteAuthCredentialStore } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { opencodeGoUsageProvider } from "@oh-my-pi/pi-ai/usage/opencode-go";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import type { Model } from "@oh-my-pi/pi-catalog/types";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { ExtensionRunner } from "@oh-my-pi/pi-coding-agent/extensibility/extensions";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { unregisterCustomApis } from "@bbcli/pi-ai/api-registry";
+import * as AIError from "@bbcli/pi-ai/error";
+import { createMockModel, type MockResponse, registerMockApi } from "@bbcli/pi-ai/providers/mock";
+import * as aiStream from "@bbcli/pi-ai/stream";
+import { kCursorExecResolved } from "@bbcli/pi-ai/utils/block-symbols";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { SqliteAuthCredentialStore } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { opencodeGoUsageProvider } from "@bbcli/pi-ai/usage/opencode-go";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import type { Model } from "@bbcli/pi-catalog/types";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { ExtensionRunner } from "@bbcli/pi-coding-agent/extensibility/extensions";
+import { AgentSession, type AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { TempDir } from "@bbcli/pi-utils";
 
 type AutoRetryEndEvent = Extract<AgentSessionEvent, { type: "auto_retry_end" }>;
 type AutoRetryStartEvent = Extract<AgentSessionEvent, { type: "auto_retry_start" }>;

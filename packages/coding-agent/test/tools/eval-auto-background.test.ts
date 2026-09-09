@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import type { AgentToolContext } from "@oh-my-pi/pi-agent-core";
-import { AsyncJobManager } from "@oh-my-pi/pi-coding-agent/async";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import * as evalIndex from "@oh-my-pi/pi-coding-agent/eval";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { EvalTool } from "@oh-my-pi/pi-coding-agent/tools/eval";
+import type { AgentToolContext } from "@bbcli/pi-agent-core";
+import { AsyncJobManager } from "@bbcli/pi-coding-agent/async";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import * as evalIndex from "@bbcli/pi-coding-agent/eval";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { EvalTool } from "@bbcli/pi-coding-agent/tools/eval";
 
 function makeSession(settings: Settings, asyncJobManager: AsyncJobManager): ToolSession {
 	return {

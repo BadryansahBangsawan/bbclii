@@ -1,4 +1,4 @@
-import TurndownService, { gfm } from "@oh-my-pi/pi-utils/turndown";
+import TurndownService, { gfm } from "@bbcli/pi-utils/turndown";
 
 type TurndownListParent = {
 	nodeName: string;

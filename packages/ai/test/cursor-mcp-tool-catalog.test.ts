@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { buildMcpToolDefinitions } from "@oh-my-pi/pi-ai/providers/cursor";
-import type { Tool, TSchema } from "@oh-my-pi/pi-ai/types";
-import { isJsonSchemaValueValid, sanitizeSchemaForCursor, toolWireSchema } from "@oh-my-pi/pi-ai/utils/schema";
-import { decodeJsonValue } from "@oh-my-pi/pi-catalog/discovery/protobuf";
+import { buildMcpToolDefinitions } from "@bbcli/pi-ai/providers/cursor";
+import type { Tool, TSchema } from "@bbcli/pi-ai/types";
+import { isJsonSchemaValueValid, sanitizeSchemaForCursor, toolWireSchema } from "@bbcli/pi-ai/utils/schema";
+import { decodeJsonValue } from "@bbcli/pi-catalog/discovery/protobuf";
 
 const tool = (name: string, parameters: TSchema = { type: "object", properties: {} }): Tool => ({
 	name,

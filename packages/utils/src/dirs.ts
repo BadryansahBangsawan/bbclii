@@ -1,14 +1,14 @@
 /**
- * Centralized path helpers for omp config directories.
+ * Centralized path helpers for bbcli config directories.
  *
- * Uses PI_CONFIG_DIR (default ".omp") for the config root and
- * PI_CODING_AGENT_DIR to override the agent directory.
+ * Uses BBCLI_CONFIG_DIR / PI_CONFIG_DIR (default ".bbcli") for the config root
+ * and BBCLI_CODING_AGENT_DIR / PI_CODING_AGENT_DIR to override the agent directory.
  *
  * On Linux, if XDG_DATA_HOME / XDG_STATE_HOME / XDG_CACHE_HOME environment
  * variables are set, paths are redirected to XDG-compliant locations under
- * $XDG_*_HOME/omp/. This requires running `omp config migrate` first to
+ * $XDG_*_HOME/bbcli/. This requires running `bbcli config migrate` first to
  * move data to the new locations. No filesystem existence checks are performed
- * — if the env var is set, omp trusts that the migration has been done.
+ * — if the env var is set, bbcli trusts that the migration has been done.
  */
 
 import * as fs from "node:fs";
@@ -17,11 +17,11 @@ import * as path from "node:path";
 import { engines, version } from "../package.json" with { type: "json" };
 import { isEnoent, isEnotdir } from "./fs-error";
 
-/** App name (e.g. "omp") */
-export const APP_NAME: string = "omp";
+/** App name (e.g. "bbcli") */
+export const APP_NAME: string = "bbcli";
 
-/** Config directory name (e.g. ".omp") */
-export const CONFIG_DIR_NAME: string = ".omp";
+/** Config directory name (e.g. ".bbcli") */
+export const CONFIG_DIR_NAME: string = ".bbcli";
 
 /** Ordered main settings filenames: canonical write target first, legacy-compatible YAML fallback second. */
 export const MAIN_CONFIG_FILENAMES = ["config.yml", "config.yaml"] as const;
@@ -29,14 +29,47 @@ export const MAIN_CONFIG_FILENAMES = ["config.yml", "config.yaml"] as const;
 /** Version (e.g. "1.0.0") */
 export const VERSION: string = version;
 
-/** Default User-Agent header string (e.g. "omp/17.2.12") */
-export const USER_AGENT = `omp/${VERSION}`;
+/** Default User-Agent header string (e.g. "bbcli/17.2.12") */
+export const USER_AGENT = `${APP_NAME}/${VERSION}`;
 
 /** Minimum Bun version */
 export const MIN_BUN_VERSION: string = engines.bun.replace(/[^0-9.]/g, "");
 
+/**
+ * Read `BBCLI_<name>`, falling back to `OMP_<name>` so existing shells keep working.
+ */
+export function readBrandedEnv(name: string): string | undefined {
+	const branded = process.env[`BBCLI_${name}`];
+	if (branded !== undefined) return branded;
+	return process.env[`OMP_${name}`];
+}
+
+function migrateLegacyDir(src: string, dest: string): void {
+	if (fs.existsSync(dest) || !fs.existsSync(src)) return;
+	try {
+		fs.renameSync(src, dest);
+	} catch (err) {
+		if (err && typeof err === "object" && "code" in err && err.code === "EXDEV") {
+			fs.cpSync(src, dest, { recursive: true });
+			return;
+		}
+		// leave ~/.omp in place; resolver uses dest (.bbcli), which may be empty
+	}
+}
+
+function migrateLegacyConfigRoots(): void {
+	if (process.env.BBCLI_CONFIG_DIR || process.env.PI_CONFIG_DIR) return;
+	const home = os.homedir();
+	migrateLegacyDir(path.join(home, ".omp"), path.join(home, ".bbcli"));
+	for (const envName of ["XDG_DATA_HOME", "XDG_STATE_HOME", "XDG_CACHE_HOME"] as const) {
+		const root = process.env[envName];
+		if (!root) continue;
+		migrateLegacyDir(path.join(root, "omp"), path.join(root, "bbcli"));
+	}
+}
+
 const PROFILE_NAME_RE = /^[a-z0-9][a-z0-9._-]{0,63}$/;
-const PROFILE_ENV_KEYS = ["OMP_PROFILE", "PI_PROFILE"] as const;
+const PROFILE_ENV_KEYS = ["BBCLI_PROFILE", "OMP_PROFILE", "PI_PROFILE"] as const;
 
 /**
  * Names Windows treats as reserved device aliases. Matches the basename
@@ -53,7 +86,7 @@ const WINDOWS_RESERVED_BASENAME_RE = /^(?:CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(?:\
  * default (empty string, whitespace, or the explicit "default" sentinel) and
  * throws for syntactically invalid or platform-reserved names.
  *
- * Exported so consumers of `@oh-my-pi/pi-utils/dirs` (CLI bootstrap, tests,
+ * Exported so consumers of `@bbcli/pi-utils/dirs` (CLI bootstrap, tests,
  * downstream tools) can validate user input without re-deriving the rules.
  */
 export function normalizeProfileName(profile: string | undefined): string | undefined {
@@ -67,7 +100,7 @@ export function normalizeProfileName(profile: string | undefined): string | unde
 		WINDOWS_RESERVED_BASENAME_RE.test(normalized)
 	) {
 		throw new Error(
-			`Invalid OMP profile "${profile}". Profile names must match ${PROFILE_NAME_RE.source}, ` +
+			`Invalid BBCLI profile "${profile}". Profile names must match ${PROFILE_NAME_RE.source}, ` +
 				`cannot be "." or "..", cannot end with ".", and cannot be a Windows reserved device name ` +
 				`(CON, PRN, AUX, NUL, COM0-9, LPT0-9, or any of those with an extension).`,
 		);
@@ -76,11 +109,12 @@ export function normalizeProfileName(profile: string | undefined): string | unde
 }
 
 /**
- * Resolve the active profile from the two profile env vars. `OMP_PROFILE` is the
- * canonical variable and takes precedence; `PI_PROFILE` is the legacy
- * compatibility fallback, consulted only when `OMP_PROFILE` is undefined. An
- * explicitly-empty `OMP_PROFILE` therefore selects the default profile rather
- * than silently inheriting `PI_PROFILE`. Delegates validation/normalization to
+ * Resolve the active profile from the two profile env vars. `BBCLI_PROFILE`
+ * (then `OMP_PROFILE`) is the canonical variable and takes precedence;
+ * `PI_PROFILE` is the legacy compatibility fallback, consulted only when the
+ * branded profile env is undefined. An explicitly-empty `BBCLI_PROFILE` /
+ * `OMP_PROFILE` therefore selects the default profile rather than silently
+ * inheriting `PI_PROFILE`. Delegates validation/normalization to
  * {@link normalizeProfileName} (which throws on a syntactically invalid value).
  */
 export function resolveProfileEnv(omp: string | undefined, pi: string | undefined): string | undefined {
@@ -88,7 +122,7 @@ export function resolveProfileEnv(omp: string | undefined, pi: string | undefine
 }
 
 function getProfileFromEnv(): string | undefined {
-	return resolveProfileEnv(process.env.OMP_PROFILE, process.env.PI_PROFILE);
+	return resolveProfileEnv(readBrandedEnv("PROFILE"), process.env.PI_PROFILE);
 }
 
 /**
@@ -277,9 +311,23 @@ export function getSafeProjectCwd(): string {
 	return os.homedir();
 }
 
-/** Get the config directory name relative to home (e.g. ".omp" or PI_CONFIG_DIR override). */
+/** Get the config directory name relative to home (e.g. ".bbcli" or BBCLI_CONFIG_DIR / PI_CONFIG_DIR override). */
 export function getConfigDirName(): string {
-	return process.env.PI_CONFIG_DIR || CONFIG_DIR_NAME;
+	return process.env.BBCLI_CONFIG_DIR || process.env.PI_CONFIG_DIR || CONFIG_DIR_NAME;
+}
+
+function getCodingAgentDirEnv(): string | undefined {
+	return readBrandedEnv("CODING_AGENT_DIR") ?? process.env.PI_CODING_AGENT_DIR;
+}
+
+function writeCodingAgentDirEnv(dir: string | undefined): void {
+	if (dir === undefined) {
+		delete process.env.BBCLI_CODING_AGENT_DIR;
+		delete process.env.PI_CODING_AGENT_DIR;
+		return;
+	}
+	process.env.BBCLI_CODING_AGENT_DIR = dir;
+	process.env.PI_CODING_AGENT_DIR = dir;
 }
 
 /** Get the config agent directory name relative to home (e.g. ".omp/agent" or PI_CONFIG_DIR + "/agent"). */
@@ -427,8 +475,10 @@ let activeProfile = readProfileFromEnvSafe();
 function resolveActiveAgentDirOverride(): string | undefined {
 	return activeProfile
 		? undefined
-		: resolvePreProfileAgentDir(undefined, process.env.PI_CODING_AGENT_DIR, readPiProfileFromEnvSafe());
+		: resolvePreProfileAgentDir(undefined, getCodingAgentDirEnv(), readPiProfileFromEnvSafe());
 }
+
+migrateLegacyConfigRoots();
 
 let dirs = new DirResolver({
 	agentDirOverride: resolveActiveAgentDirOverride(),
@@ -447,7 +497,7 @@ let dirs = new DirResolver({
  */
 let preProfileAgentDirEnv: string | undefined = resolvePreProfileAgentDir(
 	activeProfile,
-	process.env.PI_CODING_AGENT_DIR,
+	getCodingAgentDirEnv(),
 	activeProfile ?? readPiProfileFromEnvSafe(),
 );
 // Anchor home for the resolver. Captured at module load to stay stable across
@@ -486,7 +536,7 @@ export function getConfigRootDir(): string {
 export function setAgentDir(dir: string): void {
 	activeProfile = undefined;
 	dirs = new DirResolver({ agentDirOverride: dir });
-	process.env.PI_CODING_AGENT_DIR = dir;
+	writeCodingAgentDirEnv(dir);
 	preProfileAgentDirEnv = dir;
 	for (const key of PROFILE_ENV_KEYS) {
 		delete process.env[key];
@@ -504,7 +554,7 @@ export function setAgentDir(dir: string): void {
 export function __resetProfileSnapshotForTests(): void {
 	preProfileAgentDirEnv = resolvePreProfileAgentDir(
 		activeProfile,
-		process.env.PI_CODING_AGENT_DIR,
+		getCodingAgentDirEnv(),
 		activeProfile ?? readPiProfileFromEnvSafe(),
 	);
 }
@@ -530,27 +580,20 @@ export function setProfile(profile: string | undefined): void {
 		// explicit override. Subsequent profile switches keep the original
 		// snapshot — the "pre-profile" baseline is the state before profiles
 		// entered the picture, not the state between two activations.
-		preProfileAgentDirEnv = resolvePreProfileAgentDir(
-			undefined,
-			process.env.PI_CODING_AGENT_DIR,
-			readPiProfileFromEnvSafe(),
-		);
+		preProfileAgentDirEnv = resolvePreProfileAgentDir(undefined, getCodingAgentDirEnv(), readPiProfileFromEnvSafe());
 	}
 	activeProfile = next;
 	if (activeProfile) {
 		dirs = new DirResolver({ profile: activeProfile });
+		process.env.BBCLI_PROFILE = activeProfile;
 		process.env.OMP_PROFILE = activeProfile;
 		process.env.PI_PROFILE = activeProfile;
-		process.env.PI_CODING_AGENT_DIR = dirs.agentDir;
+		writeCodingAgentDirEnv(dirs.agentDir);
 	} else {
 		for (const key of PROFILE_ENV_KEYS) {
 			delete process.env[key];
 		}
-		if (preProfileAgentDirEnv === undefined) {
-			delete process.env.PI_CODING_AGENT_DIR;
-		} else {
-			process.env.PI_CODING_AGENT_DIR = preProfileAgentDirEnv;
-		}
+		writeCodingAgentDirEnv(preProfileAgentDirEnv);
 		dirs = new DirResolver({ agentDirOverride: preProfileAgentDirEnv });
 	}
 }
@@ -569,9 +612,13 @@ export function getAgentDir(): string {
 	return dirs.agentDir;
 }
 
-/** Get the project-local config directory (.omp). */
+/** Get the project-local config directory (.bbcli). */
 export function getProjectAgentDir(cwd: string = getProjectDir()): string {
-	return path.join(cwd, CONFIG_DIR_NAME);
+	const dest = path.join(cwd, CONFIG_DIR_NAME);
+	if (!fs.existsSync(dest)) {
+		migrateLegacyDir(path.join(cwd, ".omp"), dest);
+	}
+	return dest;
 }
 
 // =============================================================================
@@ -622,7 +669,7 @@ export function getPluginsPackageJson(home?: string): string {
 
 /** Plugin lock file (~/.omp/plugins/omp-plugins.lock.json). */
 export function getPluginsLockfile(home?: string): string {
-	return path.join(getPluginsDir(home), "omp-plugins.lock.json");
+	return path.join(getPluginsDir(home), "bbcli-plugins.lock.json");
 }
 
 /** Get the remote mount directory (~/.omp/remote). */
@@ -674,7 +721,7 @@ export function setWorktreesDir(dir: string | undefined): string | undefined {
  * ignored and resolution falls through.
  */
 export function getWorktreesDir(): string {
-	return resolveWorktreeBase(process.env.OMP_WORKTREE_DIR) ?? worktreesDirOverride ?? dirs.rootSubdir("wt", "data");
+	return resolveWorktreeBase(readBrandedEnv("WORKTREE_DIR")) ?? worktreesDirOverride ?? dirs.rootSubdir("wt", "data");
 }
 
 /** Get the SSH control socket directory (~/.omp/ssh-control). */
@@ -745,7 +792,7 @@ export function getGpuCachePath(): string {
  * cache file without touching the rest of the config root.
  */
 export function getGithubCacheDbPath(): string {
-	const override = process.env.OMP_GITHUB_CACHE_DB;
+	const override = readBrandedEnv("GITHUB_CACHE_DB");
 	if (override) return override;
 	return dirs.rootSubdir(path.join("cache", "github-cache.db"), "cache");
 }
@@ -754,7 +801,7 @@ export function getGithubCacheDbPath(): string {
  * Honors `OMP_COMMIT_CACHE_DB` so tests and operators can isolate the cache.
  */
 export function getCommitCacheDbPath(): string {
-	const override = process.env.OMP_COMMIT_CACHE_DB;
+	const override = readBrandedEnv("COMMIT_CACHE_DB");
 	if (override) return override;
 	return dirs.rootSubdir(path.join("cache", "commit-inference.db"), "cache");
 }
@@ -770,7 +817,7 @@ export function getLegacyPiExtensionCacheDbPath(): string {
  * operators can isolate or relocate the cache file.
  */
 export function getAuthBrokerSnapshotCachePath(): string {
-	const override = process.env.OMP_AUTH_BROKER_SNAPSHOT_CACHE;
+	const override = readBrandedEnv("AUTH_BROKER_SNAPSHOT_CACHE");
 	if (override) return override;
 	return dirs.rootSubdir(path.join("cache", "auth-broker-snapshot.enc"), "cache");
 }
@@ -915,7 +962,7 @@ export function getTerminalSessionsDir(agentDir?: string): string {
 
 /** Get the crash log path (~/.omp/agent/omp-crash.log). */
 export function getCrashLogPath(agentDir?: string): string {
-	return dirs.agentSubdir(agentDir, "omp-crash.log", "state");
+	return dirs.agentSubdir(agentDir, `${APP_NAME}-crash.log`, "state");
 }
 
 /** Get the debug log path (~/.omp/agent/omp-debug.log). */
@@ -1037,14 +1084,13 @@ let cachedInstallId: string | null = null;
 
 const INSTALL_ID_FILE = "install-id";
 /**
- * Application label for usage attribution (`OMP_APP_NAME`), defaulting to
- * `omp`. Embedders that drive omp programmatically (robomp, CI bots, …) set
+ * Application label for usage attribution (`BBCLI_APP_NAME` / `OMP_APP_NAME`), defaulting to
+ * `bbcli`. Embedders that drive bbcli programmatically (CI bots, …) set
  * the env var so broker-side per-client burn tracking can answer "what did
  * app X use" instead of folding everything into one install-wide bucket.
  */
 export function getAppName(): string {
-	const value = process.env.OMP_APP_NAME?.trim();
-	return value ? value : "omp";
+	return readBrandedEnv("APP_NAME")?.trim() || APP_NAME;
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

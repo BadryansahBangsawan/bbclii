@@ -1,7 +1,7 @@
-export * from "@oh-my-pi/pi-catalog/effort";
-export * from "@oh-my-pi/pi-catalog/types";
+export * from "@bbcli/pi-catalog/effort";
+export * from "@bbcli/pi-catalog/types";
 
-import type { Type } from "@oh-my-pi/omptype";
+import type { Type } from "@bbcli/omptype";
 import type {
 	DeleteArgs,
 	DeleteResult,
@@ -32,9 +32,9 @@ import type {
 	ShellResult,
 	WriteArgs,
 	WriteResult,
-} from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
-import type { Effort } from "@oh-my-pi/pi-catalog/effort";
-import type { Api, FetchImpl, KnownApi, Model, Provider, ThinkingBudgets, Usage } from "@oh-my-pi/pi-catalog/types";
+} from "@bbcli/pi-catalog/discovery/cursor-proto";
+import type { Effort } from "@bbcli/pi-catalog/effort";
+import type { Api, FetchImpl, KnownApi, Model, Provider, ThinkingBudgets, Usage } from "@bbcli/pi-catalog/types";
 import type { ApiKey } from "./auth-retry";
 import type { BedrockOptions } from "./providers/amazon-bedrock";
 import type { AnthropicOptions } from "./providers/anthropic";

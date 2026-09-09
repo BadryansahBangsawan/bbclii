@@ -1,10 +1,10 @@
 {
   "type": "module",
-  "name": "@oh-my-pi/collab-web",
+  "name": "@bbcli/collab-web",
   "version": "16.3.6",
   "private": true,
   "description": "Browser guest client and local relay tools for omp collab live sessions",
-  "homepage": "https://omp.sh",
+  "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "license": "MIT",
   "repository": {
@@ -37,8 +37,8 @@
     "fmt": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts'"
   },
   "dependencies": {
-    "@oh-my-pi/pi-utils": "catalog:",
-    "@oh-my-pi/pi-wire": "catalog:",
+    "@bbcli/pi-utils": "catalog:",
+    "@bbcli/pi-wire": "catalog:",
     "lucide-react": "catalog:",
     "katex": "catalog:",
     "react": "catalog:",

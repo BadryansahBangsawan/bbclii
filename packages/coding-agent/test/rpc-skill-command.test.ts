@@ -6,9 +6,9 @@ import {
 	dispatchRpcSkillPrompt,
 	RpcExtensionUserMessageTracker,
 	tryRunRpcSkillCommand,
-} from "@oh-my-pi/pi-coding-agent/modes/rpc/rpc-mode";
-import { type CustomMessage, SKILL_PROMPT_MESSAGE_TYPE } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { removeWithRetries, Snowflake } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/modes/rpc/rpc-mode";
+import { type CustomMessage, SKILL_PROMPT_MESSAGE_TYPE } from "@bbcli/pi-coding-agent/session/messages";
+import { removeWithRetries, Snowflake } from "@bbcli/pi-utils";
 
 describe("tryRunRpcSkillCommand", () => {
 	test("dispatches registered /skill commands as skill prompt messages", async () => {

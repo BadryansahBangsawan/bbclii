@@ -7,11 +7,11 @@
  * the working brand swapped colors instantly with no tween.
  */
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "bun:test";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { StatusLineComponent } from "@oh-my-pi/pi-coding-agent/modes/components/status-line";
-import { initTheme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { getSessionAccentAnsi } from "@oh-my-pi/pi-coding-agent/utils/session-color";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { StatusLineComponent } from "@bbcli/pi-coding-agent/modes/components/status-line";
+import { initTheme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { getSessionAccentAnsi } from "@bbcli/pi-coding-agent/utils/session-color";
 
 beforeAll(async () => {
 	resetSettingsForTest();

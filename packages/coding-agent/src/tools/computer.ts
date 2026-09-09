@@ -1,9 +1,9 @@
-import { type Type, type } from "@oh-my-pi/omptype";
-import type { AgentToolResult, ToolApprovalDecision } from "@oh-my-pi/pi-agent-core";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { classifyModel } from "@oh-my-pi/pi-catalog/identity";
-import type { DesktopCapabilities } from "@oh-my-pi/pi-natives";
-import { once } from "@oh-my-pi/pi-utils";
+import { type Type, type } from "@bbcli/omptype";
+import type { AgentToolResult, ToolApprovalDecision } from "@bbcli/pi-agent-core";
+import type { Model } from "@bbcli/pi-ai";
+import { classifyModel } from "@bbcli/pi-catalog/identity";
+import type { DesktopCapabilities } from "@bbcli/pi-natives";
+import { once } from "@bbcli/pi-utils";
 import { callSessionTool } from "../eval/js/tool-bridge";
 import type { EvalPreludeContext, EvalPreludeDefinition } from "../eval/preludes";
 import computerDescription from "../prompts/tools/computer.md" with { type: "text" };

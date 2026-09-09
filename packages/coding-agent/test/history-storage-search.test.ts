@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import { HistoryStorage } from "@oh-my-pi/pi-coding-agent/session/history-storage";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { HistoryStorage } from "@bbcli/pi-coding-agent/session/history-storage";
+import { TempDir } from "@bbcli/pi-utils";
 
 let tempDir: TempDir | null = null;
 

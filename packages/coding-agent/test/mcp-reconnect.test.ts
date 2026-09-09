@@ -1,21 +1,21 @@
 import { describe, expect, it, vi } from "bun:test";
-import { createMCPJsonRpcError, MCPTransportError } from "@oh-my-pi/pi-coding-agent/mcp/errors";
-import type { MCPReconnect } from "@oh-my-pi/pi-coding-agent/mcp/tool-bridge";
+import { createMCPJsonRpcError, MCPTransportError } from "@bbcli/pi-coding-agent/mcp/errors";
+import type { MCPReconnect } from "@bbcli/pi-coding-agent/mcp/tool-bridge";
 import {
 	createMCPToolName,
 	DeferredMCPTool,
 	deduplicateMCPToolsByName,
 	isRetriableConnectionError,
 	MCPTool,
-} from "@oh-my-pi/pi-coding-agent/mcp/tool-bridge";
+} from "@bbcli/pi-coding-agent/mcp/tool-bridge";
 import type {
 	MCPImageContent,
 	MCPServerConnection,
 	MCPToolCallResult,
 	MCPTransport,
-} from "@oh-my-pi/pi-coding-agent/mcp/types";
-import { ToolAbortError } from "@oh-my-pi/pi-coding-agent/tools/tool-errors";
-import { logger } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/mcp/types";
+import { ToolAbortError } from "@bbcli/pi-coding-agent/tools/tool-errors";
+import { logger } from "@bbcli/pi-utils";
 
 // ---------------------------------------------------------------------------
 // Helpers

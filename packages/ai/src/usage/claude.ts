@@ -1,6 +1,6 @@
 import { scheduler } from "node:timers/promises";
-import { classifyModel } from "@oh-my-pi/pi-catalog/compat/taxonomy";
-import { toNumber } from "@oh-my-pi/pi-catalog/utils";
+import { classifyModel } from "@bbcli/pi-catalog/compat/taxonomy";
+import { toNumber } from "@bbcli/pi-catalog/utils";
 import * as AIError from "../error";
 import { claudeCodeVersion } from "../providers/claude-code-fingerprint";
 import {

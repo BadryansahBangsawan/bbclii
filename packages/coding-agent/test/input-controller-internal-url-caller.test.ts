@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
-import { KeybindingsManager } from "@oh-my-pi/pi-coding-agent/config/keybindings";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { InternalUrlRouter } from "@oh-my-pi/pi-coding-agent/internal-urls/router";
-import { InputController } from "@oh-my-pi/pi-coding-agent/modes/controllers/input-controller";
-import type { InteractiveModeContext } from "@oh-my-pi/pi-coding-agent/modes/types";
-import { AgentRegistry } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import type { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
+import { KeybindingsManager } from "@bbcli/pi-coding-agent/config/keybindings";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { InternalUrlRouter } from "@bbcli/pi-coding-agent/internal-urls/router";
+import { InputController } from "@bbcli/pi-coding-agent/modes/controllers/input-controller";
+import type { InteractiveModeContext } from "@bbcli/pi-coding-agent/modes/types";
+import { AgentRegistry } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import type { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
 
 const SHARED_CWD = "/tmp/input-controller-internal-url-caller";
 

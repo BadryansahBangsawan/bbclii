@@ -1,5 +1,5 @@
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import { logger } from "@oh-my-pi/pi-utils";
+import type { ImageContent } from "@bbcli/pi-ai";
+import { logger } from "@bbcli/pi-utils";
 import type { StructuredSubagentOutput } from "../task/types";
 
 const DELIVERY_RETRY_BASE_MS = 500;

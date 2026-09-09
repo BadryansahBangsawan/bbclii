@@ -1,21 +1,18 @@
 import { describe, expect, test } from "bun:test";
-import type { Api, Context, Model } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
+import type { Api, Context, Model } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
 import {
 	hashProviderFileContent,
 	ProviderFileCache,
 	type ProviderFileClient,
 	type ProviderFileHandle,
-} from "@oh-my-pi/pi-coding-agent/blob-broker/provider-file-types";
-import {
-	type ProviderFileClientFactory,
-	ProviderFileManager,
-} from "@oh-my-pi/pi-coding-agent/blob-broker/provider-files";
-import { createAnthropicFileClient } from "@oh-my-pi/pi-coding-agent/blob-broker/provider-files-anthropic";
-import { createGeminiProviderFileClient } from "@oh-my-pi/pi-coding-agent/blob-broker/provider-files-gemini";
-import { createOpenAIFileClient } from "@oh-my-pi/pi-coding-agent/blob-broker/provider-files-openai";
-import type { FetchImpl } from "@oh-my-pi/pi-coding-agent/blob-broker/uploader-runtime";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/blob-broker/provider-file-types";
+import { type ProviderFileClientFactory, ProviderFileManager } from "@bbcli/pi-coding-agent/blob-broker/provider-files";
+import { createAnthropicFileClient } from "@bbcli/pi-coding-agent/blob-broker/provider-files-anthropic";
+import { createGeminiProviderFileClient } from "@bbcli/pi-coding-agent/blob-broker/provider-files-gemini";
+import { createOpenAIFileClient } from "@bbcli/pi-coding-agent/blob-broker/provider-files-openai";
+import type { FetchImpl } from "@bbcli/pi-coding-agent/blob-broker/uploader-runtime";
+import { TempDir } from "@bbcli/pi-utils";
 
 interface RecordedRequest {
 	readonly url: string;

@@ -16,8 +16,8 @@ import { randomUUID } from "node:crypto";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { configureCredentialRedaction } from "@oh-my-pi/pi-ai/providers/transform-messages";
-import { configureProviderMaxInFlightRequests } from "@oh-my-pi/pi-ai/stream";
+import { configureCredentialRedaction } from "@bbcli/pi-ai/providers/transform-messages";
+import { configureProviderMaxInFlightRequests } from "@bbcli/pi-ai/stream";
 import {
 	getAgentDbPath,
 	getAgentDir,
@@ -29,8 +29,8 @@ import {
 	MAIN_CONFIG_FILENAMES,
 	procmgr,
 	setWorktreesDir,
-} from "@oh-my-pi/pi-utils";
-import { withFileLock } from "@oh-my-pi/pi-utils/file-lock";
+} from "@bbcli/pi-utils";
+import { withFileLock } from "@bbcli/pi-utils/file-lock";
 import { JSONC, YAML } from "bun";
 import { invalidate as invalidateCapabilityFsCache } from "../capability/fs";
 import { type Settings as SettingsCapabilityItem, settingsCapability } from "../capability/settings";

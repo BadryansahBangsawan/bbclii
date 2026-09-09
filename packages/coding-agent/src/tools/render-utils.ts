@@ -7,11 +7,11 @@
 
 import * as os from "node:os";
 import * as path from "node:path";
-import { ThinkingLevel, type ToolCallContext } from "@oh-my-pi/pi-agent-core";
-import type { Ellipsis } from "@oh-my-pi/pi-natives";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { getKeybindings, replaceTabs, sliceByColumn, truncateToWidth, visibleWidth } from "@oh-my-pi/pi-tui";
-import { pluralize, sanitizeText } from "@oh-my-pi/pi-utils";
+import { ThinkingLevel, type ToolCallContext } from "@bbcli/pi-agent-core";
+import type { Ellipsis } from "@bbcli/pi-natives";
+import type { Component } from "@bbcli/pi-tui";
+import { getKeybindings, replaceTabs, sliceByColumn, truncateToWidth, visibleWidth } from "@bbcli/pi-tui";
+import { pluralize, sanitizeText } from "@bbcli/pi-utils";
 import { formatKeyHints, type KeyId } from "../config/keybindings";
 import { isSettingsInitialized, settings } from "../config/settings";
 import { getDefault } from "../config/settings-schema";
@@ -20,8 +20,8 @@ import { AUTO_THINKING, type ConfiguredThinkingLevel } from "../thinking";
 import { Hasher } from "../tui/utils";
 import { formatDimensionNote, type ResizedImage } from "../utils/image-resize";
 
-export { Ellipsis } from "@oh-my-pi/pi-natives";
-export { replaceTabs, truncateToWidth, wrapTextWithAnsi } from "@oh-my-pi/pi-tui";
+export { Ellipsis } from "@bbcli/pi-natives";
+export { replaceTabs, truncateToWidth, wrapTextWithAnsi } from "@bbcli/pi-tui";
 
 // =============================================================================
 // Standardized Display Constants
@@ -200,7 +200,7 @@ export function getDomain(url: string): string {
 // Formatting Utilities
 // =============================================================================
 
-export { formatAge, formatBytes, formatCount, formatDuration, pluralize } from "@oh-my-pi/pi-utils";
+export { formatAge, formatBytes, formatCount, formatDuration, pluralize } from "@bbcli/pi-utils";
 
 // =============================================================================
 // Theme Helper Utilities

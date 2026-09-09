@@ -6,11 +6,11 @@
  * and the openai-completions provider translates them to router wire form at request time.
  */
 import { describe, expect, it } from "bun:test";
-import { getProviderDefinition } from "@oh-my-pi/pi-ai/registry";
-import type { OAuthController } from "@oh-my-pi/pi-ai/registry/oauth/types";
-import { streamOpenAICompletions } from "@oh-my-pi/pi-ai/providers/openai-completions";
-import type { Context, FetchImpl, Model } from "@oh-my-pi/pi-ai/types";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
+import { getProviderDefinition } from "@bbcli/pi-ai/registry";
+import type { OAuthController } from "@bbcli/pi-ai/registry/oauth/types";
+import { streamOpenAICompletions } from "@bbcli/pi-ai/providers/openai-completions";
+import type { Context, FetchImpl, Model } from "@bbcli/pi-ai/types";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
 
 function sseResponse(events: unknown[]): Response {
 	const payload = `${events.map(e => `data: ${typeof e === "string" ? e : JSON.stringify(e)}`).join("\n\n")}\n\n`;

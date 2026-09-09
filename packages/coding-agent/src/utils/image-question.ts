@@ -1,6 +1,6 @@
-import { instrumentedCompleteSimple, resolveTelemetry } from "@oh-my-pi/pi-agent-core";
-import { type Api, type AssistantMessage, completeSimple, type Model, type Usage } from "@oh-my-pi/pi-ai";
-import { prompt } from "@oh-my-pi/pi-utils";
+import { instrumentedCompleteSimple, resolveTelemetry } from "@bbcli/pi-agent-core";
+import { type Api, type AssistantMessage, completeSimple, type Model, type Usage } from "@bbcli/pi-ai";
+import { prompt } from "@bbcli/pi-utils";
 import { extractTextContent } from "../commit/utils";
 import {
 	expandRoleAlias,

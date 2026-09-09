@@ -2,17 +2,17 @@ import { afterEach, beforeEach, describe, expect, it, spyOn } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import { getManagedSkillsDir } from "@oh-my-pi/pi-coding-agent/autolearn/managed-skills";
-import { type SettingPath, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { resetActiveSkillsForTests, type Skill, setActiveSkills } from "@oh-my-pi/pi-coding-agent/extensibility/skills";
-import type { HindsightSessionState } from "@oh-my-pi/pi-coding-agent/hindsight/state";
-import type { MnemopiSessionState } from "@oh-my-pi/pi-coding-agent/mnemopi/state";
-import { createTools, type ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { LearnTool } from "@oh-my-pi/pi-coding-agent/tools/learn";
-import { ManageSkillTool } from "@oh-my-pi/pi-coding-agent/tools/manage-skill";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
-import { getAgentDir, setAgentDir } from "@oh-my-pi/pi-utils/dirs";
+import { type } from "@bbcli/omptype";
+import { getManagedSkillsDir } from "@bbcli/pi-coding-agent/autolearn/managed-skills";
+import { type SettingPath, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { resetActiveSkillsForTests, type Skill, setActiveSkills } from "@bbcli/pi-coding-agent/extensibility/skills";
+import type { HindsightSessionState } from "@bbcli/pi-coding-agent/hindsight/state";
+import type { MnemopiSessionState } from "@bbcli/pi-coding-agent/mnemopi/state";
+import { createTools, type ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { LearnTool } from "@bbcli/pi-coding-agent/tools/learn";
+import { ManageSkillTool } from "@bbcli/pi-coding-agent/tools/manage-skill";
+import { removeWithRetries } from "@bbcli/pi-utils";
+import { getAgentDir, setAgentDir } from "@bbcli/pi-utils/dirs";
 
 function makeSession(
 	settingsOverrides: Partial<Record<SettingPath, unknown>> = {},

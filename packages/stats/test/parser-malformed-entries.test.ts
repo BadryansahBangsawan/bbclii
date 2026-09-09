@@ -1,9 +1,9 @@
 import { describe, expect, it } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { getRecentRequests, initDb, insertMessageStats, insertToolCalls } from "@oh-my-pi/omp-stats/db";
-import { parseSessionFile } from "@oh-my-pi/omp-stats/parser";
-import { getSessionsDir } from "@oh-my-pi/pi-utils";
+import { getRecentRequests, initDb, insertMessageStats, insertToolCalls } from "@bbcli/stats/db";
+import { parseSessionFile } from "@bbcli/stats/parser";
+import { getSessionsDir } from "@bbcli/pi-utils";
 import { installStatsTestIsolation } from "./helpers/temp-agent";
 
 installStatsTestIsolation("@pi-stats-malformed-");

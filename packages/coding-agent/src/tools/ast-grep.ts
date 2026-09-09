@@ -1,11 +1,11 @@
 import * as path from "node:path";
-import { type } from "@oh-my-pi/omptype";
-import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@oh-my-pi/pi-agent-core";
-import type { ToolExample } from "@oh-my-pi/pi-ai";
-import { type AstFindMatch, astGrep } from "@oh-my-pi/pi-natives";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { Text } from "@oh-my-pi/pi-tui";
-import { prompt, untilAborted } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import type { AgentTool, AgentToolContext, AgentToolResult, AgentToolUpdateCallback } from "@bbcli/pi-agent-core";
+import type { ToolExample } from "@bbcli/pi-ai";
+import { type AstFindMatch, astGrep } from "@bbcli/pi-natives";
+import type { Component } from "@bbcli/pi-tui";
+import { Text } from "@bbcli/pi-tui";
+import { prompt, untilAborted } from "@bbcli/pi-utils";
 import { getEditStore } from "../edit/store";
 import type { RenderResultOptions } from "../extensibility/custom-tools/types";
 import { formatHashlineHeader } from "./hashline-format";

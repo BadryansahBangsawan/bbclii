@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import { assertTeamWritable, FileClaimBoard, FileClaimError } from "@oh-my-pi/pi-coding-agent/task/file-claim";
-import { ToolError } from "@oh-my-pi/pi-coding-agent/tools/tool-errors";
+import { assertTeamWritable, FileClaimBoard, FileClaimError } from "@bbcli/pi-coding-agent/task/file-claim";
+import { ToolError } from "@bbcli/pi-coding-agent/tools/tool-errors";
 import { parseTeamCommandArgs } from "../../src/slash-commands/helpers/parse-team-args";
 
 describe("FileClaimBoard", () => {

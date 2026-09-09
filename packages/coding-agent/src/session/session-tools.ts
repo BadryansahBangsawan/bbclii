@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
-import type { Agent, AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { Model } from "@oh-my-pi/pi-ai";
-import { resolveDelegationBias } from "@oh-my-pi/pi-catalog/compat/delegation";
-import { isRecord, logger, prompt, stringProperty, untilAborted } from "@oh-my-pi/pi-utils";
+import type { Agent, AgentTool } from "@bbcli/pi-agent-core";
+import type { Model } from "@bbcli/pi-ai";
+import { resolveDelegationBias } from "@bbcli/pi-catalog/compat/delegation";
+import { isRecord, logger, prompt, stringProperty, untilAborted } from "@bbcli/pi-utils";
 import { reset as resetCapabilities } from "../capability";
 import type { EffectiveExtensionRoots } from "../capability/types";
 import type { ModelRegistry } from "../config/model-registry";

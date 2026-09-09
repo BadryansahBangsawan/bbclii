@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { ComposerPreferences } from "@oh-my-pi/pi-coding-agent/modes/composer";
-import { InteractiveMode } from "@oh-my-pi/pi-coding-agent/modes/interactive-mode";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { ComposerPreferences } from "@bbcli/pi-coding-agent/modes/composer";
+import { InteractiveMode } from "@bbcli/pi-coding-agent/modes/interactive-mode";
 import {
 	beginStartupComposer,
 	stopPendingStartupComposer,
 	takeStartupComposerLease,
-} from "@oh-my-pi/pi-coding-agent/modes/startup-composer";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
+} from "@bbcli/pi-coding-agent/modes/startup-composer";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
 import { VirtualTerminal } from "../../tui/test/virtual-terminal";
 import { assistantMsg, createTestSession, userMsg } from "./utilities";
 

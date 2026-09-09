@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto";
 import * as fs from "node:fs/promises";
 import http2 from "node:http2";
-import { classifyModel, collapseVariantId } from "@oh-my-pi/pi-catalog/compat/taxonomy";
+import { classifyModel, collapseVariantId } from "@bbcli/pi-catalog/compat/taxonomy";
 import type {
 	ConversationStep,
 	CursorRule,
 	McpToolDefinition,
 	RequestedModel_ModelParameterbytes,
-} from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
+} from "@bbcli/pi-catalog/discovery/cursor-proto";
 import {
 	AgentClientMessageSchema,
 	AgentConversationTurnStructureSchema,
@@ -148,7 +148,7 @@ import {
 	WriteShellStdinErrorSchema,
 	WriteShellStdinResultSchema,
 	WriteSuccessSchema,
-} from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
+} from "@bbcli/pi-catalog/discovery/cursor-proto";
 import {
 	create,
 	decodeJsonValue,
@@ -157,9 +157,9 @@ import {
 	type JsonValue,
 	toBinary,
 	toJson,
-} from "@oh-my-pi/pi-catalog/discovery/protobuf";
-import { THINKING_EFFORTS } from "@oh-my-pi/pi-catalog/effort";
-import { calculateCost } from "@oh-my-pi/pi-catalog/models";
+} from "@bbcli/pi-catalog/discovery/protobuf";
+import { THINKING_EFFORTS } from "@bbcli/pi-catalog/effort";
+import { calculateCost } from "@bbcli/pi-catalog/models";
 import {
 	$env,
 	isRecord,
@@ -168,7 +168,7 @@ import {
 	parseStreamingJson,
 	parseStreamingJsonThrottled,
 	sanitizeText,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import * as AIError from "../error";
 import type {
 	Api,

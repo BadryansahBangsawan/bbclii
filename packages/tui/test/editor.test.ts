@@ -3,18 +3,11 @@ import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 import { stripVTControlCharacters } from "node:util";
-import {
-	type ComposerStyle,
-	CURSOR_MARKER,
-	Editor,
-	type EditorTheme,
-	registerComposerStyle,
-	TUI,
-} from "@oh-my-pi/pi-tui";
-import { CombinedAutocompleteProvider } from "@oh-my-pi/pi-tui/autocomplete";
-import { KeybindingsManager, setKeybindings, TUI_KEYBINDINGS } from "@oh-my-pi/pi-tui/keybindings";
-import { setKittyProtocolActive } from "@oh-my-pi/pi-tui/keys";
-import { visibleWidth } from "@oh-my-pi/pi-tui/utils";
+import { type ComposerStyle, CURSOR_MARKER, Editor, type EditorTheme, registerComposerStyle, TUI } from "@bbcli/pi-tui";
+import { CombinedAutocompleteProvider } from "@bbcli/pi-tui/autocomplete";
+import { KeybindingsManager, setKeybindings, TUI_KEYBINDINGS } from "@bbcli/pi-tui/keybindings";
+import { setKittyProtocolActive } from "@bbcli/pi-tui/keys";
+import { visibleWidth } from "@bbcli/pi-tui/utils";
 import { defaultEditorTheme } from "./test-themes";
 import { VirtualTerminal } from "./virtual-terminal";
 

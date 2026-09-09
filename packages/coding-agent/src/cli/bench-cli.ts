@@ -1,4 +1,4 @@
-import type { ResolvedThinkingLevel } from "@oh-my-pi/pi-agent-core";
+import type { ResolvedThinkingLevel } from "@bbcli/pi-agent-core";
 import type {
 	Api,
 	ApiKeyResolver,
@@ -10,11 +10,11 @@ import type {
 	ProviderSessionState,
 	ServiceTier,
 	ServiceTierByFamily,
-} from "@oh-my-pi/pi-ai";
-import { resolveModelServiceTier, streamSimple } from "@oh-my-pi/pi-ai";
-import { replaceTabs, truncateToWidth } from "@oh-my-pi/pi-tui";
-import { formatDuration, formatNumber, prompt } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+} from "@bbcli/pi-ai";
+import { resolveModelServiceTier, streamSimple } from "@bbcli/pi-ai";
+import { replaceTabs, truncateToWidth } from "@bbcli/pi-tui";
+import { formatDuration, formatNumber, prompt } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import { formatModelSelectorValue, formatModelString } from "../config/model-resolver";
 import { buildServiceTierByFamily, serviceTierForAllFamilies, serviceTierSettingToTier } from "../config/service-tier";
 import cachePrefixTemplate from "../prompts/bench/cache-prefix.md" with { type: "text" };

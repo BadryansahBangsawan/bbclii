@@ -6,16 +6,16 @@
  * internals, which massively overcounts.
  */
 import { describe, expect, it } from "bun:test";
-import { type } from "@oh-my-pi/omptype";
-import { Tokenizer } from "@oh-my-pi/pi-agent-core";
-import { arkToWireSchema } from "@oh-my-pi/pi-ai/utils/schema";
+import { type } from "@bbcli/omptype";
+import { Tokenizer } from "@bbcli/pi-agent-core";
+import { arkToWireSchema } from "@bbcli/pi-ai/utils/schema";
 import {
 	type ContextBreakdown,
 	computeNonMessageBreakdown,
 	computeNonMessageTokens,
 	estimateToolSchemaTokens,
 	renderContextUsage,
-} from "@oh-my-pi/pi-coding-agent/modes/utils/context-usage";
+} from "@bbcli/pi-coding-agent/modes/utils/context-usage";
 import { applyToolProxy } from "../../src/extensibility/tool-proxy";
 
 const tokenizer = new Tokenizer();

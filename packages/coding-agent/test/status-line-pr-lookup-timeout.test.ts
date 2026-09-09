@@ -12,14 +12,14 @@
  * rejection so the segment never wedges after a single failure.
  */
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { StatusLineSettings } from "@oh-my-pi/pi-coding-agent/modes/components/status-line";
-import { StatusLineComponent } from "@oh-my-pi/pi-coding-agent/modes/components/status-line";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { github } from "@oh-my-pi/pi-coding-agent/utils/github";
-import type { VcsGitRepo, VcsGitRepoInfo, VcsHeadState, VcsRepo } from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { getProjectDir, setProjectDir } from "@oh-my-pi/pi-utils";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { StatusLineSettings } from "@bbcli/pi-coding-agent/modes/components/status-line";
+import { StatusLineComponent } from "@bbcli/pi-coding-agent/modes/components/status-line";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { github } from "@bbcli/pi-coding-agent/utils/github";
+import type { VcsGitRepo, VcsGitRepoInfo, VcsHeadState, VcsRepo } from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { getProjectDir, setProjectDir } from "@bbcli/pi-utils";
 
 const originalProjectDir = getProjectDir();
 

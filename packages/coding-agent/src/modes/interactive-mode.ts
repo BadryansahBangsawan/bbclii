@@ -4,17 +4,11 @@
  */
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import {
-	type Agent,
-	AgentBusyError,
-	type AgentMessage,
-	EventLoopKeepalive,
-	ThinkingLevel,
-} from "@oh-my-pi/pi-agent-core";
-import type { CompactionOutcome } from "@oh-my-pi/pi-agent-core/compaction";
-import type { AssistantMessage, ImageContent, Message, Model, Usage, UsageReport } from "@oh-my-pi/pi-ai";
-import { modelsAreEqual } from "@oh-my-pi/pi-catalog/models";
-import { execReplace } from "@oh-my-pi/pi-natives";
+import { type Agent, AgentBusyError, type AgentMessage, EventLoopKeepalive, ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { CompactionOutcome } from "@bbcli/pi-agent-core/compaction";
+import type { AssistantMessage, ImageContent, Message, Model, Usage, UsageReport } from "@bbcli/pi-ai";
+import { modelsAreEqual } from "@bbcli/pi-catalog/models";
+import { execReplace } from "@bbcli/pi-natives";
 import type {
 	AutocompleteProvider,
 	Component,
@@ -22,7 +16,7 @@ import type {
 	LoaderMessageColorFn,
 	OverlayHandle,
 	SlashCommand,
-} from "@oh-my-pi/pi-tui";
+} from "@bbcli/pi-tui";
 import {
 	Container,
 	clearRenderCache,
@@ -36,9 +30,9 @@ import {
 	Text,
 	type TUI,
 	visibleWidth,
-} from "@oh-my-pi/pi-tui";
-import type { TerminalAppearanceRequestToken } from "@oh-my-pi/pi-tui/terminal";
-import { isInsideTerminalMultiplexer } from "@oh-my-pi/pi-tui/terminal-capabilities";
+} from "@bbcli/pi-tui";
+import type { TerminalAppearanceRequestToken } from "@bbcli/pi-tui/terminal";
+import { isInsideTerminalMultiplexer } from "@bbcli/pi-tui/terminal-capabilities";
 import {
 	$env,
 	adjustHsv,
@@ -51,8 +45,8 @@ import {
 	prompt,
 	sanitizeText,
 	setProjectDir,
-} from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+} from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import { reset as resetCapabilities } from "../capability";
 import { restartArgv } from "../cli/flag-tables";
 import type { CollabGuestLink } from "../collab/guest";

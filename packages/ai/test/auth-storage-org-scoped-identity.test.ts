@@ -25,9 +25,9 @@ import {
 	REMOTE_REFRESH_SENTINEL,
 	SqliteAuthCredentialStore,
 	type StoredAuthCredential,
-} from "@oh-my-pi/pi-ai/auth-storage";
-import type { UsageReport } from "@oh-my-pi/pi-ai/usage";
-import * as claudeUsage from "@oh-my-pi/pi-ai/usage/claude";
+} from "@bbcli/pi-ai/auth-storage";
+import type { UsageReport } from "@bbcli/pi-ai/usage";
+import * as claudeUsage from "@bbcli/pi-ai/usage/claude";
 import { removeWithRetries } from "../../utils/src/temp";
 
 const EMAIL = "shared@example.com";

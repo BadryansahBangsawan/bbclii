@@ -1,17 +1,17 @@
 import * as fs from "node:fs";
-import { type } from "@oh-my-pi/omptype";
+import { type } from "@bbcli/omptype";
 import type {
 	AgentTool,
 	AgentToolContext,
 	AgentToolResult,
 	AgentToolUpdateCallback,
 	ToolApprovalDecision,
-} from "@oh-my-pi/pi-agent-core";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import type { Component } from "@oh-my-pi/pi-tui";
-import { ImageProtocol, TERMINAL } from "@oh-my-pi/pi-tui";
-import { getProjectDir, isEnoent, logger, prompt } from "@oh-my-pi/pi-utils";
-import { isPosixShell } from "@oh-my-pi/pi-utils/procmgr";
+} from "@bbcli/pi-agent-core";
+import type { ImageContent } from "@bbcli/pi-ai";
+import type { Component } from "@bbcli/pi-tui";
+import { ImageProtocol, TERMINAL } from "@bbcli/pi-tui";
+import { getProjectDir, isEnoent, logger, prompt } from "@bbcli/pi-utils";
+import { isPosixShell } from "@bbcli/pi-utils/procmgr";
 import {
 	DEFAULT_AUTO_BACKGROUND_THRESHOLD_MS,
 	formatBackgroundNotice,

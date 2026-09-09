@@ -15,7 +15,7 @@ import {
 	type TUIOptions,
 	type ViewportSize,
 	visibleWidth,
-} from "@oh-my-pi/pi-tui";
+} from "@bbcli/pi-tui";
 import { CustomEditor } from "./components/custom-editor";
 import { type AnimationFrame, TranscriptContainer } from "./components/transcript-container";
 import { type LspServerInfo, type RecentSession, WelcomeComponent } from "./components/welcome";

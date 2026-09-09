@@ -1,9 +1,9 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
-import { resetSettingsForTest, Settings, settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EventController } from "@oh-my-pi/pi-coding-agent/modes/controllers/event-controller";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { Loader } from "@oh-my-pi/pi-tui";
+import { resetSettingsForTest, Settings, settings } from "@bbcli/pi-coding-agent/config/settings";
+import { EventController } from "@bbcli/pi-coding-agent/modes/controllers/event-controller";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import { Loader } from "@bbcli/pi-tui";
 import { createInteractiveModeContext } from "../../helpers/interactive-mode-context";
 
 /**

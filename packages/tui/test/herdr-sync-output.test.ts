@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
-import { TUI } from "@oh-my-pi/pi-tui";
-import type { PrivateModeReportHandler } from "@oh-my-pi/pi-tui/terminal";
+import { TUI } from "@bbcli/pi-tui";
+import type { PrivateModeReportHandler } from "@bbcli/pi-tui/terminal";
 import { withoutTerminalMultiplexer } from "./helpers/terminal-multiplexer";
 import { VirtualTerminal } from "./virtual-terminal";
 

@@ -2,7 +2,7 @@ import {
 	COPILOT_CAPI_IDENTITY_HEADERS,
 	getGitHubCopilotBaseUrl,
 	parseGitHubCopilotApiKey,
-} from "@oh-my-pi/pi-catalog/wire/github-copilot";
+} from "@bbcli/pi-catalog/wire/github-copilot";
 import type { Message } from "../types";
 /**
  * Infer whether the current request to Copilot is user-initiated or agent-initiated.

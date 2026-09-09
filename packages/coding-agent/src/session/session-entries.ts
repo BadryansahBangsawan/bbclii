@@ -1,4 +1,4 @@
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
 import type {
 	ImageContent,
 	MessageAttribution,
@@ -6,7 +6,7 @@ import type {
 	StopReason,
 	TextContent,
 	Usage,
-} from "@oh-my-pi/pi-ai";
+} from "@bbcli/pi-ai";
 import type { StructuredSubagentSchemaMode } from "../task/types";
 import type { CompactionMethod } from "./compaction-methods";
 
@@ -195,7 +195,7 @@ export interface TitleChangeEntry extends SessionEntryBase {
 	trigger?: string;
 }
 
-declare module "@oh-my-pi/pi-agent-core/compaction/entries" {
+declare module "@bbcli/pi-agent-core/compaction/entries" {
 	interface CustomCompactionSessionEntries {
 		titleChange: TitleChangeEntry;
 		credentialPin: CredentialPinEntry;

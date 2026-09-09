@@ -3,13 +3,13 @@ import { afterEach, beforeAll, beforeEach, describe, expect, test, vi } from "bu
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { AuthStorage, SqliteAuthCredentialStore } from "@oh-my-pi/pi-ai";
-import * as mcpClient from "@oh-my-pi/pi-coding-agent/mcp/client";
-import * as oauthFlow from "@oh-my-pi/pi-coding-agent/mcp/oauth-flow";
-import type { SourceMeta } from "@oh-my-pi/pi-coding-agent/capability/types";
-import type { MCPServerConfig } from "@oh-my-pi/pi-coding-agent/mcp/types";
-import { MCPCommandController } from "@oh-my-pi/pi-coding-agent/modes/controllers/mcp-command-controller";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
+import { AuthStorage, SqliteAuthCredentialStore } from "@bbcli/pi-ai";
+import * as mcpClient from "@bbcli/pi-coding-agent/mcp/client";
+import * as oauthFlow from "@bbcli/pi-coding-agent/mcp/oauth-flow";
+import type { SourceMeta } from "@bbcli/pi-coding-agent/capability/types";
+import type { MCPServerConfig } from "@bbcli/pi-coding-agent/mcp/types";
+import { MCPCommandController } from "@bbcli/pi-coding-agent/modes/controllers/mcp-command-controller";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
 import {
 	getConfigRootDir,
 	getMCPConfigPath,
@@ -17,7 +17,7 @@ import {
 	removeWithRetries,
 	setAgentDir,
 	setProjectDir,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import {
 	createInteractiveModeContext,
 	createMcpManagerStub,

@@ -9,10 +9,10 @@ import {
 	getStatsByProvider,
 	initDb,
 	insertMessageStats,
-} from "@oh-my-pi/omp-stats/db";
-import type { MessageStats } from "@oh-my-pi/omp-stats/types";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { getStatsDbPath } from "@oh-my-pi/pi-utils";
+} from "@bbcli/stats/db";
+import type { MessageStats } from "@bbcli/stats/types";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { getStatsDbPath } from "@bbcli/pi-utils";
 import { installStatsTestIsolation } from "./helpers/temp-agent";
 
 installStatsTestIsolation("@pi-stats-db-");

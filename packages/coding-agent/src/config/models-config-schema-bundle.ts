@@ -1,5 +1,5 @@
-import { type } from "@oh-my-pi/omptype";
-import { once } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import { once } from "@bbcli/pi-utils";
 
 export const getModelsConfigSchemaBundle = once(() => {
 	const OpenRouterRoutingSchema = type({

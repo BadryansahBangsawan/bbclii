@@ -4,16 +4,13 @@
  * Extends the base AgentMessage type with coding-agent specific message types,
  * and provides a transformer to convert them to LLM-compatible messages.
  */
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import {
-	invalidateMessageCache,
-	registerMessageCacheInvalidator,
-} from "@oh-my-pi/pi-agent-core/compaction/message-cache";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import { invalidateMessageCache, registerMessageCacheInvalidator } from "@bbcli/pi-agent-core/compaction/message-cache";
 import {
 	type BranchSummaryMessage,
 	type CompactionSummaryMessage,
 	convertMessageToLlm,
-} from "@oh-my-pi/pi-agent-core/compaction/messages";
+} from "@bbcli/pi-agent-core/compaction/messages";
 import type {
 	AssistantMessage,
 	ImageContent,
@@ -21,10 +18,10 @@ import type {
 	MessageAttribution,
 	TextContent,
 	UserMessage,
-} from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { isRecord, logger, prompt } from "@oh-my-pi/pi-utils";
-import { COLLAB_PROMPT_MESSAGE_TYPE } from "@oh-my-pi/pi-wire";
+} from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { isRecord, logger, prompt } from "@bbcli/pi-utils";
+import { COLLAB_PROMPT_MESSAGE_TYPE } from "@bbcli/pi-wire";
 import userInterjectionTemplate from "../prompts/steering/user-interjection.md" with { type: "text" };
 import { formatTitleConversationContext, type TitleConversationTurn } from "../tiny/message-preproc";
 
@@ -34,7 +31,7 @@ export {
 	createBranchSummaryMessage,
 	createCompactionSummaryMessage,
 	createCustomMessage,
-} from "@oh-my-pi/pi-agent-core/compaction/messages";
+} from "@bbcli/pi-agent-core/compaction/messages";
 
 import type { OutputMeta } from "../tools/output-meta";
 import { formatOutputNotice } from "../tools/output-meta";
@@ -1017,7 +1014,7 @@ export interface FileMentionMessage {
 
 // Extend CustomAgentMessages via declaration merging
 // Legacy hookMessage is kept for migration; new code should use custom.
-declare module "@oh-my-pi/pi-agent-core" {
+declare module "@bbcli/pi-agent-core" {
 	interface CustomAgentMessages {
 		bashExecution: BashExecutionMessage;
 		pythonExecution: PythonExecutionMessage;

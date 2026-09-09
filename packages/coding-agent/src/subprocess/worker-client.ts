@@ -9,7 +9,7 @@ import {
 	postmortem,
 	stripWindowsExtendedLengthPathPrefix,
 	workerHostEntry,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import type { Subprocess } from "bun";
 
 /**
@@ -178,7 +178,7 @@ export function nativeLibraryPathOverlay(
 	platform: NodeJS.Platform,
 ): Record<string, string> {
 	if (platform !== "linux") return {};
-	const native = env.OMP_NATIVE_LIBRARY_PATH;
+	const native = env.BBCLI_NATIVE_LIBRARY_PATH ?? env.OMP_NATIVE_LIBRARY_PATH;
 	if (typeof native !== "string" || native.length === 0) return {};
 	const inherited = env.LD_LIBRARY_PATH;
 	return { LD_LIBRARY_PATH: inherited ? `${inherited}:${native}` : native };

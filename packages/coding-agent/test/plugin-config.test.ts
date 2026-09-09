@@ -2,11 +2,11 @@ import { afterEach, beforeAll, beforeEach, describe, expect, mock, spyOn, test }
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { runPluginCommand } from "@oh-my-pi/pi-coding-agent/cli/plugin-cli";
-import { PluginManager } from "@oh-my-pi/pi-coding-agent/extensibility/plugins/manager";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import * as piUtils from "@oh-my-pi/pi-utils";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+import { runPluginCommand } from "@bbcli/pi-coding-agent/cli/plugin-cli";
+import { PluginManager } from "@bbcli/pi-coding-agent/extensibility/plugins/manager";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import * as piUtils from "@bbcli/pi-utils";
+import { removeWithRetries } from "@bbcli/pi-utils";
 
 beforeAll(async () => {
 	await initTheme(false);
@@ -20,7 +20,7 @@ describe("plugin config", () => {
 	beforeEach(async () => {
 		tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-plugin-config-"));
 		pluginsDir = path.join(tmpRoot, "plugins");
-		lockfile = path.join(pluginsDir, "omp-plugins.lock.json");
+		lockfile = path.join(pluginsDir, "bbcli-plugins.lock.json");
 
 		spyOn(piUtils, "getPluginsDir").mockReturnValue(pluginsDir);
 		spyOn(piUtils, "getPluginsLockfile").mockReturnValue(lockfile);
@@ -171,7 +171,7 @@ describe("plugin config", () => {
 		await fs.mkdir(path.dirname(projectPluginPath), { recursive: true });
 		await fs.symlink(projectInstallPath, projectPluginPath, "dir");
 		await Bun.write(
-			path.join(projectPluginsDir, "omp-plugins.lock.json"),
+			path.join(projectPluginsDir, "bbcli-plugins.lock.json"),
 			JSON.stringify({
 				plugins: { [pluginName]: { version: "2.0.0", enabledFeatures: null, enabled: true } },
 				settings: {},
@@ -213,7 +213,7 @@ describe("plugin config", () => {
 		await fs.mkdir(path.join(projectRoot, "node_modules"), { recursive: true });
 		await fs.symlink(installPath, path.join(projectRoot, "node_modules", "omp-commit"), "dir");
 		await Bun.write(
-			path.join(projectRoot, "omp-plugins.lock.json"),
+			path.join(projectRoot, "bbcli-plugins.lock.json"),
 			JSON.stringify({
 				plugins: { "omp-commit": { version: "2.0.0", enabledFeatures: null, enabled } },
 				settings: {},

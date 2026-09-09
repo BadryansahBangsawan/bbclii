@@ -1,15 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { renderDemotedThinking } from "@oh-my-pi/pi-ai/dialect";
-import { convertAnthropicMessages } from "@oh-my-pi/pi-ai/providers/anthropic";
-import type {
-	AssistantMessage,
-	Message,
-	Model,
-	ModelSpec,
-	ToolResultMessage,
-	UserMessage,
-} from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
+import { renderDemotedThinking } from "@bbcli/pi-ai/dialect";
+import { convertAnthropicMessages } from "@bbcli/pi-ai/providers/anthropic";
+import type { AssistantMessage, Message, Model, ModelSpec, ToolResultMessage, UserMessage } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
 
 /**
  * Cross-model `anthropic-messages` continuations must preserve the prior

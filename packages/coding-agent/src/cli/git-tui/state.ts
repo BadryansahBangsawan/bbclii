@@ -6,16 +6,10 @@
  * the split diff pane, and the staging/commit actions the sidebar triggers.
  */
 import * as path from "node:path";
-import type { VcsGitRepo, VcsNumstatEntry } from "@oh-my-pi/pi-natives";
-import {
-	DiffSide,
-	DiffStream,
-	type DiffStreamProgress,
-	type DiffStreamResult,
-	rasterizeSvg,
-} from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { BINARY_SNIFF_BYTES, isEnoent, isProbablyBinaryHeader } from "@oh-my-pi/pi-utils";
+import type { VcsGitRepo, VcsNumstatEntry } from "@bbcli/pi-natives";
+import { DiffSide, DiffStream, type DiffStreamProgress, type DiffStreamResult, rasterizeSvg } from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { BINARY_SNIFF_BYTES, isEnoent, isProbablyBinaryHeader } from "@bbcli/pi-utils";
 import type { NumstatEntry } from "../../commit/types";
 
 /** SHA of git's canonical empty tree: diff base for a root commit. */

@@ -2,16 +2,16 @@ import { beforeAll, describe, expect, it } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { AgentTool } from "@oh-my-pi/pi-agent-core";
-import { editDiffString } from "@oh-my-pi/pi-natives";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { editToolRenderer, renderStreamingFallback } from "@oh-my-pi/pi-coding-agent/edit/renderer";
-import { renderDiff } from "@oh-my-pi/pi-coding-agent/modes/components/diff";
-import { ToolExecutionComponent } from "@oh-my-pi/pi-coding-agent/modes/components/tool-execution";
-import * as themeModule from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { type TUI, visibleWidth } from "@oh-my-pi/pi-tui";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+import type { AgentTool } from "@bbcli/pi-agent-core";
+import { editDiffString } from "@bbcli/pi-natives";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { editToolRenderer, renderStreamingFallback } from "@bbcli/pi-coding-agent/edit/renderer";
+import { renderDiff } from "@bbcli/pi-coding-agent/modes/components/diff";
+import { ToolExecutionComponent } from "@bbcli/pi-coding-agent/modes/components/tool-execution";
+import * as themeModule from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { type TUI, visibleWidth } from "@bbcli/pi-tui";
+import { removeWithRetries } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 
 beforeAll(async () => {
 	resetSettingsForTest();

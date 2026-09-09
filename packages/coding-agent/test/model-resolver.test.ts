@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
-import { type Api, Effort, type Model, type ModelSpec } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { DEFAULT_MODEL_PER_PROVIDER } from "@oh-my-pi/pi-catalog/provider-models";
+import { type Api, Effort, type Model, type ModelSpec } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { DEFAULT_MODEL_PER_PROVIDER } from "@bbcli/pi-catalog/provider-models";
 import {
 	expandRoleAlias,
 	extractExplicitThinkingSelector,
@@ -22,9 +22,9 @@ import {
 	resolveModelRoleValue,
 	resolveModelScope,
 	resolveProviderModelReference,
-} from "@oh-my-pi/pi-coding-agent/config/model-resolver";
-import { DEFAULT_MODEL_ROLE_ALIAS, LEGACY_MODEL_ROLE_ALIAS_PREFIX } from "@oh-my-pi/pi-coding-agent/config/model-roles";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
+} from "@bbcli/pi-coding-agent/config/model-resolver";
+import { DEFAULT_MODEL_ROLE_ALIAS, LEGACY_MODEL_ROLE_ALIAS_PREFIX } from "@bbcli/pi-coding-agent/config/model-roles";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
 
 // Mock models for testing
 const mockModels: Model<"anthropic-messages">[] = [

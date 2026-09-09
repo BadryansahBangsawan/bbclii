@@ -1,9 +1,9 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "bun:test";
 import * as os from "node:os";
 import * as path from "node:path";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { KeybindingsManager, setKeyHintPlatform } from "@oh-my-pi/pi-coding-agent/config/keybindings";
-import { getThemeByName, initTheme, type Theme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import { KeybindingsManager, setKeyHintPlatform } from "@bbcli/pi-coding-agent/config/keybindings";
+import { getThemeByName, initTheme, type Theme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
 import {
 	dedupeParseErrors,
 	expandKeyHint,
@@ -17,13 +17,13 @@ import {
 	sanitizeDisplayLines,
 	shortenPath,
 	truncateDiffByHunk,
-} from "@oh-my-pi/pi-coding-agent/tools/render-utils";
+} from "@bbcli/pi-coding-agent/tools/render-utils";
 import {
 	DEFAULT_TAB_WIDTH,
 	getKeybindings,
 	setKeybindings,
 	type KeybindingsManager as TuiKeybindingsManager,
-} from "@oh-my-pi/pi-tui";
+} from "@bbcli/pi-tui";
 
 describe("feed model badges", () => {
 	let uiTheme: Theme;

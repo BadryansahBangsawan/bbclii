@@ -2,7 +2,7 @@
  * Component for displaying bash command execution with streaming output.
  */
 
-import type { ImageContent } from "@oh-my-pi/pi-ai";
+import type { ImageContent } from "@bbcli/pi-ai";
 import {
 	Container,
 	Ellipsis,
@@ -16,9 +16,9 @@ import {
 	type TUI,
 	truncateToWidth,
 	visibleWidth,
-} from "@oh-my-pi/pi-tui";
-import { sanitizeText } from "@oh-my-pi/pi-utils";
-import type { Terminal as XtermTerminalType } from "@oh-my-pi/pi-utils/vterm";
+} from "@bbcli/pi-tui";
+import { sanitizeText } from "@bbcli/pi-utils";
+import type { Terminal as XtermTerminalType } from "@bbcli/pi-utils/vterm";
 import { theme } from "../../modes/theme/theme";
 import { loadXtermTerminal } from "../../tools/bash-interactive";
 import type { TruncationMeta } from "../../tools/output-meta";

@@ -1,4 +1,4 @@
-import { getProjectDir, logger } from "@oh-my-pi/pi-utils";
+import { getProjectDir, logger } from "@bbcli/pi-utils";
 import {
 	type AutocompleteItem,
 	type AutocompleteProvider,

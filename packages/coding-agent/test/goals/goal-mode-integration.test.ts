@@ -1,21 +1,21 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent, Model } from "@oh-my-pi/pi-ai";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { GoalTool } from "@oh-my-pi/pi-coding-agent/goals/tools/goal-tool";
-import { InteractiveMode } from "@oh-my-pi/pi-coding-agent/modes/interactive-mode";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { SubmittedUserInput } from "@oh-my-pi/pi-coding-agent/modes/types";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { normalizeCustomMessagePayload } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { executeBuiltinSlashCommand } from "@oh-my-pi/pi-coding-agent/slash-commands/builtin-registry";
-import { createTools, type Tool, type ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import type { TodoPhase } from "@oh-my-pi/pi-coding-agent/tools/todo";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@bbcli/pi-agent-core";
+import type { ImageContent, Model } from "@bbcli/pi-ai";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { GoalTool } from "@bbcli/pi-coding-agent/goals/tools/goal-tool";
+import { InteractiveMode } from "@bbcli/pi-coding-agent/modes/interactive-mode";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { SubmittedUserInput } from "@bbcli/pi-coding-agent/modes/types";
+import { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { normalizeCustomMessagePayload } from "@bbcli/pi-coding-agent/session/messages";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { executeBuiltinSlashCommand } from "@bbcli/pi-coding-agent/slash-commands/builtin-registry";
+import { createTools, type Tool, type ToolSession } from "@bbcli/pi-coding-agent/tools";
+import type { TodoPhase } from "@bbcli/pi-coding-agent/tools/todo";
+import { TempDir } from "@bbcli/pi-utils";
 
 function createToolSession(cwd: string, settings: Settings, overrides: Partial<ToolSession> = {}): ToolSession {
 	return {

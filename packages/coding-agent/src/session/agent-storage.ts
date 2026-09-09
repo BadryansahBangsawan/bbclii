@@ -7,7 +7,7 @@ import {
 	isSqliteBusyError,
 	SqliteAuthCredentialStore,
 	type StoredAuthCredential,
-} from "@oh-my-pi/pi-ai";
+} from "@bbcli/pi-ai";
 import {
 	AsyncDrain,
 	checkpointWal,
@@ -17,7 +17,7 @@ import {
 	isRecord,
 	logger,
 	postmortem,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import type { RawSettings as Settings } from "../config/settings";
 
 /** Row shape for settings table queries */
@@ -134,7 +134,7 @@ let cancelExitCleanup: (() => void) | undefined;
 
 /**
  * Unified SQLite storage for agent settings, model usage, and auth credentials.
- * Delegates auth credential operations to AuthCredentialStore from @oh-my-pi/pi-ai.
+ * Delegates auth credential operations to AuthCredentialStore from @bbcli/pi-ai.
  * Uses singleton pattern per database path; access via AgentStorage.open().
  */
 export class AgentStorage {

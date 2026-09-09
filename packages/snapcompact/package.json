@@ -1,9 +1,9 @@
 {
   "type": "module",
-  "name": "@oh-my-pi/snapcompact",
+  "name": "@bbcli/snapcompact",
   "version": "18.1.15",
   "description": "Bitmap-frame context compression for vision-capable LLMs",
-  "homepage": "https://omp.sh",
+  "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "license": "MIT",
   "repository": {
@@ -31,11 +31,11 @@
     "fmt": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts'"
   },
   "dependencies": {
-    "@oh-my-pi/pi-ai": "catalog:",
-    "@oh-my-pi/pi-catalog": "catalog:",
-    "@oh-my-pi/pi-natives": "catalog:",
-    "@oh-my-pi/pi-utils": "catalog:",
-    "@oh-my-pi/pi-wire": "catalog:"
+    "@bbcli/pi-ai": "catalog:",
+    "@bbcli/pi-catalog": "catalog:",
+    "@bbcli/pi-natives": "catalog:",
+    "@bbcli/pi-utils": "catalog:",
+    "@bbcli/pi-wire": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "catalog:"

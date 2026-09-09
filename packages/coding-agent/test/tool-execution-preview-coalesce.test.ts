@@ -1,8 +1,8 @@
 import { beforeAll, describe, expect, test } from "bun:test";
-import type { AgentTool } from "@oh-my-pi/pi-agent-core";
-import { ToolExecutionComponent } from "@oh-my-pi/pi-coding-agent/modes/components/tool-execution";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { TUI } from "@oh-my-pi/pi-tui";
+import type { AgentTool } from "@bbcli/pi-agent-core";
+import { ToolExecutionComponent } from "@bbcli/pi-coding-agent/modes/components/tool-execution";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { TUI } from "@bbcli/pi-tui";
 
 describe("native streaming edit previews", () => {
 	beforeAll(async () => {

@@ -9,7 +9,7 @@
  */
 
 import * as fs from "node:fs";
-import { logger } from "@oh-my-pi/pi-utils";
+import { logger, readBrandedEnv } from "@bbcli/pi-utils";
 import { isUploaderKind, LocalBlobBackend } from "./broker";
 import {
 	BLOB_BROKER_CONFIG_ENV,
@@ -146,8 +146,8 @@ export function createControlHandler(
 
 /** Boot the blob daemon from worker environment variables and serve forever. */
 export async function startBlobBrokerFromEnvironment(): Promise<void> {
-	const socketPath = Bun.env[BLOB_BROKER_SOCKET_ENV];
-	const configJson = Bun.env[BLOB_BROKER_CONFIG_ENV];
+	const socketPath = readBrandedEnv("BLOB_BROKER_SOCKET");
+	const configJson = readBrandedEnv("BLOB_BROKER_CONFIG");
 	if (!socketPath || !configJson) {
 		throw new Error(`blob broker worker requires ${BLOB_BROKER_SOCKET_ENV} and ${BLOB_BROKER_CONFIG_ENV}`);
 	}

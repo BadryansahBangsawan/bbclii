@@ -1,11 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import MODELS_JSON from "@oh-my-pi/pi-catalog/models.json" with { type: "json" };
-import {
-	MODELS_DEV_PROVIDER_DESCRIPTORS,
-	mapModelsDevToModels,
-} from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
-import type { ModelSpec } from "@oh-my-pi/pi-catalog/types";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import MODELS_JSON from "@bbcli/pi-catalog/models.json" with { type: "json" };
+import { MODELS_DEV_PROVIDER_DESCRIPTORS, mapModelsDevToModels } from "@bbcli/pi-catalog/provider-models/openai-compat";
+import type { ModelSpec } from "@bbcli/pi-catalog/types";
 import { applyGeneratedModelPolicies } from "../scripts/generated-policies";
 
 const XAI_MODELS_DEV_FIXTURE = {

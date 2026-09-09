@@ -1,6 +1,6 @@
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Api, ApiKey, AssistantMessage, AuthStorage, Model } from "@oh-my-pi/pi-ai";
-import { completeSimple } from "@oh-my-pi/pi-ai";
+import type { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { Api, ApiKey, AssistantMessage, AuthStorage, Model } from "@bbcli/pi-ai";
+import { completeSimple } from "@bbcli/pi-ai";
 import { toReasoningEffort } from "../../thinking";
 import type { ResolvedCommitModel } from "../model-selection";
 import { type CommitInferenceCache, computeCommitCacheKey } from "./cache";

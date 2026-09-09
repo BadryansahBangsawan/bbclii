@@ -1,8 +1,8 @@
 import * as path from "node:path";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import { type AutocompleteProvider, matchesKey, type PasteOptions, type SlashCommand } from "@oh-my-pi/pi-tui";
-import { isEnoent, logger, sanitizeText } from "@oh-my-pi/pi-utils";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { ImageContent } from "@bbcli/pi-ai";
+import { type AutocompleteProvider, matchesKey, type PasteOptions, type SlashCommand } from "@bbcli/pi-tui";
+import { isEnoent, logger, sanitizeText } from "@bbcli/pi-utils";
 import { isSettingsInitialized, settings } from "../../config/settings";
 import { resolveLocalRoot } from "../../internal-urls";
 import { AskDialogComponent } from "../../modes/components/ask-dialog";

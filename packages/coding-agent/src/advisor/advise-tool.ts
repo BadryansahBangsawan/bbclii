@@ -1,4 +1,4 @@
-import { type } from "@oh-my-pi/omptype";
+import { type } from "@bbcli/omptype";
 import type {
 	AgentIdentity,
 	AgentTelemetryConfig,
@@ -6,8 +6,8 @@ import type {
 	AgentToolContext,
 	AgentToolResult,
 	AgentToolUpdateCallback,
-} from "@oh-my-pi/pi-agent-core";
-import { escapeXmlAttribute, escapeXmlText } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-agent-core";
+import { escapeXmlAttribute, escapeXmlText } from "@bbcli/pi-utils";
 import adviseDescription from "../prompts/advisor/advise-tool.md" with { type: "text" };
 import { type AdvisorEmissionDecision, normalizeAdvisorNote } from "./emission-guard";
 

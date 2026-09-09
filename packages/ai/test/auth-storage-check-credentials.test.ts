@@ -31,10 +31,10 @@ import {
 	type CompletionProbeInput,
 	REMOTE_REFRESH_SENTINEL,
 	type StoredAuthCredential,
-} from "@oh-my-pi/pi-ai/auth-storage";
-import type { UsageProvider } from "@oh-my-pi/pi-ai/usage";
-import * as claudeUsage from "@oh-my-pi/pi-ai/usage/claude";
-import { ollamaCloudUsageProvider } from "@oh-my-pi/pi-ai/usage/ollama";
+} from "@bbcli/pi-ai/auth-storage";
+import type { UsageProvider } from "@bbcli/pi-ai/usage";
+import * as claudeUsage from "@bbcli/pi-ai/usage/claude";
+import { ollamaCloudUsageProvider } from "@bbcli/pi-ai/usage/ollama";
 
 function oauthRow(id: number, email: string, opts?: { expired?: boolean }): StoredAuthCredential {
 	const credential: AuthCredential = {

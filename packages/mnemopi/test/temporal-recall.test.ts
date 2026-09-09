@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "bun:test";
-import { BeamMemory } from "@oh-my-pi/pi-mnemopi/core/beam";
-import { parseQueryTime, temporalBoost } from "@oh-my-pi/pi-mnemopi/core/beam/recall";
+import { BeamMemory } from "@bbcli/pi-mnemopi/core/beam";
+import { parseQueryTime, temporalBoost } from "@bbcli/pi-mnemopi/core/beam/recall";
 
 const beams: BeamMemory[] = [];
 

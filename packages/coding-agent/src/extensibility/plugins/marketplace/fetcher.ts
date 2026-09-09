@@ -7,8 +7,8 @@
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { isEnoent, logger } from "@oh-my-pi/pi-utils";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { isEnoent, logger } from "@bbcli/pi-utils";
 
 import { isValidNameSegment, type MarketplaceCatalog, type MarketplaceSourceType } from "./types";
 

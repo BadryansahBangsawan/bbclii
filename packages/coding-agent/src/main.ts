@@ -7,8 +7,8 @@
 import * as fsSync from "node:fs";
 import * as os from "node:os";
 import { createInterface } from "node:readline/promises";
-import { EventLoopKeepalive, type ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { ImageContent, Model } from "@oh-my-pi/pi-ai";
+import { EventLoopKeepalive, type ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { ImageContent, Model } from "@bbcli/pi-ai";
 import {
 	$env,
 	directoryIsMissing,
@@ -21,8 +21,8 @@ import {
 	setInteractiveHost,
 	setProjectDir,
 	VERSION,
-} from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+} from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import { reset as resetCapabilities } from "./capability";
 import { type Args, reportUnrecognizedFlags, validateToolNames } from "./cli/args";
 import { applyExtensionFlags, type ExtensionFlagSink } from "./cli/extension-flags";

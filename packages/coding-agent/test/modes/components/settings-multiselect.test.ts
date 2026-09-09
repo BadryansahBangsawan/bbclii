@@ -1,8 +1,8 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "bun:test";
-import { resetSettingsForTest, Settings, settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { SettingsSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/settings-selector";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { SEARCH_PROVIDER_CHOICES } from "@oh-my-pi/pi-coding-agent/web/search/types";
+import { resetSettingsForTest, Settings, settings } from "@bbcli/pi-coding-agent/config/settings";
+import { SettingsSelectorComponent } from "@bbcli/pi-coding-agent/modes/components/settings-selector";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { SEARCH_PROVIDER_CHOICES } from "@bbcli/pi-coding-agent/web/search/types";
 
 beforeAll(async () => {
 	await initTheme();

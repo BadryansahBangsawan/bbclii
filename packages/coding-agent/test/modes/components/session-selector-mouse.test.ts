@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "bun:test";
-import { SessionSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/session-selector";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { SessionInfo } from "@oh-my-pi/pi-coding-agent/session/session-listing";
+import { SessionSelectorComponent } from "@bbcli/pi-coding-agent/modes/components/session-selector";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { SessionInfo } from "@bbcli/pi-coding-agent/session/session-listing";
 
 beforeAll(async () => {
 	await initTheme();

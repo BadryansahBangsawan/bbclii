@@ -1,6 +1,6 @@
 import * as stream from "node:stream";
-import { postmortem } from "@oh-my-pi/pi-utils";
-import { AgentSideConnection, ndJsonStream, type Stream } from "@oh-my-pi/pi-utils/acp";
+import { postmortem } from "@bbcli/pi-utils";
+import { AgentSideConnection, ndJsonStream, type Stream } from "@bbcli/pi-utils/acp";
 import type { ExtensionUIContext } from "../../extensibility/extensions/types";
 import type { AgentSession } from "../../session/agent-session";
 import { AcpAgent } from "./acp-agent";

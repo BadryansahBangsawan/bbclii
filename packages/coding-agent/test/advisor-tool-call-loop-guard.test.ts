@@ -1,15 +1,15 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "bun:test";
-import { type } from "@oh-my-pi/omptype";
-import { Agent, type AgentMessage, type AgentTool, type AgentTurnEndContext } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, Context, ToolResultMessage } from "@oh-my-pi/pi-ai";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentSession } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import type { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import { Agent, type AgentMessage, type AgentTool, type AgentTurnEndContext } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, Context, ToolResultMessage } from "@bbcli/pi-ai";
+import { createMockModel } from "@bbcli/pi-ai/providers/mock";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AgentSession } from "@bbcli/pi-coding-agent/session/agent-session";
+import type { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { TempDir } from "@bbcli/pi-utils";
 import { AdvisorLoopGuard } from "../src/advisor/loop-guard";
 import { createInMemoryAuthStorage } from "./helpers/agent-session-setup";
 

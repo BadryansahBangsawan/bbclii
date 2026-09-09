@@ -1,11 +1,11 @@
 import { describe, expect, spyOn, test } from "bun:test";
 import { scheduler } from "node:timers/promises";
-import { clearCustomApis, registerCustomApi } from "@oh-my-pi/pi-ai/api-registry";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { createMockModel, type MockContent, registerMockApi } from "@oh-my-pi/pi-ai/providers/mock";
-import { complete, completeSimple, stream, streamSimple } from "@oh-my-pi/pi-ai/stream";
-import type { Api, AssistantMessage, AssistantMessageEvent, Context, Model } from "@oh-my-pi/pi-ai/types";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
+import { clearCustomApis, registerCustomApi } from "@bbcli/pi-ai/api-registry";
+import * as AIError from "@bbcli/pi-ai/error";
+import { createMockModel, type MockContent, registerMockApi } from "@bbcli/pi-ai/providers/mock";
+import { complete, completeSimple, stream, streamSimple } from "@bbcli/pi-ai/stream";
+import type { Api, AssistantMessage, AssistantMessageEvent, Context, Model } from "@bbcli/pi-ai/types";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
 import {
 	GEMINI_HEADER_RUNAWAY_THRESHOLD,
 	GeminiHeaderRunDetector,
@@ -14,9 +14,9 @@ import {
 	THINKING_LOOP_ERROR_MARKER,
 	ThinkingLoopDetector,
 	withThinkingLoopGuard,
-} from "@oh-my-pi/pi-ai/utils/thinking-loop";
-import { classifyModel } from "@oh-my-pi/pi-catalog/compat/taxonomy";
-import { isRetryableError } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai/utils/thinking-loop";
+import { classifyModel } from "@bbcli/pi-catalog/compat/taxonomy";
+import { isRetryableError } from "@bbcli/pi-utils";
 
 function context(): Context {
 	return { systemPrompt: [], messages: [{ role: "user", content: "go", timestamp: 0 }] };

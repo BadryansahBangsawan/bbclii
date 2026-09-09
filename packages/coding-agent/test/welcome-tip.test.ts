@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it, spyOn } from "bun:test";
-import { renderWelcomeTip, WelcomeComponent } from "@oh-my-pi/pi-coding-agent/modes/components/welcome";
-import { initTheme, setSymbolPreset, setTheme, theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { visibleWidth } from "@oh-my-pi/pi-tui";
+import { renderWelcomeTip, WelcomeComponent } from "@bbcli/pi-coding-agent/modes/components/welcome";
+import { initTheme, setSymbolPreset, setTheme, theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { visibleWidth } from "@bbcli/pi-tui";
 
 describe("renderWelcomeTip", () => {
 	beforeAll(async () => {

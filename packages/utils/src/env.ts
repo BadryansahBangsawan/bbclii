@@ -213,7 +213,8 @@ function parseEnvLine(line: string): { key: string; value: string } | undefined 
 /**
  * Parses a .env file synchronously into key-value string pairs using
  * {@link parseEnvLine} for Bun-compatible line semantics, then mirrors valid
- * `OMP_` variables to their `PI_` aliases.
+ * `BBCLI_` variables to their `OMP_`/`PI_` aliases and `OMP_` variables to
+ * their `PI_` aliases.
  */
 export function parseEnvFile(filePath: string): Record<string, string> {
 	const result: Record<string, string> = {};
@@ -227,7 +228,14 @@ export function parseEnvFile(filePath: string): Record<string, string> {
 		// File doesn't exist or can't be read - return empty result
 	}
 
-	// OMP_ overrides PI_
+	// BBCLI_ overrides OMP_ and PI_; OMP_ still overrides PI_.
+	for (const k in result) {
+		if (k.startsWith("BBCLI_")) {
+			const rest = k.slice(6);
+			result[`OMP_${rest}`] = result[k];
+			result[`PI_${rest}`] = result[k];
+		}
+	}
 	for (const k in result) {
 		if (k.startsWith("OMP_")) {
 			result[`PI_${k.slice(4)}`] = result[k];
@@ -269,7 +277,7 @@ refreshDirsFromEnv();
 /**
  * Intentional re-export of Bun.env.
  *
- * All users should import this env module (import { $env } from "@oh-my-pi/pi-utils")
+ * All users should import this env module (import { $env } from "@bbcli/pi-utils")
  * before using environment variables. This ensures that .env files have been loaded and
  * overrides (project, home) have been applied, so $env always reflects the correct values.
  */

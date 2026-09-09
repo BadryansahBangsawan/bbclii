@@ -31,8 +31,8 @@ async function refreshCrossNatives(arches: GuestArch[], version: string): Promis
 	for (const arch of arches) {
 		if (process.platform === "linux" && process.arch === arch) continue;
 		const pkg = `pi-natives-linux-${arch}`;
-		const response = await fetch(`https://registry.npmjs.org/@oh-my-pi/${pkg}/-/${pkg}-${version}.tgz`);
-		if (!response.ok) throw new Error(`Fetching @oh-my-pi/${pkg}@${version} failed: HTTP ${response.status}`);
+		const response = await fetch(`https://registry.npmjs.org/@bbcli/${pkg}/-/${pkg}-${version}.tgz`);
+		if (!response.ok) throw new Error(`Fetching @bbcli/${pkg}@${version} failed: HTTP ${response.status}`);
 		const archive = new Bun.Archive(await response.arrayBuffer());
 		let extracted = 0;
 		for (const [entry, file] of await archive.files()) {
@@ -41,7 +41,7 @@ async function refreshCrossNatives(arches: GuestArch[], version: string): Promis
 			await Bun.write(path.join(NATIVES_DIR, name), file);
 			extracted++;
 		}
-		if (extracted === 0) throw new Error(`@oh-my-pi/${pkg}@${version} tarball contained no .node files`);
+		if (extracted === 0) throw new Error(`@bbcli/${pkg}@${version} tarball contained no .node files`);
 	}
 }
 
@@ -59,7 +59,7 @@ export async function prepareAgentBinaries(opts: {
 	const arches = [...new Set(opts.arches)];
 	const cached: Partial<Record<GuestArch, string>> = {};
 	for (const arch of arches) {
-		cached[arch] = path.join(opts.cacheDir, `omp-linux-${arch}-${manifest.version}`);
+		cached[arch] = path.join(opts.cacheDir, `bbcli-linux-${arch}-${manifest.version}`);
 	}
 	const missing: GuestArch[] = [];
 	for (const arch of arches) {
@@ -72,7 +72,7 @@ export async function prepareAgentBinaries(opts: {
 		const targets = missing.map(arch => `linux-${arch}`).join(",");
 		await run(["bun", "scripts/ci-release-build-binaries.ts", "--targets", targets], REPO_ROOT);
 		for (const arch of missing) {
-			const source = path.join(CODING_AGENT_DIR, "binaries", `omp-linux-${arch}`);
+			const source = path.join(CODING_AGENT_DIR, "binaries", `bbcli-linux-${arch}`);
 			const destination = cached[arch]!;
 			if (!(await Bun.file(source).exists())) throw new Error(`Binary build did not produce ${source}`);
 			await Bun.write(destination, Bun.file(source));

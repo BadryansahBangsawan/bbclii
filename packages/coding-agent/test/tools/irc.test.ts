@@ -1,21 +1,21 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
-import { Agent } from "@oh-my-pi/pi-agent-core";
-import { createMockModel, type MockHandler } from "@oh-my-pi/pi-ai/providers/mock";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { SettingPath } from "@oh-my-pi/pi-coding-agent/config/settings-schema";
-import { IrcBus, type IrcMessage } from "@oh-my-pi/pi-coding-agent/irc/bus";
-import { AgentLifecycleManager } from "@oh-my-pi/pi-coding-agent/registry/agent-lifecycle";
-import { AgentRegistry } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { IrcBridge } from "@oh-my-pi/pi-coding-agent/session/irc-bridge";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import type { CustomMessage } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { type CoordinationDetails, HubTool, isIrcEnabled } from "@oh-my-pi/pi-coding-agent/tools/hub";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import { Agent } from "@bbcli/pi-agent-core";
+import { createMockModel, type MockHandler } from "@bbcli/pi-ai/providers/mock";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { SettingPath } from "@bbcli/pi-coding-agent/config/settings-schema";
+import { IrcBus, type IrcMessage } from "@bbcli/pi-coding-agent/irc/bus";
+import { AgentLifecycleManager } from "@bbcli/pi-coding-agent/registry/agent-lifecycle";
+import { AgentRegistry } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import { AgentSession, type AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import { IrcBridge } from "@bbcli/pi-coding-agent/session/irc-bridge";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import type { CustomMessage } from "@bbcli/pi-coding-agent/session/messages";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { type CoordinationDetails, HubTool, isIrcEnabled } from "@bbcli/pi-coding-agent/tools/hub";
+import { TempDir } from "@bbcli/pi-utils";
 
 interface FakeSession {
 	session: AgentSession;

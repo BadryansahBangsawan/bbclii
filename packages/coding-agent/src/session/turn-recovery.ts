@@ -5,7 +5,7 @@ import {
 	type AgentMessage,
 	isSyntheticToolResultMessage,
 	type ThinkingLevel,
-} from "@oh-my-pi/pi-agent-core";
+} from "@bbcli/pi-agent-core";
 import type {
 	AssistantMessage,
 	AssistantRetryRecovery,
@@ -17,13 +17,13 @@ import type {
 	TextContent,
 	ThinkingContent,
 	ToolChoice,
-} from "@oh-my-pi/pi-ai";
-import { calculateRateLimitBackoffMs, parseRateLimitReason } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { resolveModelPolicy } from "@oh-my-pi/pi-catalog/compat/resolve";
-import { isFireworksFastModelId, toFireworksBaseModelId } from "@oh-my-pi/pi-catalog/fireworks-model-id";
-import { modelsAreEqual } from "@oh-my-pi/pi-catalog/models";
-import { extractRetryHint, logger, prompt } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { calculateRateLimitBackoffMs, parseRateLimitReason } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { resolveModelPolicy } from "@bbcli/pi-catalog/compat/resolve";
+import { isFireworksFastModelId, toFireworksBaseModelId } from "@bbcli/pi-catalog/fireworks-model-id";
+import { modelsAreEqual } from "@bbcli/pi-catalog/models";
+import { extractRetryHint, logger, prompt } from "@bbcli/pi-utils";
 import type { ModelRegistry } from "../config/model-registry";
 import { formatModelStringWithRouting, resolveModelOverride } from "../config/model-resolver";
 

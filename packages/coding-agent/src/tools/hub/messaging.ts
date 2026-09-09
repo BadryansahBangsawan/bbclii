@@ -9,9 +9,9 @@
  * drains pending messages; `list` shows actionable running+idle peers by default.
  */
 
-import type { AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { type Component, Text } from "@oh-my-pi/pi-tui";
-import { formatAge, formatDuration } from "@oh-my-pi/pi-utils";
+import type { AgentToolResult } from "@bbcli/pi-agent-core";
+import { type Component, Text } from "@bbcli/pi-tui";
+import { formatAge, formatDuration } from "@bbcli/pi-utils";
 import type { Settings } from "../../config/settings";
 import type { RenderResultOptions } from "../../extensibility/custom-tools/types";
 import { IrcAwaitTargetStopped, IrcBus, type IrcDeliveryReceipt, type IrcMessage } from "../../irc/bus";

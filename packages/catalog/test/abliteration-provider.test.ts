@@ -1,14 +1,14 @@
 import { describe, expect, test, vi } from "bun:test";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { clampThinkingLevelForModel } from "@oh-my-pi/pi-catalog/model-thinking";
-import { getBundledModels } from "@oh-my-pi/pi-catalog/models";
-import { DEFAULT_MODEL_PER_PROVIDER, PROVIDER_DESCRIPTORS } from "@oh-my-pi/pi-catalog/provider-models/descriptors";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import { clampThinkingLevelForModel } from "@bbcli/pi-catalog/model-thinking";
+import { getBundledModels } from "@bbcli/pi-catalog/models";
+import { DEFAULT_MODEL_PER_PROVIDER, PROVIDER_DESCRIPTORS } from "@bbcli/pi-catalog/provider-models/descriptors";
 import {
 	ABLITERATION_STATIC_MODELS,
 	abliterationModelManagerOptions,
-} from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
-import type { FetchImpl, Model } from "@oh-my-pi/pi-catalog/types";
+} from "@bbcli/pi-catalog/provider-models/openai-compat";
+import type { FetchImpl, Model } from "@bbcli/pi-catalog/types";
 
 function seed(id: string): Model<"openai-responses"> {
 	const spec = ABLITERATION_STATIC_MODELS.find(model => model.id === id);

@@ -13,7 +13,7 @@ import type {
 	TextGenerationStringOutput,
 	StoppingCriteria as TransformersStoppingCriteria,
 } from "@huggingface/transformers";
-import { getTinyModelsCacheDir, logger, setProcessName } from "@oh-my-pi/pi-utils";
+import { getTinyModelsCacheDir, logger, readBrandedEnv, setProcessName } from "@bbcli/pi-utils";
 import {
 	errorMessage,
 	errorText,
@@ -38,15 +38,7 @@ import {
 	type TinyLocalModelKey,
 	type TinyTitleLocalModelSpec,
 } from "./models";
-import {
-	TINY_WORKER_IDLE_MS,
-	TINY_WORKER_IDLE_MS_ENV,
-	TINY_WORKER_MODEL_ENV,
-	TINY_WORKER_SOCKET_ENV,
-	TINY_WORKER_TAG_ENV,
-	type TinyWorkerRequest,
-	type TinyWorkerResponse,
-} from "./title-protocol";
+import { TINY_WORKER_IDLE_MS, type TinyWorkerRequest, type TinyWorkerResponse } from "./title-protocol";
 import { TinyWorkerServer } from "./worker-server";
 
 const STOP_DECODE_WINDOW_TOKENS = 32;
@@ -253,9 +245,9 @@ class OnnxModel {
 
 /** Run the ONNX worker for the model/endpoint selected by the CLI worker host environment. */
 export async function startTinyWorkerFromEnvironment(): Promise<void> {
-	const endpoint = process.env[TINY_WORKER_SOCKET_ENV];
-	const modelKey = process.env[TINY_WORKER_MODEL_ENV];
-	const tag = process.env[TINY_WORKER_TAG_ENV];
+	const endpoint = readBrandedEnv("TINY_WORKER_SOCKET");
+	const modelKey = readBrandedEnv("TINY_WORKER_MODEL");
+	const tag = readBrandedEnv("TINY_WORKER_TAG");
 	if (!endpoint || !modelKey || !tag) throw new Error("tiny worker environment is incomplete");
 	if (!isTinyLocalModelKey(modelKey)) throw new Error(`Unknown tiny local model: ${modelKey}`);
 	const spec = getTinyLocalModelSpec(modelKey);
@@ -264,7 +256,7 @@ export async function startTinyWorkerFromEnvironment(): Promise<void> {
 	const model = new OnnxModel(modelKey, spec, resolveTinyModelDevicePreference(), resolveTinyModelDtypeOverride());
 	const server = new TinyWorkerServer({
 		tag,
-		idleMs: Number(process.env[TINY_WORKER_IDLE_MS_ENV]) || TINY_WORKER_IDLE_MS,
+		idleMs: Number(readBrandedEnv("TINY_WORKER_IDLE_MS")) || TINY_WORKER_IDLE_MS,
 		async handle(request, reply) {
 			if (request.type === "load") {
 				await model.pipeline(reply, request.id);

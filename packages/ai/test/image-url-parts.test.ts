@@ -2,12 +2,12 @@
 // APIs fetch remote images — and its base64 payload stays off the wire.
 // Undecorated blocks keep the inline base64 forms byte-for-byte.
 import { describe, expect, it } from "bun:test";
-import { convertAnthropicMessages } from "@oh-my-pi/pi-ai/providers/anthropic";
-import { convertMessages as convertGoogleMessages } from "@oh-my-pi/pi-ai/providers/google-shared";
-import { streamOpenAICompletions } from "@oh-my-pi/pi-ai/providers/openai-completions";
-import { convertResponsesInputContent } from "@oh-my-pi/pi-ai/providers/openai-shared";
-import type { Context, FetchImpl, Message, Model, ProviderFileReference, UserMessage } from "@oh-my-pi/pi-ai/types";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
+import { convertAnthropicMessages } from "@bbcli/pi-ai/providers/anthropic";
+import { convertMessages as convertGoogleMessages } from "@bbcli/pi-ai/providers/google-shared";
+import { streamOpenAICompletions } from "@bbcli/pi-ai/providers/openai-completions";
+import { convertResponsesInputContent } from "@bbcli/pi-ai/providers/openai-shared";
+import type { Context, FetchImpl, Message, Model, ProviderFileReference, UserMessage } from "@bbcli/pi-ai/types";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
 
 const PNG_B64 = Buffer.from("not-actually-a-png, but bytes are opaque here").toString("base64");
 const BLOB_URL = "https://blobs.example.com/0123456789abcdef0123456789abcdef.png";

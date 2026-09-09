@@ -1,8 +1,8 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { AgentBusyError, type AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, Model } from "@oh-my-pi/pi-ai";
-import { getBlobsDir, isEnoent, logger, type postmortem, VERSION } from "@oh-my-pi/pi-utils";
+import { AgentBusyError, type AgentToolResult } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, Model } from "@bbcli/pi-ai";
+import { getBlobsDir, isEnoent, logger, type postmortem, VERSION } from "@bbcli/pi-utils";
 import {
 	type Agent,
 	type AgentSideConnection,
@@ -43,7 +43,7 @@ import {
 	type SetSessionModeRequest,
 	type SetSessionModeResponse,
 	type Usage,
-} from "@oh-my-pi/pi-utils/acp";
+} from "@bbcli/pi-utils/acp";
 import { disableProvider, enableProvider, reset as resetCapabilities } from "../../capability";
 import { Settings } from "../../config/settings";
 import { clearPluginRootsAndCaches, resolveActiveProjectRegistryPath } from "../../discovery/helpers";

@@ -1,5 +1,5 @@
-import { applyBackgroundToLine, type Component, Container, Markdown, padding, visibleWidth } from "@oh-my-pi/pi-tui";
-import { formatBytes } from "@oh-my-pi/pi-utils";
+import { applyBackgroundToLine, type Component, Container, Markdown, padding, visibleWidth } from "@bbcli/pi-tui";
+import { formatBytes } from "@bbcli/pi-utils";
 import { getMarkdownTheme, theme } from "../../modes/theme/theme";
 import { attachmentSgr, collapseImageMarkers, renderPlaceholders } from "../composer-attachments";
 import { imageReferenceHyperlink } from "../image-references";

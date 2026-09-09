@@ -1,11 +1,11 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "bun:test";
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { resetSettingsForTest, Settings, settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { EvalStatusEvent, EvalToolDetails } from "@oh-my-pi/pi-coding-agent/eval/types";
-import { getThemeByName, setThemeInstance, type Theme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { evalToolRenderer } from "@oh-my-pi/pi-coding-agent/tools/eval";
-import { thinkingLevelGlyph } from "@oh-my-pi/pi-coding-agent/tools/render-utils";
-import { visibleWidth } from "@oh-my-pi/pi-tui";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import { resetSettingsForTest, Settings, settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { EvalStatusEvent, EvalToolDetails } from "@bbcli/pi-coding-agent/eval/types";
+import { getThemeByName, setThemeInstance, type Theme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { evalToolRenderer } from "@bbcli/pi-coding-agent/tools/eval";
+import { thinkingLevelGlyph } from "@bbcli/pi-coding-agent/tools/render-utils";
+import { visibleWidth } from "@bbcli/pi-tui";
 
 /**
  * Defends the contract that `agent()` calls inside an eval cell surface as a

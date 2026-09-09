@@ -15,19 +15,19 @@
  *   CLI flags, scope globs — onto that pipeline.
  */
 
-import { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Api, Effort, KnownProvider, Model, ModelSpec } from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { resolveBareVariantSelector, resolveVariantSelector } from "@oh-my-pi/pi-catalog/compat/collapse";
-import { collapseVariantId, stripThinkingVariantSuffix } from "@oh-my-pi/pi-catalog/compat/taxonomy";
-import { modelMatchesHost } from "@oh-my-pi/pi-catalog/hosts";
-import { buildModelProviderPriorityRank } from "@oh-my-pi/pi-catalog/identity";
-import { clampThinkingLevelForModel } from "@oh-my-pi/pi-catalog/model-thinking";
-import { type GeneratedProvider, getBundledModels, modelsAreEqual } from "@oh-my-pi/pi-catalog/models";
-import { DEFAULT_MODEL_PER_PROVIDER } from "@oh-my-pi/pi-catalog/provider-models";
-import { fuzzyMatch } from "@oh-my-pi/pi-tui";
-import { logger } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+import { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { Api, Effort, KnownProvider, Model, ModelSpec } from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { resolveBareVariantSelector, resolveVariantSelector } from "@bbcli/pi-catalog/compat/collapse";
+import { collapseVariantId, stripThinkingVariantSuffix } from "@bbcli/pi-catalog/compat/taxonomy";
+import { modelMatchesHost } from "@bbcli/pi-catalog/hosts";
+import { buildModelProviderPriorityRank } from "@bbcli/pi-catalog/identity";
+import { clampThinkingLevelForModel } from "@bbcli/pi-catalog/model-thinking";
+import { type GeneratedProvider, getBundledModels, modelsAreEqual } from "@bbcli/pi-catalog/models";
+import { DEFAULT_MODEL_PER_PROVIDER } from "@bbcli/pi-catalog/provider-models";
+import { fuzzyMatch } from "@bbcli/pi-tui";
+import { logger } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import MODEL_PRIO from "../priority.json" with { type: "json" };
 import {
 	AUTO_THINKING,

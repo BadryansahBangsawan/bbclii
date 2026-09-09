@@ -1,6 +1,6 @@
-import { isDefinitiveOAuthFailure, REMOTE_REFRESH_SENTINEL, type StoredOAuthRefreshResult } from "@oh-my-pi/pi-ai";
-import type { OAuthCredentials } from "@oh-my-pi/pi-ai/oauth/types";
-import { getActiveProfile } from "@oh-my-pi/pi-utils/dirs";
+import { isDefinitiveOAuthFailure, REMOTE_REFRESH_SENTINEL, type StoredOAuthRefreshResult } from "@bbcli/pi-ai";
+import type { OAuthCredentials } from "@bbcli/pi-ai/oauth/types";
+import { getActiveProfile } from "@bbcli/pi-utils/dirs";
 import { expandEnvVarsDeep } from "../discovery/helpers";
 import type { AuthStorage } from "../session/auth-storage";
 import {

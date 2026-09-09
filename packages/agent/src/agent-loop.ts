@@ -22,20 +22,20 @@ import {
 	type TSchema,
 	toolWireSchema,
 	validateToolArguments,
-} from "@oh-my-pi/pi-ai";
+} from "@bbcli/pi-ai";
 import {
 	type Dialect,
 	encodeInbandToolHistory,
 	renderInbandToolPrompt,
 	renderToolExamples,
 	wrapInbandToolStream,
-} from "@oh-my-pi/pi-ai/dialect";
-import * as AIError from "@oh-my-pi/pi-ai/error";
+} from "@bbcli/pi-ai/dialect";
+import * as AIError from "@bbcli/pi-ai/error";
 import {
 	type CursorExecResolvedCarrier,
 	copyCursorExecResolved,
 	kCursorExecResolved,
-} from "@oh-my-pi/pi-ai/utils/block-symbols";
+} from "@bbcli/pi-ai/utils/block-symbols";
 import {
 	createHarmonyAuditEvent,
 	detectHarmonyLeakInAssistantMessage,
@@ -45,9 +45,9 @@ import {
 	isHarmonyLeakMitigationTarget,
 	recoverHarmonyToolCall,
 	signalListLabel,
-} from "@oh-my-pi/pi-ai/utils/harmony-leak";
-import { logger, sanitizeText, structuredCloneJSON } from "@oh-my-pi/pi-utils";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+} from "@bbcli/pi-ai/utils/harmony-leak";
+import { logger, sanitizeText, structuredCloneJSON } from "@bbcli/pi-utils";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 import { agentPauseGate } from "./pause";
 import { type AgentRunCoverage, type AgentRunSummary, ToolCallBlockedError } from "./run-collector";
 import {

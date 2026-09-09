@@ -6,16 +6,16 @@
  * how assistant text snaps at message_end.
  */
 import { afterEach, beforeAll, describe, expect, it, vi } from "bun:test";
-import type { AgentTool } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage } from "@oh-my-pi/pi-ai";
-import { kStreamingPartialJson } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { resetSettingsForTest, Settings, settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AssistantMessageComponent } from "@oh-my-pi/pi-coding-agent/modes/components/assistant-message";
-import { ToolExecutionComponent } from "@oh-my-pi/pi-coding-agent/modes/components/tool-execution";
-import { EventController } from "@oh-my-pi/pi-coding-agent/modes/controllers/event-controller";
-import { STREAMING_REVEAL_FRAME_MS } from "@oh-my-pi/pi-coding-agent/modes/controllers/streaming-reveal";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
+import type { AgentTool } from "@bbcli/pi-agent-core";
+import type { AssistantMessage } from "@bbcli/pi-ai";
+import { kStreamingPartialJson } from "@bbcli/pi-ai/utils/block-symbols";
+import { resetSettingsForTest, Settings, settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AssistantMessageComponent } from "@bbcli/pi-coding-agent/modes/components/assistant-message";
+import { ToolExecutionComponent } from "@bbcli/pi-coding-agent/modes/components/tool-execution";
+import { EventController } from "@bbcli/pi-coding-agent/modes/controllers/event-controller";
+import { STREAMING_REVEAL_FRAME_MS } from "@bbcli/pi-coding-agent/modes/controllers/streaming-reveal";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
 import { createInteractiveModeContext } from "../../helpers/interactive-mode-context";
 
 beforeAll(async () => {

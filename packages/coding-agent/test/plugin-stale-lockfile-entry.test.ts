@@ -2,9 +2,9 @@ import { afterEach, expect, test } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { clearClaudePluginRootsCache } from "@oh-my-pi/pi-coding-agent/discovery/helpers";
-import { getEnabledPlugins } from "@oh-my-pi/pi-coding-agent/extensibility/plugins/loader";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+import { clearClaudePluginRootsCache } from "@bbcli/pi-coding-agent/discovery/helpers";
+import { getEnabledPlugins } from "@bbcli/pi-coding-agent/extensibility/plugins/loader";
+import { removeWithRetries } from "@bbcli/pi-utils";
 
 const tempRoots: string[] = [];
 
@@ -66,7 +66,7 @@ test("stale lockfile-only directory plugin is skipped while declared and linked 
 	await writeJson(path.join(pluginsDir, "package.json"), {
 		dependencies: { "declared-plugin": "1.0.0" },
 	});
-	await writeJson(path.join(pluginsDir, "omp-plugins.lock.json"), {
+	await writeJson(path.join(pluginsDir, "bbcli-plugins.lock.json"), {
 		plugins: {
 			"declared-plugin": { version: "1.0.0", enabled: true, enabledFeatures: null },
 			"stale-plugin": { version: "0.1.0", enabled: true, enabledFeatures: null },
@@ -94,7 +94,7 @@ test("manifest-less project roots retain lockfile-only directory plugins", async
 		version: "1.0.0",
 		omp: { extensions: ["ext.ts"] },
 	});
-	await writeJson(path.join(pluginsDir, "omp-plugins.lock.json"), {
+	await writeJson(path.join(pluginsDir, "bbcli-plugins.lock.json"), {
 		plugins: {
 			"project-plugin": { version: "1.0.0", enabled: true, enabledFeatures: null },
 		},

@@ -211,7 +211,7 @@ jobs:
 
    # Provides the native addons every downstream TS job installs. PRs never
    # build: they fetch the latest release's Linux x64 pair from the
-   # @oh-my-pi/pi-natives-linux-x64 npm leaf instead. The workspace loader
+   # @bbcli/pi-natives-linux-x64 npm leaf instead. The workspace loader
    # skips its version sentinel for workspace loads, so release addons load
    # fine under a newer checkout; a PR whose TS tests depend on changed
    # native behavior fails visibly and the native side lands via main.
@@ -229,7 +229,7 @@ jobs:
            shell: bash
            run: |
               set -euo pipefail
-              tarball="$(npm view @oh-my-pi/pi-natives-linux-x64@latest dist.tarball)"
+              tarball="$(npm view @bbcli/pi-natives-linux-x64@latest dist.tarball)"
               echo "Fetching $tarball"
               curl -fsSL --retry 3 "$tarball" | tar -xz -C "$RUNNER_TEMP"
               mkdir -p bazel-bin/natives-linux-x64-baseline bazel-bin/natives-linux-x64-modern
@@ -520,7 +520,7 @@ jobs:
                     platform: linux,
                     arch: x64,
                     target_id: linux-x64,
-                    binary_path: packages/coding-agent/binaries/omp-linux-x64,
+                    binary_path: packages/coding-agent/binaries/bbcli-linux-x64,
                     native_targets: linux-x64-baseline linux-x64-modern,
                  }
                - {
@@ -529,7 +529,7 @@ jobs:
                     libc: musl,
                     arch: x64,
                     target_id: linux-musl-x64,
-                    binary_path: packages/coding-agent/binaries/omp-linux-musl-x64,
+                    binary_path: packages/coding-agent/binaries/bbcli-linux-musl-x64,
                     native_targets: linux-musl-x64-baseline,
                  }
                - {
@@ -537,7 +537,7 @@ jobs:
                     platform: linux,
                     arch: arm64,
                     target_id: linux-arm64,
-                    binary_path: packages/coding-agent/binaries/omp-linux-arm64,
+                    binary_path: packages/coding-agent/binaries/bbcli-linux-arm64,
                     native_targets: linux-arm64,
                  }
                - {
@@ -546,7 +546,7 @@ jobs:
                     libc: musl,
                     arch: arm64,
                     target_id: linux-musl-arm64,
-                    binary_path: packages/coding-agent/binaries/omp-linux-musl-arm64,
+                    binary_path: packages/coding-agent/binaries/bbcli-linux-musl-arm64,
                     native_targets: linux-musl-arm64,
                  }
                - {
@@ -554,7 +554,7 @@ jobs:
                     platform: win32,
                     arch: x64,
                     target_id: win32-x64,
-                    binary_path: packages/coding-agent/binaries/omp-windows-x64.exe,
+                    binary_path: packages/coding-agent/binaries/bbcli-windows-x64.exe,
                     native_targets: win32-x64-baseline,
                  }
       runs-on: ${{ matrix.os }}
@@ -624,21 +624,21 @@ jobs:
                     os: macos-15-intel,
                     platform: darwin,
                     target_id: darwin-x64,
-                    binary_path: packages/coding-agent/binaries/omp-darwin-x64,
+                    binary_path: packages/coding-agent/binaries/bbcli-darwin-x64,
                     native_targets: darwin-x64-baseline,
                  }
                - {
                     os: macos-14,
                     platform: darwin,
                     target_id: darwin-arm64,
-                    binary_path: packages/coding-agent/binaries/omp-darwin-arm64,
+                    binary_path: packages/coding-agent/binaries/bbcli-darwin-arm64,
                     native_targets: darwin-arm64,
                  }
                - {
                     os: windows-11-arm,
                     platform: win32,
                     target_id: win32-arm64,
-                    binary_path: packages/coding-agent/binaries/omp-windows-arm64.exe,
+                    binary_path: packages/coding-agent/binaries/bbcli-windows-arm64.exe,
                  }
       runs-on: ${{ matrix.os }}
       permissions:
@@ -725,7 +725,7 @@ jobs:
               name: omp-binary-${{ matrix.target_id }}
               path: ${{ matrix.binary_path }}
 
-   # Publishes the six @oh-my-pi/pi-natives-<tag> leaf packages once
+   # Publishes the six @bbcli/pi-natives-<tag> leaf packages once
    # validation passes and every binary built. Runs on one linux runner: leaf
    # publishing is platform-agnostic file packaging (gen-npm-packages reads
    # packages/natives/native), so no per-platform runners are needed.
@@ -859,26 +859,26 @@ jobs:
       steps:
          - name: Download published macOS arm64 binary
            run: |
-              curl -fsSL -o omp-darwin-arm64 "https://github.com/${{ github.repository }}/releases/download/${{ needs.release_metadata.outputs.release-tag }}/omp-darwin-arm64"
-              chmod +x omp-darwin-arm64
+              curl -fsSL -o bbcli-darwin-arm64 "https://github.com/${{ github.repository }}/releases/download/${{ needs.release_metadata.outputs.release-tag }}/bbcli-darwin-arm64"
+              chmod +x bbcli-darwin-arm64
          - name: Verify published macOS arm64 binary
            run: |
-              codesign -dvvv ./omp-darwin-arm64
-              codesign --verify --strict --verbose=4 ./omp-darwin-arm64
+              codesign -dvvv ./bbcli-darwin-arm64
+              codesign --verify --strict --verbose=4 ./bbcli-darwin-arm64
               runtime_dir="$(mktemp -d)"
-              HOME="$runtime_dir/home" XDG_DATA_HOME="$runtime_dir/xdg" ./omp-darwin-arm64 --version
-              HOME="$runtime_dir/home" XDG_DATA_HOME="$runtime_dir/xdg" ./omp-darwin-arm64 --smoke-test
+              HOME="$runtime_dir/home" XDG_DATA_HOME="$runtime_dir/xdg" ./bbcli-darwin-arm64 --version
+              HOME="$runtime_dir/home" XDG_DATA_HOME="$runtime_dir/xdg" ./bbcli-darwin-arm64 --smoke-test
          - name: Assert signed release is not ad-hoc
            if: env.MACOS_SIGNING == 'true'
            run: |
-              if codesign -dvvv ./omp-darwin-arm64 2>&1 | grep -qE "flags=.*adhoc|Signature=adhoc"; then
+              if codesign -dvvv ./bbcli-darwin-arm64 2>&1 | grep -qE "flags=.*adhoc|Signature=adhoc"; then
                 echo "published binary is still ad-hoc signed (Developer ID signing did not run)" >&2
                 exit 1
               fi
               # Gatekeeper assessment: a notarized Developer ID binary is accepted.
               # Informational — a bare (unstapled) Mach-O relies on the online ticket
               # lookup, so surface the result without gating the release on it.
-              spctl -a -t exec -vv ./omp-darwin-arm64 || echo "spctl non-zero (expected for unstapled bare binary; ticket served online)"
+              spctl -a -t exec -vv ./bbcli-darwin-arm64 || echo "spctl non-zero (expected for unstapled bare binary; ticket served online)"
 
    release_npm:
       name: Publish to npm

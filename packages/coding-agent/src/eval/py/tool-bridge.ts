@@ -7,7 +7,7 @@
  * current execution and forwards to the same `callSessionTool` implementation
  * the JavaScript bridge uses.
  */
-import { logger, postmortem } from "@oh-my-pi/pi-utils";
+import { logger, postmortem } from "@bbcli/pi-utils";
 import type { ToolSession } from "../../tools";
 import { callSessionTool, type JsStatusEvent } from "../js/tool-bridge";
 

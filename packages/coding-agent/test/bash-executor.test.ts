@@ -2,21 +2,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import { resetSettingsForTest, Settings, type ShellMinimizerSettings } from "@oh-my-pi/pi-coding-agent/config/settings";
+import type { ImageContent } from "@bbcli/pi-ai";
+import { resetSettingsForTest, Settings, type ShellMinimizerSettings } from "@bbcli/pi-coding-agent/config/settings";
 import {
 	applyDirenvPreflight,
 	buildMinimizerOptions,
 	executeBash,
 	isPersistentShellCdCommand,
-} from "@oh-my-pi/pi-coding-agent/exec/bash-executor";
-import * as direnvModule from "@oh-my-pi/pi-coding-agent/exec/direnv";
-import { DEFAULT_MAX_BYTES } from "@oh-my-pi/pi-coding-agent/session/streaming-output";
-import * as shellSnapshot from "@oh-my-pi/pi-coding-agent/utils/shell-snapshot";
-import { encodeTerminalImage } from "@oh-my-pi/pi-coding-agent/utils/terminal-graphics";
-import type { Shell, ShellRunResult } from "@oh-my-pi/pi-natives";
-import * as piNatives from "@oh-my-pi/pi-natives";
-import { removeSyncWithRetries } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/exec/bash-executor";
+import * as direnvModule from "@bbcli/pi-coding-agent/exec/direnv";
+import { DEFAULT_MAX_BYTES } from "@bbcli/pi-coding-agent/session/streaming-output";
+import * as shellSnapshot from "@bbcli/pi-coding-agent/utils/shell-snapshot";
+import { encodeTerminalImage } from "@bbcli/pi-coding-agent/utils/terminal-graphics";
+import type { Shell, ShellRunResult } from "@bbcli/pi-natives";
+import * as piNatives from "@bbcli/pi-natives";
+import { removeSyncWithRetries } from "@bbcli/pi-utils";
 
 // Matches the schema default for `tools.artifactHeadBytes` (20 KB) used by
 // OutputSink when bash-executor pulls settings via resolveOutputSinkHeadBytes.

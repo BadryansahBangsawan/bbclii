@@ -1,9 +1,9 @@
 {
   "type": "module",
-  "name": "@oh-my-pi/pi-agent-core",
+  "name": "@bbcli/pi-agent-core",
   "version": "18.1.15",
   "description": "General-purpose agent with transport abstraction, state management, and attachment support",
-  "homepage": "https://omp.sh",
+  "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "contributors": [
     "Mario Zechner"
@@ -35,16 +35,16 @@
     "fmt": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts'"
   },
   "dependencies": {
-    "@oh-my-pi/pi-ai": "catalog:",
-    "@oh-my-pi/pi-catalog": "catalog:",
-    "@oh-my-pi/pi-natives": "catalog:",
-    "@oh-my-pi/pi-utils": "catalog:",
-    "@oh-my-pi/pi-wire": "catalog:",
-    "@oh-my-pi/snapcompact": "catalog:",
+    "@bbcli/pi-ai": "catalog:",
+    "@bbcli/pi-catalog": "catalog:",
+    "@bbcli/pi-natives": "catalog:",
+    "@bbcli/pi-utils": "catalog:",
+    "@bbcli/pi-wire": "catalog:",
+    "@bbcli/snapcompact": "catalog:",
     "@opentelemetry/api": "catalog:"
   },
   "devDependencies": {
-    "@oh-my-pi/omptype": "catalog:",
+    "@bbcli/omptype": "catalog:",
     "@opentelemetry/context-async-hooks": "catalog:",
     "@opentelemetry/sdk-trace-base": "catalog:",
     "@types/bun": "catalog:"

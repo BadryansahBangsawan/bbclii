@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { parseArgs } from "node:util";
-import { formatDuration, formatNumber, formatPercent } from "@oh-my-pi/pi-utils";
+import { formatDuration, formatNumber, formatPercent } from "@bbcli/pi-utils";
 import { getDashboardStats, getTotalMessageCount, syncAllSessions } from "./aggregator";
 import { closeDb } from "./db";
 import { formatStatsDashboardUrl, startServer } from "./server";

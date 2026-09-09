@@ -185,20 +185,20 @@ mkdir -p "$TARBALL_APP_DIR"
    node -e "
 		const pkg = JSON.parse(require('fs').readFileSync('package.json', 'utf8'));
 		pkg.overrides = {
-			'@oh-my-pi/pi-utils': '$utils_tgz',
-			'@oh-my-pi/pi-wire': '$wire_tgz',
-			'@oh-my-pi/omptype': '$omptype_tgz',
-			'@oh-my-pi/pi-natives': '$natives_tgz',
-			'@oh-my-pi/pi-natives-$host_tag': '$natives_leaf_tgz',
-			'@oh-my-pi/pi-ai': '$ai_tgz',
-			'@oh-my-pi/pi-catalog': '$catalog_tgz',
-			'@oh-my-pi/pi-mnemopi': '$mnemopi_tgz',
-			'@oh-my-pi/snapcompact': '$snapcompact_tgz',
-			'@oh-my-pi/pi-agent-core': '$agent_tgz',
-			'@oh-my-pi/pi-tui': '$tui_tgz',
-			'@oh-my-pi/omp-stats': '$stats_tgz',
-			'@oh-my-pi/pi-coding-agent': '$coding_agent_tgz',
-			'@oh-my-pi/collab-web': '$collab_web_tgz'
+			'@bbcli/pi-utils': '$utils_tgz',
+			'@bbcli/pi-wire': '$wire_tgz',
+			'@bbcli/omptype': '$omptype_tgz',
+			'@bbcli/pi-natives': '$natives_tgz',
+			'@bbcli/pi-natives-$host_tag': '$natives_leaf_tgz',
+			'@bbcli/pi-ai': '$ai_tgz',
+			'@bbcli/pi-catalog': '$catalog_tgz',
+			'@bbcli/pi-mnemopi': '$mnemopi_tgz',
+			'@bbcli/snapcompact': '$snapcompact_tgz',
+			'@bbcli/pi-agent-core': '$agent_tgz',
+			'@bbcli/pi-tui': '$tui_tgz',
+			'@bbcli/stats': '$stats_tgz',
+			'@bbcli/pi-coding-agent': '$coding_agent_tgz',
+			'@bbcli/collab-web': '$collab_web_tgz'
 		};
 		require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
 	"
@@ -207,28 +207,28 @@ mkdir -p "$TARBALL_APP_DIR"
    # The platform leaf must arrive through the core's optionalDependencies +
    # override, not as a direct dependency — assert it landed before smoking so a
    # resolution regression is distinguishable from a runtime loader bug.
-   leaf_dir="node_modules/@oh-my-pi/pi-natives-$host_tag"
+   leaf_dir="node_modules/@bbcli/pi-natives-$host_tag"
    [ -d "$leaf_dir" ] || {
       echo "Platform leaf package not installed: $leaf_dir"
       exit 1
    }
-   wire_proto="$(bun -e 'import { COLLAB_PROTO } from "@oh-my-pi/pi-wire"; process.stdout.write(String(COLLAB_PROTO));')"
+   wire_proto="$(bun -e 'import { COLLAB_PROTO } from "@bbcli/pi-wire"; process.stdout.write(String(COLLAB_PROTO));')"
    [ "$wire_proto" = "3" ] || {
-      echo "Unexpected @oh-my-pi/pi-wire COLLAB_PROTO: $wire_proto"
+      echo "Unexpected @bbcli/pi-wire COLLAB_PROTO: $wire_proto"
       exit 1
    }
    omptype_probe="$(bun -e '
-      import { type } from "@oh-my-pi/omptype";
-      import { Type } from "@oh-my-pi/omptype/typebox";
+      import { type } from "@bbcli/omptype";
+      import { Type } from "@bbcli/omptype/typebox";
       const root = type({ name: "string", enabled: "boolean = false" }).assert({ name: "omp" });
       const typebox = Type.Object({ name: Type.String() }).assert({ name: "tb" });
       process.stdout.write(`${root.name}:${root.enabled}:${typebox.name}`);
    ')"
    [ "$omptype_probe" = "omp:false:tb" ] || {
-      echo "Unexpected @oh-my-pi/omptype probe result: $omptype_probe"
+      echo "Unexpected @bbcli/omptype probe result: $omptype_probe"
       exit 1
    }
-   [ -f "node_modules/@oh-my-pi/collab-web/dist/index.html" ] || {
+   [ -f "node_modules/@bbcli/collab-web/dist/index.html" ] || {
       echo "Collab web tarball did not install built dist/index.html"
       exit 1
    }

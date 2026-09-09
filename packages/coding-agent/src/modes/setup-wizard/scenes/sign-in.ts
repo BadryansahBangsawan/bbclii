@@ -1,15 +1,8 @@
-import type { AuthStorage } from "@oh-my-pi/pi-ai";
-import { PASTE_CODE_LOGIN_PROVIDERS } from "@oh-my-pi/pi-ai";
-import type { OAuthProvider } from "@oh-my-pi/pi-ai/oauth/types";
-import {
-	type Component,
-	type Focusable,
-	Input,
-	matchesKey,
-	type SgrMouseEvent,
-	wrapTextWithAnsi,
-} from "@oh-my-pi/pi-tui";
-import { getAgentDbPath } from "@oh-my-pi/pi-utils";
+import type { AuthStorage } from "@bbcli/pi-ai";
+import { PASTE_CODE_LOGIN_PROVIDERS } from "@bbcli/pi-ai";
+import type { OAuthProvider } from "@bbcli/pi-ai/oauth/types";
+import { type Component, type Focusable, Input, matchesKey, type SgrMouseEvent, wrapTextWithAnsi } from "@bbcli/pi-tui";
+import { getAgentDbPath } from "@bbcli/pi-utils";
 import { copyToClipboard } from "../../../utils/clipboard";
 import { OAuthSelectorComponent } from "../../components/oauth-selector";
 import { theme } from "../../theme/theme";

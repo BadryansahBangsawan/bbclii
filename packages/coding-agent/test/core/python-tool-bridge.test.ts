@@ -1,14 +1,14 @@
 import { afterAll, describe, expect, it } from "bun:test";
-import type { AgentTool, AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { PYTHON_PRELUDE } from "@oh-my-pi/pi-coding-agent/eval/py/prelude";
+import type { AgentTool, AgentToolResult } from "@bbcli/pi-agent-core";
+import { PYTHON_PRELUDE } from "@bbcli/pi-coding-agent/eval/py/prelude";
 import {
 	disposePyToolBridge,
 	ensurePyToolBridge,
 	registerPyToolBridge,
-} from "@oh-my-pi/pi-coding-agent/eval/py/tool-bridge";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { $which, isRecord } from "@oh-my-pi/pi-utils";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+} from "@bbcli/pi-coding-agent/eval/py/tool-bridge";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { $which, isRecord } from "@bbcli/pi-utils";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 
 interface FakeCall {
 	id: string;

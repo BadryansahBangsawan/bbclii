@@ -10,11 +10,11 @@ import type {
 	OAuthAccess,
 	OAuthAccessResolution,
 	SimpleStreamOptions,
-} from "@oh-my-pi/pi-ai";
-import { streamSimple } from "@oh-my-pi/pi-ai";
-import { replaceTabs, truncateToWidth } from "@oh-my-pi/pi-tui";
-import { formatDuration, getProjectDir } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+} from "@bbcli/pi-ai";
+import { streamSimple } from "@bbcli/pi-ai";
+import { replaceTabs, truncateToWidth } from "@bbcli/pi-tui";
+import { formatDuration, getProjectDir } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import { ModelRegistry } from "../config/model-registry";
 import {
 	formatModelString,

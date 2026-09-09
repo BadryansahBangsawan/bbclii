@@ -3,19 +3,19 @@ import * as fsSync from "node:fs";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { scheduler } from "node:timers/promises";
-import { isOfficialAnthropicApiUrl } from "@oh-my-pi/pi-catalog/compat/anthropic";
-import type { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { isVertexExpressOpenAIUrl, isVertexRawPredictUrl, resolveVertexEndpointHost } from "@oh-my-pi/pi-catalog/hosts";
+import { isOfficialAnthropicApiUrl } from "@bbcli/pi-catalog/compat/anthropic";
+import type { Effort } from "@bbcli/pi-catalog/effort";
+import { isVertexExpressOpenAIUrl, isVertexRawPredictUrl, resolveVertexEndpointHost } from "@bbcli/pi-catalog/hosts";
 import {
 	defaultSupportedEffort,
 	mapEffortToAnthropicAdaptiveEffort,
 	mapEffortToGoogleThinkingLevel,
 	requireSupportedEffort,
 	resolveWireModelId,
-} from "@oh-my-pi/pi-catalog/model-thinking";
-import { CATALOG_PROVIDERS, type ProviderCatalogEntry } from "@oh-my-pi/pi-catalog/provider-models";
-import { CODEX_BASE_URL } from "@oh-my-pi/pi-catalog/wire/codex";
-import { $env, $pickenv, getProviderInFlightRoot, isEnoent, logger } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-catalog/model-thinking";
+import { CATALOG_PROVIDERS, type ProviderCatalogEntry } from "@bbcli/pi-catalog/provider-models";
+import { CODEX_BASE_URL } from "@bbcli/pi-catalog/wire/codex";
+import { $env, $pickenv, getProviderInFlightRoot, isEnoent, logger } from "@bbcli/pi-utils";
 import { getCustomApi } from "./api-registry";
 import { createAuthRetryKeyState, isApiKeyResolver, resolveNextAuthRetryKey } from "./auth-retry";
 import * as AIError from "./error";

@@ -1,9 +1,9 @@
-import type { AssistantMessage, ImageContent } from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { getStreamingPartialJson } from "@oh-my-pi/pi-ai/utils/block-symbols";
-import { type Component, Loader, TERMINAL } from "@oh-my-pi/pi-tui";
-import { formatDuration, logger, prompt, sanitizeText } from "@oh-my-pi/pi-utils";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+import type { AssistantMessage, ImageContent } from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { getStreamingPartialJson } from "@bbcli/pi-ai/utils/block-symbols";
+import { type Component, Loader, TERMINAL } from "@bbcli/pi-tui";
+import { formatDuration, logger, prompt, sanitizeText } from "@bbcli/pi-utils";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 import { extractTextContent } from "../../commit/utils";
 import { settings } from "../../config/settings";
 import { AssistantMessageComponent } from "../../modes/components/assistant-message";

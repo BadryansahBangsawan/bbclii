@@ -9,14 +9,14 @@ import type {
 	AssistantMessageEventStream,
 	Model,
 	SimpleStreamOptions,
-} from "@oh-my-pi/pi-ai";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { writeModelCache } from "@oh-my-pi/pi-catalog/model-cache";
-import { resolveModelCacheProviderId } from "@oh-my-pi/pi-catalog/provider-models";
-import { type BenchSummary, runBenchCommand } from "@oh-my-pi/pi-coding-agent/cli/bench-cli";
-import type { BenchModelRegistry } from "@oh-my-pi/pi-coding-agent/cli/bench-runtime";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { getModelDbPath, TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { writeModelCache } from "@bbcli/pi-catalog/model-cache";
+import { resolveModelCacheProviderId } from "@bbcli/pi-catalog/provider-models";
+import { type BenchSummary, runBenchCommand } from "@bbcli/pi-coding-agent/cli/bench-cli";
+import type { BenchModelRegistry } from "@bbcli/pi-coding-agent/cli/bench-runtime";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { getModelDbPath, TempDir } from "@bbcli/pi-utils";
 
 function fakeModel(provider: string, id: string): Model<Api> {
 	return buildModel({

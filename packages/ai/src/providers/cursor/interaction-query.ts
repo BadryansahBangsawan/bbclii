@@ -20,9 +20,9 @@ import {
 	WebFetchRequestResponseSchema,
 	WebSearchRequestResponse_ApprovedSchema,
 	WebSearchRequestResponseSchema,
-} from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
-import { create, toBinary } from "@oh-my-pi/pi-catalog/discovery/protobuf";
-import { $env } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-catalog/discovery/cursor-proto";
+import { create, toBinary } from "@bbcli/pi-catalog/discovery/protobuf";
+import { $env } from "@bbcli/pi-utils";
 
 const NOT_IMPLEMENTED_SUFFIX = "not implemented by this client";
 

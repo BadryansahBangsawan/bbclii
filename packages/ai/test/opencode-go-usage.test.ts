@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
-import type { FetchImpl } from "@oh-my-pi/pi-ai/types";
-import { USER_AGENT } from "@oh-my-pi/pi-utils";
+import type { FetchImpl } from "@bbcli/pi-ai/types";
+import { USER_AGENT } from "@bbcli/pi-utils";
 import { opencodeGoRankingStrategy, opencodeGoUsageProvider } from "../src/usage/opencode-go";
 
 const DEFAULT_USAGE_URL = "https://opencode.ai/zen/go/v1/usage";

@@ -1,15 +1,15 @@
 import { describe, expect, test } from "bun:test";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { CATALOG_PROVIDERS } from "@oh-my-pi/pi-catalog/provider-models/descriptors";
+import { Effort } from "@bbcli/pi-catalog/effort";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { CATALOG_PROVIDERS } from "@bbcli/pi-catalog/provider-models/descriptors";
 import {
 	META_MUSE_STATIC_MODELS,
 	MUSE_CODE_STATIC_MODELS,
 	metaModelManagerOptions,
 	museCodeModelManagerOptions,
-} from "@oh-my-pi/pi-catalog/provider-models/openai-compat";
-import type { FetchImpl, ThinkingConfig } from "@oh-my-pi/pi-catalog/types";
+} from "@bbcli/pi-catalog/provider-models/openai-compat";
+import type { FetchImpl, ThinkingConfig } from "@bbcli/pi-catalog/types";
 
 const MUSE_SPARK_THINKING: ThinkingConfig = {
 	mode: "effort",

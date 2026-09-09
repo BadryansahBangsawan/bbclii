@@ -2,18 +2,18 @@ import { afterEach, describe, expect, it, vi } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { AgentRegistry } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import * as executorModule from "@oh-my-pi/pi-coding-agent/task/executor";
+import { AgentRegistry } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import * as executorModule from "@bbcli/pi-coding-agent/task/executor";
 import {
 	applyEligibleNestedPatches,
 	mergeIsolatedChanges,
 	runIsolatedSubprocess,
-} from "@oh-my-pi/pi-coding-agent/task/isolation-runner";
-import type { SingleResult } from "@oh-my-pi/pi-coding-agent/task/types";
-import * as worktreeModule from "@oh-my-pi/pi-coding-agent/task/worktree";
-import * as natives from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
+} from "@bbcli/pi-coding-agent/task/isolation-runner";
+import type { SingleResult } from "@bbcli/pi-coding-agent/task/types";
+import * as worktreeModule from "@bbcli/pi-coding-agent/task/worktree";
+import * as natives from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
 import { $ } from "bun";
 
 function result(overrides: Partial<SingleResult> = {}): SingleResult {

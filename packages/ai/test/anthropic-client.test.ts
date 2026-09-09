@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { AnthropicMessagesClient } from "@oh-my-pi/pi-ai/providers/anthropic-client";
-import type { MessageCreateParamsStreaming } from "@oh-my-pi/pi-ai/providers/anthropic-wire";
-import type { FetchImpl } from "@oh-my-pi/pi-ai/types";
+import * as AIError from "@bbcli/pi-ai/error";
+import { AnthropicMessagesClient } from "@bbcli/pi-ai/providers/anthropic-client";
+import type { MessageCreateParamsStreaming } from "@bbcli/pi-ai/providers/anthropic-wire";
+import type { FetchImpl } from "@bbcli/pi-ai/types";
 
 const params: MessageCreateParamsStreaming = {
 	model: "claude-sonnet-4-5",

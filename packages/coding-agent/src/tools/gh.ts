@@ -1,12 +1,12 @@
-import { type } from "@oh-my-pi/omptype";
+import { type } from "@bbcli/omptype";
 import type {
 	AgentTool,
 	AgentToolContext,
 	AgentToolResult,
 	AgentToolUpdateCallback,
 	ToolApprovalDecision,
-} from "@oh-my-pi/pi-agent-core";
-import type { IsoBackendKind } from "@oh-my-pi/pi-natives";
+} from "@bbcli/pi-agent-core";
+import type { IsoBackendKind } from "@bbcli/pi-natives";
 import {
 	BINARY_SNIFF_BYTES,
 	formatBytes,
@@ -14,7 +14,7 @@ import {
 	parseImageMetadata,
 	prompt,
 	untilAborted,
-} from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-utils";
 import githubDescription from "../prompts/tools/github.md" with { type: "text" };
 import { github } from "../utils/github";
 import { loadImageAttachmentInput, webpExclusionForModel } from "../utils/image-loading";

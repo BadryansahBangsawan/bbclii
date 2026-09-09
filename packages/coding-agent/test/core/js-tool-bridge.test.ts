@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "bun:test";
-import { type } from "@oh-my-pi/omptype";
-import type { AgentTool, AgentToolContext, AgentToolResult } from "@oh-my-pi/pi-agent-core";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { callSessionTool } from "@oh-my-pi/pi-coding-agent/eval/js/tool-bridge";
-import { type TodoPhase, TodoTool, type ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { INTENT_FIELD } from "@oh-my-pi/pi-wire";
+import { type } from "@bbcli/omptype";
+import type { AgentTool, AgentToolContext, AgentToolResult } from "@bbcli/pi-agent-core";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { callSessionTool } from "@bbcli/pi-coding-agent/eval/js/tool-bridge";
+import { type TodoPhase, TodoTool, type ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { INTENT_FIELD } from "@bbcli/pi-wire";
 
 function createTool(name: string, execute: AgentTool["execute"]): AgentTool {
 	return {

@@ -3,11 +3,11 @@
  *
  * Uses brush-core via native bindings for shell execution.
  */
-import { ExponentialYield } from "@oh-my-pi/pi-agent-core/utils/yield";
-import type { ImageContent } from "@oh-my-pi/pi-ai";
-import { type MinimizerOptions, PtySession, Shell, type ShellRunResult } from "@oh-my-pi/pi-natives";
-import { $env } from "@oh-my-pi/pi-utils/env";
-import { isCmdShell, isExecutable, type ShellConfig } from "@oh-my-pi/pi-utils/procmgr";
+import { ExponentialYield } from "@bbcli/pi-agent-core/utils/yield";
+import type { ImageContent } from "@bbcli/pi-ai";
+import { type MinimizerOptions, PtySession, Shell, type ShellRunResult } from "@bbcli/pi-natives";
+import { $env } from "@bbcli/pi-utils/env";
+import { isCmdShell, isExecutable, type ShellConfig } from "@bbcli/pi-utils/procmgr";
 import { Settings, type ShellMinimizerSettings } from "../config/settings";
 import { OutputSink, type OutputSummary } from "../session/streaming-output";
 import { resolveOutputMaxColumns, resolveOutputSinkHeadBytes } from "../tools/output-meta";

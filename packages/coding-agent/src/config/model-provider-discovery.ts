@@ -1,10 +1,10 @@
-import type { Api, Model } from "@oh-my-pi/pi-ai/types";
-import type { ModelResolutionSource } from "@oh-my-pi/pi-catalog/model-manager";
+import type { Api, Model } from "@bbcli/pi-ai/types";
+import type { ModelResolutionSource } from "@bbcli/pi-catalog/model-manager";
 import {
 	MODELS_DEV_CATALOG_PROVIDER_IDS,
 	type OpenAICodexAccount,
 	PROVIDER_DESCRIPTORS,
-} from "@oh-my-pi/pi-catalog/provider-models";
+} from "@bbcli/pi-catalog/provider-models";
 import type { AuthStorage, OAuthCredential } from "../session/auth-storage";
 
 /**

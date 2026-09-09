@@ -2,7 +2,7 @@
  * Resolve auth-broker connection configuration for the local omp client.
  *
  * This is a thin coding-agent wrapper around the shared resolver in
- * `@oh-my-pi/pi-ai/auth-broker/discover` that preserves the process-lifetime
+ * `@bbcli/pi-ai/auth-broker/discover` that preserves the process-lifetime
  * memoization expected by the CLI and injects the full `resolveConfigValue`
  * (including `!command` config indirection) from coding-agent's config layer.
  *
@@ -21,16 +21,16 @@
  * boot without forcing a startup reorder.
  */
 
-import { AuthBrokerError } from "@oh-my-pi/pi-ai/auth-broker";
+import { AuthBrokerError } from "@bbcli/pi-ai/auth-broker";
 import {
 	type AuthBrokerClientConfig,
 	type DiscoverAuthStorageOptions,
 	discoverAuthStorage as discoverAuthStorageShared,
 	getAuthBrokerTokenFilePath,
 	resolveAuthBrokerConfig as resolveAuthBrokerConfigShared,
-} from "@oh-my-pi/pi-ai/auth-broker/discover";
-import { MissingApiKeyError } from "@oh-my-pi/pi-ai/error";
-import { getAgentDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai/auth-broker/discover";
+import { MissingApiKeyError } from "@bbcli/pi-ai/error";
+import { getAgentDir, readBrandedEnv } from "@bbcli/pi-utils";
 import { resolveConfigValue } from "../config/resolve-config-value";
 import type { AuthStorage } from "./auth-storage";
 
@@ -57,7 +57,7 @@ let cachedConfigPromise: Promise<AuthBrokerClientConfig | null> | null = null;
  * retried. Concurrent callers share one in-flight resolution.
  */
 export function resolveAuthBrokerConfig(): Promise<AuthBrokerClientConfig | null> {
-	const key = `${process.env.OMP_AUTH_BROKER_URL ?? ""}\u0000${process.env.OMP_AUTH_BROKER_TOKEN ?? ""}\u0000${getAgentDir()}`;
+	const key = `${readBrandedEnv("AUTH_BROKER_URL") ?? ""}\u0000${readBrandedEnv("AUTH_BROKER_TOKEN") ?? ""}\u0000${getAgentDir()}`;
 	if (cachedConfigPromise && cachedConfigKey === key) return cachedConfigPromise;
 	const promise = resolveAuthBrokerConfigShared({
 		agentDir: getAgentDir(),

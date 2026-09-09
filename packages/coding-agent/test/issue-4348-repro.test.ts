@@ -18,14 +18,14 @@
  */
 
 import { beforeAll, describe, expect, it, vi } from "bun:test";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import type { AssistantMessage, Usage } from "@oh-my-pi/pi-ai";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { InteractiveModeContext, RenderSessionContextOptions } from "@oh-my-pi/pi-coding-agent/modes/types";
-import { UiHelpers } from "@oh-my-pi/pi-coding-agent/modes/utils/ui-helpers";
-import type { SessionContext } from "@oh-my-pi/pi-coding-agent/session/session-context";
-import { Container } from "@oh-my-pi/pi-tui";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import type { AssistantMessage, Usage } from "@bbcli/pi-ai";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { InteractiveModeContext, RenderSessionContextOptions } from "@bbcli/pi-coding-agent/modes/types";
+import { UiHelpers } from "@bbcli/pi-coding-agent/modes/utils/ui-helpers";
+import type { SessionContext } from "@bbcli/pi-coding-agent/session/session-context";
+import { Container } from "@bbcli/pi-tui";
 
 beforeAll(() => {
 	initTheme();

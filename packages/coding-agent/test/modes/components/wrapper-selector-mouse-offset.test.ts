@@ -1,11 +1,11 @@
 import { beforeAll, describe, expect, it } from "bun:test";
-import { Effort } from "@oh-my-pi/pi-ai";
-import { PluginSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/plugin-selector";
-import { QueueModeSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/queue-mode-selector";
-import { ThemeSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/theme-selector";
-import { ThinkingSelectorComponent } from "@oh-my-pi/pi-coding-agent/modes/components/thinking-selector";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { SgrMouseEvent } from "@oh-my-pi/pi-tui";
+import { Effort } from "@bbcli/pi-ai";
+import { PluginSelectorComponent } from "@bbcli/pi-coding-agent/modes/components/plugin-selector";
+import { QueueModeSelectorComponent } from "@bbcli/pi-coding-agent/modes/components/queue-mode-selector";
+import { ThemeSelectorComponent } from "@bbcli/pi-coding-agent/modes/components/theme-selector";
+import { ThinkingSelectorComponent } from "@bbcli/pi-coding-agent/modes/components/thinking-selector";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { SgrMouseEvent } from "@bbcli/pi-tui";
 
 beforeAll(async () => {
 	await initTheme();

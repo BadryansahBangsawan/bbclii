@@ -1,8 +1,8 @@
-import { type } from "@oh-my-pi/omptype";
-import type { AgentMessage } from "@oh-my-pi/pi-agent-core";
-import { completeSimple, Effort, type Model, retryTransientCompletion } from "@oh-my-pi/pi-ai";
-import { clampThinkingLevelForModel } from "@oh-my-pi/pi-catalog/model-thinking";
-import { logger, prompt } from "@oh-my-pi/pi-utils";
+import { type } from "@bbcli/omptype";
+import type { AgentMessage } from "@bbcli/pi-agent-core";
+import { completeSimple, Effort, type Model, retryTransientCompletion } from "@bbcli/pi-ai";
+import { clampThinkingLevelForModel } from "@bbcli/pi-catalog/model-thinking";
+import { logger, prompt } from "@bbcli/pi-utils";
 import type { ModelRegistry } from "../config/model-registry";
 import { getModelMatchPreferences, resolveModelRoleValue, resolveRoleSelection } from "../config/model-resolver";
 import type { Settings } from "../config/settings";

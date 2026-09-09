@@ -1,18 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
-import type { AssistantMessage, Model } from "@oh-my-pi/pi-ai";
-import type { AsyncJobRegisterOptions } from "@oh-my-pi/pi-coding-agent/async/job-manager";
-import type { EffectiveExtensionRoots } from "@oh-my-pi/pi-coding-agent/capability/types";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { PreparedExtension } from "@oh-my-pi/pi-coding-agent/extensibility/extensions";
-import { resolveLocalRoot } from "@oh-my-pi/pi-coding-agent/internal-urls/local-protocol";
-import { TanCommandController } from "@oh-my-pi/pi-coding-agent/modes/controllers/tan-command-controller";
-import type { InteractiveModeContext } from "@oh-my-pi/pi-coding-agent/modes/types";
-import { AgentRegistry, MAIN_AGENT_ID } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import type { CreateAgentSessionOptions, CreateAgentSessionResult } from "@oh-my-pi/pi-coding-agent/sdk";
-import * as sdkModule from "@oh-my-pi/pi-coding-agent/sdk";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import type { AssistantMessage, Model } from "@bbcli/pi-ai";
+import type { AsyncJobRegisterOptions } from "@bbcli/pi-coding-agent/async/job-manager";
+import type { EffectiveExtensionRoots } from "@bbcli/pi-coding-agent/capability/types";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { PreparedExtension } from "@bbcli/pi-coding-agent/extensibility/extensions";
+import { resolveLocalRoot } from "@bbcli/pi-coding-agent/internal-urls/local-protocol";
+import { TanCommandController } from "@bbcli/pi-coding-agent/modes/controllers/tan-command-controller";
+import type { InteractiveModeContext } from "@bbcli/pi-coding-agent/modes/types";
+import { AgentRegistry, MAIN_AGENT_ID } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import type { CreateAgentSessionOptions, CreateAgentSessionResult } from "@bbcli/pi-coding-agent/sdk";
+import * as sdkModule from "@bbcli/pi-coding-agent/sdk";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { TempDir } from "@bbcli/pi-utils";
 
 interface CapturedJobRunContext {
 	jobId: string;

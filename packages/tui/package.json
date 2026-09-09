@@ -1,9 +1,9 @@
 {
   "type": "module",
-  "name": "@oh-my-pi/pi-tui",
+  "name": "@bbcli/pi-tui",
   "version": "18.1.15",
   "description": "Terminal User Interface library with differential rendering for efficient text-based applications",
-  "homepage": "https://omp.sh",
+  "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "contributors": [
     "Mario Zechner"
@@ -37,8 +37,8 @@
     "fmt": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts'"
   },
   "dependencies": {
-    "@oh-my-pi/pi-natives": "catalog:",
-    "@oh-my-pi/pi-utils": "catalog:"
+    "@bbcli/pi-natives": "catalog:",
+    "@bbcli/pi-utils": "catalog:"
   },
   "devDependencies": {
     "kitty-vt-wasm": "catalog:"

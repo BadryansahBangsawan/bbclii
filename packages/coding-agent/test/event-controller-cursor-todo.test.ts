@@ -1,12 +1,12 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "bun:test";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AssistantMessageComponent } from "@oh-my-pi/pi-coding-agent/modes/components/assistant-message";
-import { TranscriptContainer } from "@oh-my-pi/pi-coding-agent/modes/components/transcript-container";
-import { EventController } from "@oh-my-pi/pi-coding-agent/modes/controllers/event-controller";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import type { AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { TRUNCATE_LENGTHS } from "@oh-my-pi/pi-coding-agent/tools/render-utils";
-import type { Component } from "@oh-my-pi/pi-tui";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AssistantMessageComponent } from "@bbcli/pi-coding-agent/modes/components/assistant-message";
+import { TranscriptContainer } from "@bbcli/pi-coding-agent/modes/components/transcript-container";
+import { EventController } from "@bbcli/pi-coding-agent/modes/controllers/event-controller";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import type { AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import { TRUNCATE_LENGTHS } from "@bbcli/pi-coding-agent/tools/render-utils";
+import type { Component } from "@bbcli/pi-tui";
 import { createInteractiveModeContext } from "./helpers/interactive-mode-context";
 
 beforeAll(async () => {

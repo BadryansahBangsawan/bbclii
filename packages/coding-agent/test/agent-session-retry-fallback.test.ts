@@ -1,8 +1,8 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
 import { scheduler } from "node:timers/promises";
-import { type } from "@oh-my-pi/omptype";
-import { Agent, type AgentTool } from "@oh-my-pi/pi-agent-core";
+import { type } from "@bbcli/omptype";
+import { Agent, type AgentTool } from "@bbcli/pi-agent-core";
 import {
 	type Api,
 	type AssistantMessage,
@@ -12,29 +12,26 @@ import {
 	type ModelUsageHealth,
 	type ProviderSessionState,
 	type ToolCall,
-} from "@oh-my-pi/pi-ai";
-import * as AIError from "@oh-my-pi/pi-ai/error";
-import { createMockModel } from "@oh-my-pi/pi-ai/providers/mock";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { writeModelCache } from "@oh-my-pi/pi-catalog/model-cache";
-import { getBundledModel } from "@oh-my-pi/pi-catalog/models";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { parseModelPattern, parseModelString } from "@oh-my-pi/pi-coding-agent/config/model-resolver";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { ExtensionRuntime, loadExtensionFromFactory } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/loader";
-import { ExtensionRunner } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/runner";
-import { initTheme } from "@oh-my-pi/pi-coding-agent/modes/theme/theme";
-import { AgentSession, type AgentSessionEvent } from "@oh-my-pi/pi-coding-agent/session/agent-session";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import {
-	type ServingModel,
-	validateRetryFallbackChains,
-} from "@oh-my-pi/pi-coding-agent/session/retry-fallback-chains";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { convertToLlm } from "@oh-my-pi/pi-coding-agent/session/messages";
-import { EventBus } from "@oh-my-pi/pi-coding-agent/utils/event-bus";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import * as AIError from "@bbcli/pi-ai/error";
+import { createMockModel } from "@bbcli/pi-ai/providers/mock";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { writeModelCache } from "@bbcli/pi-catalog/model-cache";
+import { getBundledModel } from "@bbcli/pi-catalog/models";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { parseModelPattern, parseModelString } from "@bbcli/pi-coding-agent/config/model-resolver";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { ExtensionRuntime, loadExtensionFromFactory } from "@bbcli/pi-coding-agent/extensibility/extensions/loader";
+import { ExtensionRunner } from "@bbcli/pi-coding-agent/extensibility/extensions/runner";
+import { initTheme } from "@bbcli/pi-coding-agent/modes/theme/theme";
+import { AgentSession, type AgentSessionEvent } from "@bbcli/pi-coding-agent/session/agent-session";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { type ServingModel, validateRetryFallbackChains } from "@bbcli/pi-coding-agent/session/retry-fallback-chains";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { convertToLlm } from "@bbcli/pi-coding-agent/session/messages";
+import { EventBus } from "@bbcli/pi-coding-agent/utils/event-bus";
+import { TempDir } from "@bbcli/pi-utils";
 
 type AutoRetryStartEvent = Extract<AgentSessionEvent, { type: "auto_retry_start" }>;
 type AutoRetryEndEvent = Extract<AgentSessionEvent, { type: "auto_retry_end" }>;

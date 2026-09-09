@@ -2,11 +2,11 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import type { ToolCall } from "@oh-my-pi/pi-ai";
-import { toolWireSchema } from "@oh-my-pi/pi-ai/utils/schema";
-import { validateToolArguments } from "@oh-my-pi/pi-ai/utils/validation";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
+import type { ToolCall } from "@bbcli/pi-ai";
+import { toolWireSchema } from "@bbcli/pi-ai/utils/schema";
+import { validateToolArguments } from "@bbcli/pi-ai/utils/validation";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
 import {
 	buildSearchDateQualifier,
 	GithubTool,
@@ -14,13 +14,13 @@ import {
 	parsePrUnifiedDiff,
 	parseSearchDateBound,
 	resolveDefaultRepoMemoized,
-} from "@oh-my-pi/pi-coding-agent/tools/gh";
-import { parseIssueUrl, parsePullRequestUrl } from "@oh-my-pi/pi-coding-agent/tools/gh-common";
-import { github } from "@oh-my-pi/pi-coding-agent/utils/github";
-import { withRepoLock } from "@oh-my-pi/pi-coding-agent/utils/repo-lock";
-import type { VcsGitRepo } from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { getAgentDir, hashPath, normalizePathForComparison, removeWithRetries, setAgentDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/tools/gh";
+import { parseIssueUrl, parsePullRequestUrl } from "@bbcli/pi-coding-agent/tools/gh-common";
+import { github } from "@bbcli/pi-coding-agent/utils/github";
+import { withRepoLock } from "@bbcli/pi-coding-agent/utils/repo-lock";
+import type { VcsGitRepo } from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { getAgentDir, hashPath, normalizePathForComparison, removeWithRetries, setAgentDir } from "@bbcli/pi-utils";
 
 const TINY_PNG_BASE64 =
 	"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFBQIAX8jx0gAAAABJRU5ErkJggg==";

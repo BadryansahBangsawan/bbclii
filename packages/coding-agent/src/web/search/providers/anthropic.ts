@@ -18,9 +18,9 @@ import {
 	stripClaudeToolPrefix,
 	withAuth,
 	wrapFetchForCch,
-} from "@oh-my-pi/pi-ai";
-import { classifyModel, compareRevision, parseRevision } from "@oh-my-pi/pi-catalog/identity";
-import { $env } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-ai";
+import { classifyModel, compareRevision, parseRevision } from "@bbcli/pi-catalog/identity";
+import { $env } from "@bbcli/pi-utils";
 import type {
 	AnthropicApiResponse,
 	AnthropicCitation,

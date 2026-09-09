@@ -1,5 +1,5 @@
-import type { Context, ImageContent, Model } from "@oh-my-pi/pi-ai";
-import { logger } from "@oh-my-pi/pi-utils";
+import type { Context, ImageContent, Model } from "@bbcli/pi-ai";
+import { logger } from "@bbcli/pi-utils";
 import { contextHasImages, decorateContextProviderFiles } from "./context-images";
 import {
 	hashProviderFileContent,

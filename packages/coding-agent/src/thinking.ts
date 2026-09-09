@@ -1,7 +1,7 @@
-import { type ResolvedThinkingLevel, ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import { Effort, type Model, THINKING_EFFORTS } from "@oh-my-pi/pi-ai";
-import { clampThinkingLevelForModel, getSupportedEfforts } from "@oh-my-pi/pi-catalog/model-thinking";
-import { modelsAreEqual } from "@oh-my-pi/pi-catalog/models";
+import { type ResolvedThinkingLevel, ThinkingLevel } from "@bbcli/pi-agent-core";
+import { Effort, type Model, THINKING_EFFORTS } from "@bbcli/pi-ai";
+import { clampThinkingLevelForModel, getSupportedEfforts } from "@bbcli/pi-catalog/model-thinking";
+import { modelsAreEqual } from "@bbcli/pi-catalog/models";
 
 export { CLI_THINKING_LEVELS } from "./cli/thinking-levels";
 

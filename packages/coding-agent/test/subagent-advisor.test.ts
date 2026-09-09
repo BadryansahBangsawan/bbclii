@@ -6,11 +6,11 @@ import { afterEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as os from "node:os";
 import * as path from "node:path";
-import { Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { AgentRegistry, MAIN_AGENT_ID } from "@oh-my-pi/pi-coding-agent/registry/agent-registry";
-import { registerPersistedSubagents } from "@oh-my-pi/pi-coding-agent/registry/persisted-agents";
-import { CURRENT_SESSION_VERSION } from "@oh-my-pi/pi-coding-agent/session/session-entries";
-import { createSubagentSettings } from "@oh-my-pi/pi-coding-agent/task/executor";
+import { Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { AgentRegistry, MAIN_AGENT_ID } from "@bbcli/pi-coding-agent/registry/agent-registry";
+import { registerPersistedSubagents } from "@bbcli/pi-coding-agent/registry/persisted-agents";
+import { CURRENT_SESSION_VERSION } from "@bbcli/pi-coding-agent/session/session-entries";
+import { createSubagentSettings } from "@bbcli/pi-coding-agent/task/executor";
 
 describe("per-agent settings migrations", () => {
 	let agentDir = "";

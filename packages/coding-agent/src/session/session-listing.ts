@@ -1,8 +1,8 @@
 import * as os from "node:os";
 import * as path from "node:path";
-import type { Message } from "@oh-my-pi/pi-ai";
-import { getSessionsDir, logger, parseJsonlLenient, toError } from "@oh-my-pi/pi-utils";
-import { LRUCache } from "@oh-my-pi/pi-utils/lru";
+import type { Message } from "@bbcli/pi-ai";
+import { getSessionsDir, logger, parseJsonlLenient, toError } from "@bbcli/pi-utils";
+import { LRUCache } from "@bbcli/pi-utils/lru";
 import { computeDefaultSessionDir } from "./session-paths";
 import { FileSessionStorage, type SessionStorage, type SessionStorageStat } from "./session-storage";
 import { lookupSessionTitle, recordSessionTitle } from "./title-index";

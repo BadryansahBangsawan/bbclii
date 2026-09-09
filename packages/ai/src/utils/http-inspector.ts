@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import { getLogsDir, isBunTestRuntime } from "@oh-my-pi/pi-utils";
+import { getLogsDir, isBunTestRuntime } from "@bbcli/pi-utils";
 import * as AIError from "../error/flags";
 import { formatErrorMessageWithRetryAfter } from "./retry-after.js";
 

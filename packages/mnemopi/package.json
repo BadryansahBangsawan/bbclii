@@ -1,9 +1,9 @@
 {
   "type": "module",
-  "name": "@oh-my-pi/pi-mnemopi",
+  "name": "@bbcli/pi-mnemopi",
   "version": "18.1.15",
   "description": "Local SQLite memory engine for Oh My Pi agents",
-  "homepage": "https://omp.sh",
+  "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "contributors": [
     "Abdias J"
@@ -39,10 +39,10 @@
     "fmt": "oxfmt --no-error-on-unmatched-pattern 'src/**/*.{ts,tsx}' '{test,bench,examples,scripts}/**/*.ts' '*.ts'"
   },
   "dependencies": {
-    "@oh-my-pi/pi-ai": "catalog:",
-    "@oh-my-pi/pi-catalog": "catalog:",
-    "@oh-my-pi/pi-natives": "catalog:",
-    "@oh-my-pi/pi-utils": "catalog:"
+    "@bbcli/pi-ai": "catalog:",
+    "@bbcli/pi-catalog": "catalog:",
+    "@bbcli/pi-natives": "catalog:",
+    "@bbcli/pi-utils": "catalog:"
   },
   "peerDependencies": {
     "fastembed": "2.1.0",

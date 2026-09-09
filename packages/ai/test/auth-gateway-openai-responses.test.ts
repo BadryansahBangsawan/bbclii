@@ -2,16 +2,16 @@ import { describe, expect, it } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { clearCustomApis } from "@oh-my-pi/pi-ai/api-registry";
-import { startAuthGateway } from "@oh-my-pi/pi-ai/auth-gateway";
-import { AuthStorage } from "@oh-my-pi/pi-ai/auth-storage";
-import { createMockModel, registerMockApi } from "@oh-my-pi/pi-ai/providers/mock";
-import { encodeResponse, encodeStream, parseRequest } from "@oh-my-pi/pi-ai/providers/openai-responses-server";
-import { buildResponsesInput } from "@oh-my-pi/pi-ai/providers/openai-shared";
-import type { AssistantMessage, Context, ModelSpec } from "@oh-my-pi/pi-ai/types";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { Effort } from "@oh-my-pi/pi-catalog/effort";
+import { clearCustomApis } from "@bbcli/pi-ai/api-registry";
+import { startAuthGateway } from "@bbcli/pi-ai/auth-gateway";
+import { AuthStorage } from "@bbcli/pi-ai/auth-storage";
+import { createMockModel, registerMockApi } from "@bbcli/pi-ai/providers/mock";
+import { encodeResponse, encodeStream, parseRequest } from "@bbcli/pi-ai/providers/openai-responses-server";
+import { buildResponsesInput } from "@bbcli/pi-ai/providers/openai-shared";
+import type { AssistantMessage, Context, ModelSpec } from "@bbcli/pi-ai/types";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { Effort } from "@bbcli/pi-catalog/effort";
 
 function zeroUsage(): AssistantMessage["usage"] {
 	return {

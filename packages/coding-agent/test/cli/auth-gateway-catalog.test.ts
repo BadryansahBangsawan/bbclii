@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
-import type { AuthStorage } from "@oh-my-pi/pi-ai";
-import { getBundledModels } from "@oh-my-pi/pi-catalog/models";
-import { TempDir } from "@oh-my-pi/pi-utils";
+import type { AuthStorage } from "@bbcli/pi-ai";
+import { getBundledModels } from "@bbcli/pi-catalog/models";
+import { TempDir } from "@bbcli/pi-utils";
 import { indexModelsByRequestId } from "../../src/cli/auth-gateway-cli";
 import { ModelRegistry } from "../../src/config/model-registry";
 

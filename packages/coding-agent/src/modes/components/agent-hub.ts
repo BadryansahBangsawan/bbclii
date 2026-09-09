@@ -13,7 +13,7 @@
  *
  * Replaces the old SessionObserverOverlayComponent (ctrl+s observer).
  */
-import type { AgentTool } from "@oh-my-pi/pi-agent-core";
+import type { AgentTool } from "@bbcli/pi-agent-core";
 import {
 	Container,
 	matchesKey,
@@ -25,8 +25,8 @@ import {
 	type TUI,
 	visibleWidth,
 	wrapTextWithAnsi,
-} from "@oh-my-pi/pi-tui";
-import { formatAge, formatNumber, getProjectDir, logger } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-tui";
+import { formatAge, formatNumber, getProjectDir, logger } from "@bbcli/pi-utils";
 import {
 	AgentActivityIndex,
 	type AgentActivityKind,

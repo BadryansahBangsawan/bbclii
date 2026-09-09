@@ -1,7 +1,7 @@
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Effort } from "@oh-my-pi/pi-ai";
-import { colorLuma, logger, relativeLuminance } from "@oh-my-pi/pi-utils";
-import chalk from "@oh-my-pi/pi-utils/chalk";
+import type { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { Effort } from "@bbcli/pi-ai";
+import { colorLuma, logger, relativeLuminance } from "@bbcli/pi-utils";
+import chalk from "@bbcli/pi-utils/chalk";
 import type { SessionAccentTheme } from "../../utils/session-color";
 import { bgAnsi, colorToAnsi, fgAnsi, resolveToHex } from "./color";
 import { type ColorMode, isValidThemeColor, type ThemeBg, type ThemeColor } from "./schema";

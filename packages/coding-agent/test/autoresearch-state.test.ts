@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "bun:test";
-import { createAutoresearchExtension } from "@oh-my-pi/pi-coding-agent/autoresearch";
+import { createAutoresearchExtension } from "@bbcli/pi-coding-agent/autoresearch";
 import {
 	buildExperimentState,
 	computeConfidence,
@@ -7,17 +7,17 @@ import {
 	findBaselineRunNumber,
 	findBestKeptMetric,
 	reconstructControlState,
-} from "@oh-my-pi/pi-coding-agent/autoresearch/state";
-import { AutoresearchStorage, closeAllAutoresearchStorages } from "@oh-my-pi/pi-coding-agent/autoresearch/storage";
-import type { ExperimentResult } from "@oh-my-pi/pi-coding-agent/autoresearch/types";
+} from "@bbcli/pi-coding-agent/autoresearch/state";
+import { AutoresearchStorage, closeAllAutoresearchStorages } from "@bbcli/pi-coding-agent/autoresearch/storage";
+import type { ExperimentResult } from "@bbcli/pi-coding-agent/autoresearch/types";
 import type {
 	ExtensionAPI,
 	ExtensionCommandContext,
 	RegisteredCommand,
-} from "@oh-my-pi/pi-coding-agent/extensibility/extensions";
-import type { VcsGitRepo, VcsGitRepoInfo } from "@oh-my-pi/pi-natives";
-import * as vcs from "@oh-my-pi/pi-natives/vcs";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/extensibility/extensions";
+import type { VcsGitRepo, VcsGitRepoInfo } from "@bbcli/pi-natives";
+import * as vcs from "@bbcli/pi-natives/vcs";
+import { TempDir } from "@bbcli/pi-utils";
 
 afterEach(() => {
 	vi.restoreAllMocks();

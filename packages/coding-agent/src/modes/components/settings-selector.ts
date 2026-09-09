@@ -1,5 +1,5 @@
-import type { ThinkingLevel } from "@oh-my-pi/pi-agent-core";
-import type { Effort } from "@oh-my-pi/pi-ai";
+import type { ThinkingLevel } from "@bbcli/pi-agent-core";
+import type { Effort } from "@bbcli/pi-ai";
 import {
 	type Component,
 	Container,
@@ -24,8 +24,8 @@ import {
 	Text,
 	truncateToWidth,
 	visibleWidth,
-} from "@oh-my-pi/pi-tui";
-import type { ShapeTarget } from "@oh-my-pi/snapcompact";
+} from "@bbcli/pi-tui";
+import type { ShapeTarget } from "@bbcli/snapcompact";
 import {
 	getDefault,
 	getType,

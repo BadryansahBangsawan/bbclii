@@ -1,9 +1,9 @@
-import type { type as ArkType } from "@oh-my-pi/omptype";
-import type * as TypeBox from "@oh-my-pi/omptype/typebox";
-import type * as zod from "@oh-my-pi/omptype/zod";
-import type { ImageContent, Message, Model, TextContent } from "@oh-my-pi/pi-ai";
-import type { Component, TUI } from "@oh-my-pi/pi-tui";
-import type { logger as PiLogger } from "@oh-my-pi/pi-utils";
+import type { type as ArkType } from "@bbcli/omptype";
+import type * as TypeBox from "@bbcli/omptype/typebox";
+import type * as zod from "@bbcli/omptype/zod";
+import type { ImageContent, Message, Model, TextContent } from "@bbcli/pi-ai";
+import type { Component, TUI } from "@bbcli/pi-tui";
+import type { logger as PiLogger } from "@bbcli/pi-utils";
 import type { KeybindingsManager } from "../../config/keybindings";
 import type { ModelRegistry } from "../../config/model-registry";
 import type { EditToolDetails } from "../../edit";

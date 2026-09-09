@@ -9,11 +9,11 @@ import type {
 	ToolResultMessage,
 	ToolResultProviderMetadata,
 	UserMessage,
-} from "@oh-my-pi/pi-ai";
-import { decodeDataUri } from "@oh-my-pi/pi-ai/providers/openai-data-uri";
-import { isRecord } from "@oh-my-pi/pi-utils";
-import { LRUCache } from "@oh-my-pi/pi-utils/lru";
-import { providerImageBudget } from "@oh-my-pi/snapcompact";
+} from "@bbcli/pi-ai";
+import { decodeDataUri } from "@bbcli/pi-ai/providers/openai-data-uri";
+import { isRecord } from "@bbcli/pi-utils";
+import { LRUCache } from "@bbcli/pi-utils/lru";
+import { providerImageBudget } from "@bbcli/snapcompact";
 import { supportsRemoteImageUrls } from "../blob-broker/context-images";
 import { imageDecodeFailureReason } from "../utils/image-loading";
 

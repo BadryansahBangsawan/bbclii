@@ -1,4 +1,5 @@
-import type { ImageContent } from "@oh-my-pi/pi-ai";
+import type { ImageContent } from "@bbcli/pi-ai";
+import { readBrandedEnv } from "@bbcli/pi-utils";
 
 export interface ImageResizeOptions {
 	maxWidth?: number;
@@ -126,7 +127,7 @@ function readImageHeaderDimensions(buffer: Uint8Array): ImageHeaderDimensions | 
  * or `"0"` MUST be treated as disabled.
  */
 function isWebPExcluded(): boolean {
-	const raw = Bun.env.OMP_NO_WEBP;
+	const raw = readBrandedEnv("NO_WEBP");
 	if (raw === undefined) return false;
 	const v = raw.toLowerCase();
 	return v === "1" || v === "true";

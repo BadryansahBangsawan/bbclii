@@ -4,10 +4,10 @@
  * consumer-facing stream single and ordered.
  */
 
-import type { StreamFn } from "@oh-my-pi/pi-agent-core";
-import type { Context } from "@oh-my-pi/pi-ai";
-import { AssistantMessageEventStream } from "@oh-my-pi/pi-ai/utils/event-stream";
-import { logger } from "@oh-my-pi/pi-utils";
+import type { StreamFn } from "@bbcli/pi-agent-core";
+import type { Context } from "@bbcli/pi-ai";
+import { AssistantMessageEventStream } from "@bbcli/pi-ai/utils/event-stream";
+import { logger } from "@bbcli/pi-utils";
 import { contextHasImageUrls, contextHasProviderFiles } from "./context-images";
 import type { ImageUrlService } from "./service";
 

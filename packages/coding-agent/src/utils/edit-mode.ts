@@ -1,5 +1,5 @@
-import { classifyModel } from "@oh-my-pi/pi-catalog/identity";
-import { $env, $flag } from "@oh-my-pi/pi-utils";
+import { classifyModel } from "@bbcli/pi-catalog/identity";
+import { $env, $flag } from "@bbcli/pi-utils";
 
 export type EditMode = "replace" | "patch" | "hashline" | "apply_patch" | "sloppy";
 

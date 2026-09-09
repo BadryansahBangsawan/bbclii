@@ -1,16 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { ModelRegistry } from "@oh-my-pi/pi-coding-agent/config/model-registry";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { ExtensionRuntime, loadExtensionFromFactory } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/loader";
-import { ExtensionRunner } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/runner";
-import { ExtensionToolWrapper, wrapRegisteredTool } from "@oh-my-pi/pi-coding-agent/extensibility/extensions/wrapper";
-import { SettingsManager } from "@oh-my-pi/pi-coding-agent/extensibility/legacy-pi-coding-agent-shim";
-import { AuthStorage } from "@oh-my-pi/pi-coding-agent/session/auth-storage";
-import { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { EventBus } from "@oh-my-pi/pi-coding-agent/utils/event-bus";
-import { getProjectAgentDir, TempDir } from "@oh-my-pi/pi-utils";
+import { ModelRegistry } from "@bbcli/pi-coding-agent/config/model-registry";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { ExtensionRuntime, loadExtensionFromFactory } from "@bbcli/pi-coding-agent/extensibility/extensions/loader";
+import { ExtensionRunner } from "@bbcli/pi-coding-agent/extensibility/extensions/runner";
+import { ExtensionToolWrapper, wrapRegisteredTool } from "@bbcli/pi-coding-agent/extensibility/extensions/wrapper";
+import { SettingsManager } from "@bbcli/pi-coding-agent/extensibility/legacy-pi-coding-agent-shim";
+import { AuthStorage } from "@bbcli/pi-coding-agent/session/auth-storage";
+import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { EventBus } from "@bbcli/pi-coding-agent/utils/event-bus";
+import { getProjectAgentDir, TempDir } from "@bbcli/pi-utils";
 import { YAML } from "bun";
 import { beginSettingsTest, restoreSettingsTestState, type SettingsTestState } from "../helpers/settings-test-state";
 

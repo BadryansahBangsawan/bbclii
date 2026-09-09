@@ -1,6 +1,6 @@
 /** Shared inference request identity headers. */
 
-import { USER_AGENT } from "@oh-my-pi/pi-utils";
+import { USER_AGENT } from "@bbcli/pi-utils";
 
 /** Options controlling provider and protocol inference headers. */
 export interface InferenceHeaderOptions {

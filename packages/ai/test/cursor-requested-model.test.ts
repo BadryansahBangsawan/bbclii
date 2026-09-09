@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { streamCursor } from "@oh-my-pi/pi-ai/providers/cursor";
-import type { Context, Model } from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import type { AgentRunRequest } from "@oh-my-pi/pi-catalog/discovery/cursor-proto";
+import { streamCursor } from "@bbcli/pi-ai/providers/cursor";
+import type { Context, Model } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import type { AgentRunRequest } from "@bbcli/pi-catalog/discovery/cursor-proto";
 
 function cursorModel(id: string): Model<"cursor-agent"> {
 	return buildModel({

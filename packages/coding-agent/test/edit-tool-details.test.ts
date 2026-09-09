@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { EditTool, type EditToolDetails, getEditStore } from "@oh-my-pi/pi-coding-agent/edit";
-import type { EditMode } from "@oh-my-pi/pi-coding-agent/utils/edit-mode";
-import type { ToolSession } from "@oh-my-pi/pi-coding-agent/tools";
-import { removeWithRetries } from "@oh-my-pi/pi-utils";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { EditTool, type EditToolDetails, getEditStore } from "@bbcli/pi-coding-agent/edit";
+import type { EditMode } from "@bbcli/pi-coding-agent/utils/edit-mode";
+import type { ToolSession } from "@bbcli/pi-coding-agent/tools";
+import { removeWithRetries } from "@bbcli/pi-utils";
 
 function makeSession(cwd: string, settings: Record<string, unknown> = {}): ToolSession {
 	return {

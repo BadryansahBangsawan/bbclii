@@ -10,12 +10,12 @@ const COPILOT_PREMIUM_MULTIPLIERS: Record<string, number> = {
 };
 
 import * as path from "node:path";
-import { discoverAuthStorage } from "@oh-my-pi/pi-ai/auth-broker/discover";
-import type { OAuthAccess } from "@oh-my-pi/pi-ai/auth-storage";
-import type { OAuthProvider } from "@oh-my-pi/pi-ai/oauth/types";
-import { getGitLabDuoModels } from "@oh-my-pi/pi-ai/providers/gitlab-duo";
-import { getProviderDefinition } from "@oh-my-pi/pi-ai/registry";
-import { $env } from "@oh-my-pi/pi-utils";
+import { discoverAuthStorage } from "@bbcli/pi-ai/auth-broker/discover";
+import type { OAuthAccess } from "@bbcli/pi-ai/auth-storage";
+import type { OAuthProvider } from "@bbcli/pi-ai/oauth/types";
+import { getGitLabDuoModels } from "@bbcli/pi-ai/providers/gitlab-duo";
+import { getProviderDefinition } from "@bbcli/pi-ai/registry";
+import { $env } from "@bbcli/pi-utils";
 import { buildModel } from "../src/build";
 import { isRetiredProvider } from "../src/compat/behavior";
 import { collapseVariants } from "../src/compat/collapse";

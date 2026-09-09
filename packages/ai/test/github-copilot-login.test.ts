@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { getProviderDefinition } from "@oh-my-pi/pi-ai/registry";
-import { getOAuthApiKey } from "@oh-my-pi/pi-ai/registry/oauth";
-import { loginGitHubCopilot } from "@oh-my-pi/pi-ai/registry/oauth/github-copilot";
+import { getProviderDefinition } from "@bbcli/pi-ai/registry";
+import { getOAuthApiKey } from "@bbcli/pi-ai/registry/oauth";
+import { loginGitHubCopilot } from "@bbcli/pi-ai/registry/oauth/github-copilot";
 
 const FAST_POLL_OPTIONS = { pollIntervalFloorMs: 0, pollIntervalScaleMs: 1 } as const;
 

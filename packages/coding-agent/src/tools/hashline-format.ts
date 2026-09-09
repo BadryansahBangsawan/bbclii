@@ -3,7 +3,7 @@ import {
 	hashlineFormatHeader,
 	hashlineFormatNumberedLines,
 	hashlineStripPrefixes,
-} from "@oh-my-pi/pi-natives";
+} from "@bbcli/pi-natives";
 
 export const HL_FILE_PREFIX = "[";
 export const HL_FILE_SUFFIX = "]";

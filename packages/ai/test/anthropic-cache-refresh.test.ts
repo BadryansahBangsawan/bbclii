@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
-import { streamSimple } from "@oh-my-pi/pi-ai";
-import type { CacheControlEphemeral, MessageCreateParams } from "@oh-my-pi/pi-ai/providers/anthropic-wire";
-import type { CacheRetention, Context, FetchImpl, Model, ProviderSessionState } from "@oh-my-pi/pi-ai/types";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
+import { streamSimple } from "@bbcli/pi-ai";
+import type { CacheControlEphemeral, MessageCreateParams } from "@bbcli/pi-ai/providers/anthropic-wire";
+import type { CacheRetention, Context, FetchImpl, Model, ProviderSessionState } from "@bbcli/pi-ai/types";
+import { buildModel } from "@bbcli/pi-catalog/build";
 import { withOfficialAnthropicEndpoint } from "./helpers";
 
 const CACHE_REFRESH_DELAY_MS = 5 * 60_000 - 15_000;
