@@ -98,6 +98,10 @@ export interface SegmentContext {
 	vibeMode: {
 		enabled: boolean;
 	} | null;
+	teamMode: {
+		enabled: boolean;
+		size: number;
+	} | null;
 	collab: CollabStatus | null;
 	// Cached values for performance (computed once per render)
 	usageStats: {

@@ -48,6 +48,9 @@ export const PREWALK_PLAN_MESSAGE_TYPE = "prewalk-plan";
 /** Custom message type for the transient Vibe mode directive. */
 export const VIBE_MODE_CONTEXT_MESSAGE_TYPE = "vibe-mode-context";
 
+/** Custom message type for the transient Team mode orchestrator directive. */
+export const TEAM_MODE_CONTEXT_MESSAGE_TYPE = "team-mode-context";
+
 /**
  * Logs provider-error turns so their actual cause is available outside the
  * session transcript. No-op for non-error stop reasons.

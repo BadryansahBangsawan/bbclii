@@ -5085,6 +5085,52 @@ export const SETTINGS_SCHEMA = {
 		},
 	},
 
+	"task.team.enabled": {
+		type: "boolean",
+		default: true,
+		ui: {
+			tab: "tasks",
+			group: "Subagents",
+			label: "Team Swarm",
+			description: "Allow task.team and /team",
+		},
+	},
+
+	"task.team.defaultSize": {
+		type: "number",
+		default: 3,
+		ui: {
+			tab: "tasks",
+			group: "Subagents",
+			label: "Team Default Size",
+			description: "Default specialist count for /team when no size is given",
+			options: [
+				{ value: "2", label: "2 agents" },
+				{ value: "3", label: "3 agents" },
+				{ value: "4", label: "4 agents" },
+				{ value: "6", label: "6 agents" },
+				{ value: "8", label: "8 agents" },
+			],
+		},
+	},
+
+	"task.team.maxSize": {
+		type: "number",
+		default: 8,
+		ui: {
+			tab: "tasks",
+			group: "Subagents",
+			label: "Team Max Size",
+			description: "Maximum specialists in one team swarm",
+			options: [
+				{ value: "2", label: "2 agents" },
+				{ value: "4", label: "4 agents" },
+				{ value: "8", label: "8 agents" },
+				{ value: "16", label: "16 agents" },
+			],
+		},
+	},
+
 	"task.enableEffort": {
 		type: "boolean",
 		default: false,

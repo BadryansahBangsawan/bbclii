@@ -6,8 +6,9 @@ import { type AstReplaceChange, type AstReplaceFileChange, astEdit } from "@oh-m
 import type { Component } from "@oh-my-pi/pi-tui";
 import { replaceTabs, Text } from "@oh-my-pi/pi-tui";
 import { $envpos, prompt, untilAborted } from "@oh-my-pi/pi-utils";
-import { getEditStore } from "../edit/store";
 import { normalizeToLF } from "../edit/normalize";
+import { getEditStore } from "../edit/store";
+import { assertTeamWritable } from "../task/file-claim";
 import { formatHashlineHeader } from "./hashline-format";
 import type { RenderResultOptions } from "../extensibility/custom-tools/types";
 import type { Theme } from "../modes/theme/theme";
@@ -354,6 +355,11 @@ export class AstEditTool implements AgentTool<typeof astEditSchema, AstEditToolD
 					: "";
 				return toolResult(baseDetails).text(`No replacements made${parseMessage}`).done();
 			}
+
+			const claimedPaths = [
+				...new Set(result.fileChanges.map(fileChange => path.resolve(this.session.cwd, fileChange.path))),
+			].filter(target => !isInternalUrlPath(target));
+			if (claimedPaths.length > 0) assertTeamWritable(this.session, claimedPaths);
 
 			const useHashLines = resolveFileDisplayMode(this.session).hashLines;
 			const hashContexts = new Map<string, { tag: string }>();

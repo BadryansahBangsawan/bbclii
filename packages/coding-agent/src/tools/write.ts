@@ -33,6 +33,7 @@ import { getLanguageFromPath, highlightCode, type Theme } from "../modes/theme/t
 import writeDescription from "../prompts/tools/write.md" with { type: "text" };
 import writeDeviceOnlyDescription from "../prompts/tools/write-device-only.md" with { type: "text" };
 import type { ToolSession } from "../sdk";
+import { assertTeamWritable } from "../task/file-claim";
 import { fileHyperlink, framedBlock, renderStatusLine } from "../tui";
 import { resolveFileDisplayMode } from "../utils/file-display-mode";
 import { routeWriteThroughBridge } from "./acp-bridge";
@@ -1239,6 +1240,7 @@ export class WriteTool implements AgentTool<typeof writeSchema, WriteToolDetails
 			}
 			const resolvedArchivePath = await this.#resolveArchiveWritePath(path);
 			if (resolvedArchivePath) {
+				assertTeamWritable(this.session, [resolvedArchivePath.absolutePath]);
 				enforcePlanModeWrite(this.session, resolvedArchivePath.archivePath, {
 					op: resolvedArchivePath.exists ? "update" : "create",
 				});
@@ -1266,6 +1268,7 @@ export class WriteTool implements AgentTool<typeof writeSchema, WriteToolDetails
 
 			const resolvedSqlitePath = await this.#resolveSqliteWritePath(path);
 			if (resolvedSqlitePath) {
+				assertTeamWritable(this.session, [resolvedSqlitePath.absolutePath]);
 				enforcePlanModeWrite(this.session, resolvedSqlitePath.sqlitePath, { op: "update" });
 
 				emitWriteProgress(onUpdate, cleanContent, path, resolvedSqlitePath.absolutePath);
@@ -1285,6 +1288,9 @@ export class WriteTool implements AgentTool<typeof writeSchema, WriteToolDetails
 			await assertNotReadSelectorMisfire(path, cleanContent, this.session.cwd);
 			enforcePlanModeWrite(this.session, path, { op: "create" });
 			const absolutePath = resolvePlanPath(this.session, path);
+			if (!internalRouter.canHandle(path)) {
+				assertTeamWritable(this.session, [absolutePath]);
+			}
 			const batchRequest = getLspBatchRequest(context?.toolCall);
 
 			// Check if file exists and is auto-generated before overwriting

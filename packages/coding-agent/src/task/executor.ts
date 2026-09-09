@@ -73,6 +73,7 @@ import { resolveAgentPrewalkDefault } from "./prewalk";
 import { isReadOnlyAgent } from "./read-only-policy";
 import { formatTaskResultSummary } from "./result-summary";
 import { subprocessToolRegistry } from "./subprocess-tool-registry";
+import type { FileClaimBoard } from "./file-claim";
 import type { WorkPoolYieldItem } from "./workpool-yield";
 import {
 	type AgentDefinition,
@@ -553,6 +554,10 @@ export interface ExecutorOptions {
 	 * set this false so disposal unregisters them instead of leaving idle peers.
 	 */
 	keepAlive?: boolean;
+	/** Shared team file-claim board. Same object as the parent session. */
+	fileClaimBoard?: FileClaimBoard;
+	/** Render the team-mode subagent prompt. */
+	team?: boolean;
 	/** Internal ownership handoff for cleanup that outlives the visible Task result. */
 	onCleanupDeferred?: (completion: Promise<void>) => void;
 	/** Internal cleanup grace override for deterministic lifecycle tests. */
@@ -2710,8 +2715,10 @@ export async function finalizeSubagentLifecycle(args: {
 	reviveSession: AgentReviver | null;
 	cleanupDeadlineAt?: number;
 	onCleanupDeferred?: (completion: Promise<void>) => void;
+	fileClaimBoard?: FileClaimBoard;
 }): Promise<void> {
 	const registry = AgentRegistry.global();
+	args.fileClaimBoard?.release(args.id);
 	const ref = registry.get(args.id);
 	const ownsRef = Boolean(ref && ref.session === args.session);
 	const cleanupDeadlineAt = args.cleanupDeadlineAt ?? Date.now() + 5000;
@@ -3118,6 +3125,9 @@ export async function runSubprocess(options: ExecutorOptions): Promise<SingleRes
 	if (toolNames && !options.restrictToolNames && !toolNames.includes("hub")) {
 		toolNames = [...toolNames, "hub"];
 	}
+	if (options.fileClaimBoard && toolNames && !options.restrictToolNames && !toolNames.includes("claim")) {
+		toolNames = [...toolNames, "claim"];
+	}
 	if (toolNames?.includes("exec")) {
 		const backends = resolveEvalBackends({ settings } as ToolSession);
 		const expanded = toolNames.filter(name => name !== "exec");
@@ -3488,6 +3498,7 @@ export async function runSubprocess(options: ExecutorOptions): Promise<SingleRes
 						ircParkedCount: ircRoster?.parkedCount ?? 0,
 						ircOmittedCount: ircRoster?.omittedCount ?? 0,
 						ircSelfId: ircEnabled ? id : "",
+						team: options.fileClaimBoard !== undefined && options.team === true,
 					});
 					return defaultPrompt.length === 0
 						? [subagentPrompt]
@@ -3507,6 +3518,7 @@ export async function runSubprocess(options: ExecutorOptions): Promise<SingleRes
 				parentTaskPrefix: id,
 				parentAgentId: options.parentAgentId,
 				agentId: id,
+				fileClaimBoard: options.fileClaimBoard,
 				agentDisplayName: agent.name,
 				agentName: agent.name,
 				expectedAgentRef,
@@ -3832,6 +3844,7 @@ export async function runSubprocess(options: ExecutorOptions): Promise<SingleRes
 					aborted,
 					abortKind: monitor.abortKind(),
 					keepAlive: options.keepAlive !== false,
+					fileClaimBoard: options.fileClaimBoard,
 					isolated: worktree !== undefined,
 					agentIdleTtlMs,
 					reviveSession,

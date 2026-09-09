@@ -249,6 +249,25 @@ export const BUILTIN_MODE_SLASH_COMMANDS: ReadonlyArray<SlashCommandSpec> = [
 		},
 	},
 	{
+		name: "team",
+		icon: "agents",
+		description: "Toggle team mode (Main orchestrates parallel specialists on shared cwd)",
+		inlineHint: "[n] [prompt]",
+		allowArgs: true,
+		getTuiAutocompleteDescription: runtime => {
+			if (!runtime.ctx.settings.get("task.team.enabled")) return "Team: disabled in settings";
+			if (runtime.ctx.planModeEnabled) return "Team: blocked by plan mode";
+			if (runtime.ctx.vibeModeEnabled) return "Team: blocked by vibe mode";
+			if (runtime.ctx.teamModeEnabled) return `Team: on (${runtime.ctx.teamModeSize})`;
+			return "Team: off";
+		},
+		handleTui: async (command, runtime) => {
+			await runWithDetachedModeDraft(command, runtime, () =>
+				runtime.ctx.handleTeamModeCommand(command.args || undefined, runtime.input),
+			);
+		},
+	},
+	{
 		name: "goal",
 		icon: "goal",
 		description: "Toggle goal mode (persistent autonomous objective for this session)",

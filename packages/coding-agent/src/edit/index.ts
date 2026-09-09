@@ -34,6 +34,7 @@ import {
 import { FileChangeType, notifyWorkspaceWatchedFiles } from "../lsp/client";
 import { DeferredDiagnostics } from "../lsp/deferred-diagnostics";
 import { getDiagnosticsLedger } from "../lsp/diagnostics-ledger";
+import { assertTeamWritable } from "../task/file-claim";
 import type { ToolSession } from "../tools";
 import { routeWriteThroughBridge } from "../tools/acp-bridge";
 import { truncateForPrompt } from "../tools/approval";
@@ -49,7 +50,7 @@ import {
 	invalidateFsScanAfterWrite,
 } from "../tools/fs-cache-invalidation";
 import { outputMeta } from "../tools/output-meta";
-import { resolveFileWriteApprovalTier } from "../tools/path-utils";
+import { isInternalUrlPath, resolveFileWriteApprovalTier } from "../tools/path-utils";
 import { planLocalProtocolOptions } from "../tools/plan-mode-guard";
 import { ToolError } from "../tools/tool-errors";
 import { type EditMode, normalizeEditMode, resolveEditMode } from "../utils/edit-mode";
@@ -574,6 +575,12 @@ export class EditTool implements AgentTool<TInput> {
 	}
 
 	async #write(request: EditWriteRequest, signal?: AbortSignal): Promise<EditWriteResponse> {
+		const claimed = [request.path];
+		if (request.moveTo) claimed.push(request.moveTo);
+		assertTeamWritable(
+			this.session,
+			claimed.filter(target => !isInternalUrlPath(target)),
+		);
 		if (request.op === "delete") {
 			await deleteFileWithFallback(request.path, Bun.file(request.path));
 			if (this.session.enableLsp ?? true) {

@@ -185,6 +185,8 @@ export interface InteractiveModeContext {
 	todoExpanded: boolean;
 	planModeEnabled: boolean;
 	vibeModeEnabled: boolean;
+	teamModeEnabled: boolean;
+	teamModeSize: number;
 	goalModeEnabled: boolean;
 	goalModePaused: boolean;
 	loopModeEnabled: boolean;
@@ -504,6 +506,10 @@ export interface InteractiveModeContext {
 		input?: Pick<SubmittedUserInput, "images" | "imageLinks">,
 	): Promise<boolean>;
 	handleVibeModeCommand(
+		initialPrompt?: string,
+		input?: Pick<SubmittedUserInput, "images" | "imageLinks">,
+	): Promise<boolean>;
+	handleTeamModeCommand(
 		initialPrompt?: string,
 		input?: Pick<SubmittedUserInput, "images" | "imageLinks">,
 	): Promise<boolean>;

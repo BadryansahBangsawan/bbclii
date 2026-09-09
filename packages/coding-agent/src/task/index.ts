@@ -29,6 +29,7 @@ import { isIrcEnabled } from "../tools/hub";
 import { isReadOnlyAgent } from "./read-only-policy";
 import { formatTaskResultSummary } from "./result-summary";
 import { isScoutSpawnable, resolveSpawnPolicy } from "./spawn-policy";
+import { FileClaimBoard } from "./file-claim";
 import {
 	type AgentDefinition,
 	type AgentProgress,
@@ -134,6 +135,7 @@ interface TaskDescriptionOptions {
 	asyncEnabled: boolean;
 	ircEnabled: boolean;
 	parentSpawns: string;
+	teamEnabled: boolean;
 }
 
 /** Render the tool description from a cached agent list and current settings. */
@@ -170,6 +172,7 @@ function renderDescription(options: TaskDescriptionOptions): string {
 		asyncEnabled: options.asyncEnabled,
 		hasBlockingAgents: renderedAgents.some(agent => agent.blocking),
 		ircEnabled: options.ircEnabled,
+		teamEnabled: options.teamEnabled,
 	});
 }
 
@@ -215,6 +218,37 @@ function validateEffort(effort: TaskEffort | undefined, label: string): string |
 	return `${label} has an invalid \`effort\` value ${JSON.stringify(effort)}. Use "lo", "med", or "hi".`;
 }
 
+function validateTeamSpawn(
+	params: TaskParams,
+	batchEnabled: boolean,
+	options: { taskDepth: number; enabled: boolean; maxSize: number; planMode: boolean },
+): string | undefined {
+	if (params.team !== true) return undefined;
+	const tasks = params.tasks;
+	if (!batchEnabled || !Array.isArray(tasks) || tasks.length === 0) {
+		return "`team: true` requires the batch shape ({ context, tasks[] }). Enable task.batch or omit team.";
+	}
+	if (options.taskDepth > 0) {
+		return "`team: true` is only valid on the root session (Main). Nested agents cannot open a team.";
+	}
+	if (!options.enabled) {
+		return "Team swarm is disabled (task.team.enabled).";
+	}
+	if (tasks.length < 2) {
+		return "A team needs at least 2 agents.";
+	}
+	if (tasks.length > options.maxSize) {
+		return `A team can have at most ${options.maxSize} agents (task.team.maxSize).`;
+	}
+	if (tasks.some(item => item.isolated === true)) {
+		return "Team members share cwd; `isolated` is not allowed when `team: true`.";
+	}
+	if (options.planMode) {
+		return "Team swarm is blocked while plan mode is on.";
+	}
+	return undefined;
+}
+
 function validateSpawnParams(params: TaskParams, batchEnabled: boolean): string | undefined {
 	const hasTask = typeof params.task === "string" && params.task.trim() !== "";
 	const tasks = params.tasks;
@@ -248,6 +282,9 @@ function validateSpawnParams(params: TaskParams, batchEnabled: boolean): string 
 			return "Missing `context`. Provide the shared background for this batch — goal, constraints, and any contract the tasks share.";
 		}
 		return undefined;
+	}
+	if (params.team === true) {
+		return "`team: true` requires the batch shape ({ context, tasks[] }). Enable task.batch or omit team.";
 	}
 	if (!hasTask) {
 		return batchEnabled
@@ -299,6 +336,7 @@ function spawnParamsFor(params: TaskParams, item: TaskItem, defaultAgent: string
 	} else if ("isolated" in params) {
 		spawn.isolated = params.isolated;
 	}
+	if (params.team === true) spawn.team = true;
 	return spawn;
 }
 
@@ -421,11 +459,14 @@ export function composeSpawnAdvisory(args: {
 	ircEnabled: boolean;
 	willRunAsync: boolean;
 	scoutAvailable?: boolean;
+	team?: boolean;
 }): string | undefined {
 	return (
 		[
 			buildSpecializationAdvisory(args.agents, args.depthCapacity, args.scoutAvailable),
-			args.willRunAsync ? buildCoordinationAdvisory(args.items, args.depthCapacity, args.ircEnabled) : undefined,
+			args.willRunAsync && !args.team
+				? buildCoordinationAdvisory(args.items, args.depthCapacity, args.ircEnabled)
+				: undefined,
 		]
 			.filter(Boolean)
 			.join("\n\n") || undefined
@@ -615,6 +656,7 @@ export class TaskTool implements AgentTool<TaskToolSchemaInstance, TaskToolDetai
 			asyncEnabled: this.session.settings.get("async.enabled"),
 			ircEnabled: isIrcEnabled(this.session.settings, this.session.taskDepth ?? 0),
 			parentSpawns: this.session.getSessionSpawns() ?? "*",
+			teamEnabled: this.session.settings.get("task.team.enabled") !== false,
 		});
 	}
 	private constructor(
@@ -687,12 +729,24 @@ export class TaskTool implements AgentTool<TaskToolSchemaInstance, TaskToolDetai
 		// item's agent type against the session's actual default agent.
 		const defaultAgent = resolveSpawnPolicy(this.session.getSessionSpawns()).defaultAgent;
 		const batchEnabled = this.#isBatchEnabled();
-		const validationError = validateShapeParams(batchEnabled, params) ?? validateSpawnParams(params, batchEnabled);
+		const validationError =
+			validateTeamSpawn(params, batchEnabled, {
+				taskDepth: this.session.taskDepth ?? 0,
+				enabled: this.session.settings.get("task.team.enabled") !== false,
+				maxSize: Math.min(32, Math.max(2, Math.trunc(Number(this.session.settings.get("task.team.maxSize")) || 8))),
+				planMode: this.session.getPlanModeState?.()?.enabled === true,
+			}) ??
+			validateShapeParams(batchEnabled, params) ??
+			validateSpawnParams(params, batchEnabled);
 		if (validationError) {
 			return createTaskModeError(validationError);
 		}
 
 		const spawnItems = resolveSpawnItems(params);
+		if (params.team === true) {
+			this.session.fileClaimBoard ??= new FileClaimBoard(this.session.cwd);
+			for (const item of spawnItems) item.isolated = false;
+		}
 		const evalToolNames = spawnItems.flatMap(item => item.tools ?? []);
 		if (evalToolNames.length > 0) {
 			if (this.session.getPlanModeState?.()?.enabled === true) {
@@ -770,6 +824,7 @@ export class TaskTool implements AgentTool<TaskToolSchemaInstance, TaskToolDetai
 							this.session.settings.get("task.disabledAgents") as string[] | undefined,
 							this.session.getSessionSpawns?.() ?? "*",
 						),
+						team: params.team === true,
 					});
 			const result = await this.#executeSyncFanout(
 				toolCallId,
@@ -807,6 +862,7 @@ export class TaskTool implements AgentTool<TaskToolSchemaInstance, TaskToolDetai
 						this.session.settings.get("task.disabledAgents") as string[] | undefined,
 						this.session.getSessionSpawns?.() ?? "*",
 					),
+					team: params.team === true,
 				});
 		// Returns a fresh result (copied content array, copied text part) rather
 		// than mutating the caller's — task results are short-lived here, but an
@@ -1504,6 +1560,7 @@ export class TaskTool implements AgentTool<TaskToolSchemaInstance, TaskToolDetai
 				enableLsp: (this.session.enableLsp ?? true) && this.session.settings.get("task.enableLsp"),
 				enableIrc: isIrcEnabled(this.session.settings, this.session.taskDepth ?? 0),
 				maxRuntimeMs: this.session.settings.get("task.maxRuntimeMs"),
+				...(params.team === true ? { team: true, fileClaimBoard: this.session.fileClaimBoard } : {}),
 				signal,
 				onProgress: progress => {
 					latestProgress = { ...progress, recentTools: progress.recentTools.slice() };

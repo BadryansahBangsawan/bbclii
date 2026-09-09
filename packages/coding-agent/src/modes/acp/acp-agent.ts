@@ -1933,11 +1933,14 @@ export class AcpAgent implements Agent {
 				error,
 			});
 		}
+		const teamEnabled = session.settings.get("task.team.enabled") !== false;
 		return {
 			content: [
 				{
 					type: "text" as const,
-					text: `Plan approved at ${planFilePath}. Plan mode exited; proceed with the implementation.`,
+					text: teamEnabled
+						? `Plan approved at ${planFilePath}. Plan mode exited. Independent slices: one task call with team: true, shared context = this plan, disjoint # Target files. Orchestrate those slices; do not implement them yourself.`
+						: `Plan approved at ${planFilePath}. Plan mode exited; proceed with the implementation.`,
 				},
 			],
 			details,

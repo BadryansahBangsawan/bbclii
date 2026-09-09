@@ -23,6 +23,7 @@ import { isIrcEnabled } from "../tools/hub";
 import { buildOutputValidator } from "../tools/output-schema-validator";
 import { trackLateCleanup } from "../utils/late-cleanup";
 import { type DiscoveryResult, discoverAgents, getAgent } from "./discovery";
+import type { FileClaimBoard } from "./file-claim";
 import { type ExecutorOptions, runSubprocess } from "./executor";
 import {
 	applyEligibleNestedPatches,
@@ -128,6 +129,10 @@ export interface StructuredSubagentRequest {
 	workPoolYieldItems?: WorkPoolYieldItem[];
 	signal?: AbortSignal;
 	onProgress?: (progress: AgentProgress) => void;
+	/** Shared team file-claim board. Same object as the parent session. */
+	fileClaimBoard?: FileClaimBoard;
+	/** Render the team-mode subagent prompt and force hub+claim tools. */
+	team?: boolean;
 }
 
 /** A normalized preflight result, reusable by tests and adapters. */
@@ -474,6 +479,8 @@ function buildExecutorOptions(
 		parentEvalSessionId: request.shareEvalSession === false ? undefined : (session.getEvalSessionId?.() ?? undefined),
 		parentAgentId: session.getAgentId?.() ?? MAIN_AGENT_ID,
 		parentServiceTier: session.getServiceTierByFamily ? (session.getServiceTierByFamily() ?? null) : undefined,
+		fileClaimBoard: request.fileClaimBoard,
+		team: request.team,
 	};
 }
 

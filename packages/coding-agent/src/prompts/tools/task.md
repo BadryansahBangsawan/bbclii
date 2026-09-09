@@ -34,6 +34,9 @@ Agents marked BLOCKING run inline — results return in this call; non-blocking 
 {{/if}}
   - `outputSchema`: Invocation-specific JSON Schema. Overrides the selected agent and parent-session schemas.
   - `schemaMode`: `"permissive"` (default) accepts a retry-exhausted invalid result with a warning; `"strict"` fails it.
+{{#if teamEnabled}}
+  - `team`: When true, this batch is a team: siblings share cwd and a file-claim board{{#if isolationEnabled}}, and must not set `isolated`{{/if}}. Minimum 2 items. Use for concurrent cooperating specialists, not independent isolated jobs.
+{{/if}}
 {{#if isolationEnabled}}
 {{#if applyIsolatedChanges}}
   - `isolated`: Run in a dedicated worktree; successful changes are automatically applied to the parent checkout.

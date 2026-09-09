@@ -107,4 +107,16 @@ describe("composeSpawnAdvisory", () => {
 			}),
 		).toBeUndefined();
 	});
+
+	it("skips the coordination suggestion for a team swarm", () => {
+		const advisory = composeSpawnAdvisory({
+			agents: ["task", "task"],
+			items: [worker(), worker()],
+			depthCapacity: true,
+			ircEnabled: true,
+			willRunAsync: true,
+			team: true,
+		});
+		expect(advisory).not.toContain("Coordinate:");
+	});
 });

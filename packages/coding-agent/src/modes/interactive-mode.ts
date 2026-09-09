@@ -117,9 +117,11 @@ import type { SessionManager } from "../session/session-manager";
 import type { ShakeMode } from "../session/shake-types";
 import { BUILTIN_SLASH_COMMAND_RESERVED_NAMES, buildTuiBuiltinSlashCommands } from "../slash-commands/builtin-registry";
 import { formatDuration } from "../slash-commands/helpers/format";
+import { clampInt, parseTeamCommandArgs } from "../slash-commands/helpers/parse-team-args";
 import { STTController, type SttState } from "../stt";
 import { resolveCliEntryCmd } from "../subprocess/worker-client";
 import { discoverTitleSystemPromptFile, resolvePromptInput } from "../system-prompt";
+import type { AgentProgress } from "../task";
 import { labelEchoesHandle } from "../task/label";
 import { agentTypeBadge, formatTaskId } from "../task/render";
 import type { ConfiguredThinkingLevel } from "../thinking";
@@ -510,26 +512,72 @@ const MODEL_CYCLE_TRACK_CLEAR_MS = 4000;
 const SUBAGENT_HUD_VISIBLE_LIMIT = 8;
 const SUBAGENT_OBSERVER_UI_COALESCE_MS = 100;
 
+function isActiveSubagent(session: ObservableSession): boolean {
+	return session.kind === "subagent" && session.status === "active";
+}
+
+function swarmParentIds(sessions: readonly ObservableSession[]): Set<string> {
+	const counts = new Map<string, number>();
+	for (const session of sessions) {
+		if (!isActiveSubagent(session) || !session.parentToolCallId) continue;
+		counts.set(session.parentToolCallId, (counts.get(session.parentToolCallId) ?? 0) + 1);
+	}
+	const ids = new Set<string>();
+	for (const [id, count] of counts) if (count >= 2) ids.add(id);
+	return ids;
+}
+
+function hudLiveActivity(progress: AgentProgress | undefined): string | undefined {
+	if (!progress) return undefined;
+	if (progress.retryState) {
+		return `rate-limited · retry ${progress.retryState.attempt}/${progress.retryState.maxAttempts}`;
+	}
+	let tool: string | undefined;
+	let detail: string | undefined;
+	if (progress.currentTool) {
+		tool = progress.currentTool;
+		detail = progress.lastIntent ?? progress.currentToolArgs;
+	} else {
+		const recent = progress.recentTools[0];
+		if (!recent) return undefined;
+		tool = recent.tool;
+		detail = progress.lastIntent ?? recent.args;
+	}
+	const collapsed = detail?.replace(/\s+/g, " ").trim();
+	return collapsed ? `${tool}: ${collapsed}` : tool;
+}
+
 /**
- * Build the anchored subagent HUD block: a bold accent "Subagents" header plus
+ * Build the anchored subagent HUD block: a bold accent header plus
  * a bounded set of running-agent rows in the same `Id ⟨role⟩: description` shape
- * the inline task rows use (muted task preview when no description was given).
+ * the inline task rows use (muted task preview when no description was given;
+ * live tool/retry activity replaces that secondary text when present).
  * Layout mirrors the Todos HUD exactly: unindented header, then
  * `renderTreeList` rows (dim connectors) shifted right by one space.
- * Only detached background spawns are listed: a sync task call blocks the
- * parent turn and its inline tool block already renders progress live, and
- * eval `agent()` spawns are rendered by their own eval cell tree.
+ * Lists detached background spawns, plus any active swarm of 2+ subagents
+ * that share a parent tool call (including sync `team: true`). Lone sync
+ * `task` calls and eval `agent()` spawns stay off the HUD. Header is `Team`
+ * when any visible row belongs to a swarm, otherwise `Subagents`.
  * Returns an empty array when nothing is running so the container can clear.
  */
 export function renderSubagentHudLines(sessions: ObservableSession[], columns: number): string[] {
+	const swarmParents = swarmParentIds(sessions);
 	const running = sessions.filter(
-		session => session.kind === "subagent" && session.status === "active" && session.detached === true,
+		session =>
+			isActiveSubagent(session) &&
+			(session.detached === true ||
+				(session.parentToolCallId !== undefined && swarmParents.has(session.parentToolCallId))),
 	);
 	if (running.length === 0) return [];
 
 	const dot = theme.styledSymbol("status.done", "accent");
 	const visible = running.slice(0, SUBAGENT_HUD_VISIBLE_LIMIT);
 	const hiddenCount = running.length - visible.length;
+	const header = visible.some(
+		session => session.parentToolCallId !== undefined && swarmParents.has(session.parentToolCallId),
+	)
+		? "Team"
+		: "Subagents";
 	const showModelBadge = isFeedModelBadgeEnabled();
 	const outerIndent = " ";
 	const rows = renderTreeList(
@@ -539,15 +587,19 @@ export function renderSubagentHudLines(sessions: ObservableSession[], columns: n
 			renderItem: (session, context) => {
 				const rowWidth = Math.max(0, columns - visibleWidth(outerIndent) - (context.prefixWidth ?? 0));
 				const role = session.agent ?? session.progress?.agent;
+				const indexLead =
+					session.parentToolCallId !== undefined && swarmParents.has(session.parentToolCallId)
+						? `${theme.fg("dim", String((session.index ?? 0) + 1))} `
+						: "";
 				const displayId = truncateToWidth(
 					formatTaskId(session.id),
-					Math.max(0, rowWidth - visibleWidth(`${dot} `)),
+					Math.max(0, rowWidth - visibleWidth(`${dot} ${indexLead}`)),
 				);
 				const badge = truncateToWidth(
 					agentTypeBadge(role, theme),
-					Math.max(0, rowWidth - visibleWidth(`${dot} ${displayId}`)),
+					Math.max(0, rowWidth - visibleWidth(`${dot} ${indexLead}${displayId}`)),
 				);
-				const titleBudget = Math.max(0, rowWidth - visibleWidth(`${dot} ${displayId}${badge}`));
+				const titleBudget = Math.max(0, rowWidth - visibleWidth(`${dot} ${indexLead}${displayId}${badge}`));
 				const modelBadge = showModelBadge
 					? formatFeedModelBadge(
 							session.progress?.resolvedModelIdentity ?? session.progress?.resolvedModel,
@@ -558,24 +610,31 @@ export function renderSubagentHudLines(sessions: ObservableSession[], columns: n
 						)
 					: "";
 				const modelLead = modelBadge ? `${modelBadge} ` : "";
-				let line = `${dot} ${modelLead}${theme.fg("accent", theme.bold(displayId))}${badge}`;
-				const description = session.description?.trim() || session.progress?.description?.trim();
-				const distinctDescription =
-					description && !labelEchoesHandle(session.id, description) ? description : undefined;
-				if (distinctDescription) {
-					const budget = Math.max(0, rowWidth - visibleWidth(line) - visibleWidth(": "));
-					const formatted = replaceTabs(distinctDescription).replace(/\s*[\r\n]+\s*/g, " ↵ ");
-					if (budget > 0) {
-						line += `${theme.fg("accent", ":")} ${theme.fg("accent", truncateToWidth(formatted, budget))}`;
-					}
+				let line = `${dot} ${indexLead}${modelLead}${theme.fg("accent", theme.bold(displayId))}${badge}`;
+				const activity = hudLiveActivity(session.progress);
+				if (activity) {
+					const formatted = replaceTabs(activity).replace(/\s*[\r\n]+\s*/g, " ↵ ");
+					const budget = Math.max(0, rowWidth - visibleWidth(line) - 1);
+					if (budget > 0) line += ` ${theme.fg("muted", truncateToWidth(formatted, budget))}`;
 				} else {
-					// No spawn description: fall back to a muted task preview, same as
-					// the inline task rows when a row has no label.
-					const taskPreview = session.progress?.task?.trim();
-					if (taskPreview && !labelEchoesHandle(session.id, taskPreview)) {
-						const formatted = replaceTabs(taskPreview).replace(/\s*[\r\n]+\s*/g, " ↵ ");
-						const budget = Math.min(TRUNCATE_LENGTHS.SHORT, Math.max(0, rowWidth - visibleWidth(line) - 1));
-						if (budget > 0) line += ` ${theme.fg("muted", truncateToWidth(formatted, budget))}`;
+					const description = session.description?.trim() || session.progress?.description?.trim();
+					const distinctDescription =
+						description && !labelEchoesHandle(session.id, description) ? description : undefined;
+					if (distinctDescription) {
+						const budget = Math.max(0, rowWidth - visibleWidth(line) - visibleWidth(": "));
+						const formatted = replaceTabs(distinctDescription).replace(/\s*[\r\n]+\s*/g, " ↵ ");
+						if (budget > 0) {
+							line += `${theme.fg("accent", ":")} ${theme.fg("accent", truncateToWidth(formatted, budget))}`;
+						}
+					} else {
+						// No spawn description: fall back to a muted task preview, same as
+						// the inline task rows when a row has no label.
+						const taskPreview = session.progress?.task?.trim();
+						if (taskPreview && !labelEchoesHandle(session.id, taskPreview)) {
+							const formatted = replaceTabs(taskPreview).replace(/\s*[\r\n]+\s*/g, " ↵ ");
+							const budget = Math.min(TRUNCATE_LENGTHS.SHORT, Math.max(0, rowWidth - visibleWidth(line) - 1));
+							if (budget > 0) line += ` ${theme.fg("muted", truncateToWidth(formatted, budget))}`;
+						}
 					}
 				}
 				return truncateToWidth(line, rowWidth, "");
@@ -588,7 +647,7 @@ export function renderSubagentHudLines(sessions: ObservableSession[], columns: n
 	}
 	return [
 		"",
-		truncateToWidth(theme.bold(theme.fg("accent", "Subagents")), columns),
+		truncateToWidth(theme.bold(theme.fg("accent", header)), columns),
 		...rows.map(line => truncateToWidth(`${outerIndent}${line}`, columns, "")),
 	];
 }
@@ -639,6 +698,8 @@ export class InteractiveMode implements InteractiveModeContext {
 	goalModeEnabled = false;
 	goalModePaused = false;
 	vibeModeEnabled = false;
+	teamModeEnabled = false;
+	teamModeSize = 3;
 	planModePlanFilePath: string | undefined = undefined;
 	loopModeEnabled = false;
 	loopModePaused = false;
@@ -2979,6 +3040,11 @@ export class InteractiveMode implements InteractiveModeContext {
 		this.ui.requestRender();
 	}
 
+	#updateTeamModeStatus(): void {
+		this.statusLine.setTeamModeStatus(this.teamModeEnabled ? { enabled: true, size: this.teamModeSize } : undefined);
+		this.ui.requestRender();
+	}
+
 	#vibeParentSession(): VibeParentSession {
 		return {
 			getAgentId: () => this.session.getAgentId() ?? null,
@@ -3245,6 +3311,12 @@ export class InteractiveMode implements InteractiveModeContext {
 			}
 			this.#updateVibeModeStatus();
 		}
+
+		if (this.teamModeEnabled) {
+			this.session.setTeamModeState(undefined);
+			this.teamModeEnabled = false;
+			this.#updateTeamModeStatus();
+		}
 	}
 
 	/** Reconcile mode state from session entries on resume/switch. */
@@ -3312,6 +3384,19 @@ export class InteractiveMode implements InteractiveModeContext {
 						: undefined,
 				});
 			}
+			return;
+		}
+		if (sessionContext.mode === "team") {
+			if (this.session.settings.get("task.team.enabled") === false) {
+				this.sessionManager.appendModeChange("none");
+				return;
+			}
+			const maxSize = clampInt(this.session.settings.get("task.team.maxSize"), 2, 32, 8);
+			const size = clampInt(sessionContext.modeData?.size, 2, maxSize, 3);
+			this.teamModeEnabled = true;
+			this.teamModeSize = size;
+			this.session.setTeamModeState({ enabled: true, size });
+			this.#updateTeamModeStatus();
 			return;
 		}
 		if (!this.session.settings.get("plan.enabled")) {
@@ -4058,6 +4143,13 @@ export class InteractiveMode implements InteractiveModeContext {
 			planFilePath: options.planFilePath,
 			planContent,
 			contextPreserved: options.preserveContext === true,
+			teamEnabled: this.session.settings.get("task.team.enabled") !== false,
+			teamSize: clampInt(
+				this.session.settings.get("task.team.defaultSize"),
+				2,
+				clampInt(this.session.settings.get("task.team.maxSize"), 2, 32, 8),
+				3,
+			),
 		});
 		// Close the review overlay only now — after the async title write and plan
 		// prompt are prepared, immediately before the execution turn is queued. The
@@ -4110,6 +4202,10 @@ export class InteractiveMode implements InteractiveModeContext {
 		}
 		if (this.vibeModeEnabled) {
 			this.showWarning("Exit vibe mode first.");
+			return false;
+		}
+		if (this.teamModeEnabled) {
+			this.showWarning("Exit team mode first.");
 			return false;
 		}
 		if (this.planModeEnabled) {
@@ -4189,6 +4285,10 @@ export class InteractiveMode implements InteractiveModeContext {
 			this.showWarning("Exit goal mode first.");
 			return false;
 		}
+		if (this.teamModeEnabled) {
+			this.showWarning("Exit team mode first.");
+			return false;
+		}
 		await this.#enterVibeMode();
 		if (!initialPrompt) return false;
 		if (isKnownSkillCommand(this, initialPrompt)) {
@@ -4214,6 +4314,69 @@ export class InteractiveMode implements InteractiveModeContext {
 		return false;
 	}
 
+	async handleTeamModeCommand(
+		initialPrompt?: string,
+		input?: Pick<SubmittedUserInput, "images" | "imageLinks">,
+	): Promise<boolean> {
+		if (this.planModeEnabled || this.planModePaused) {
+			this.showWarning("Exit plan mode first.");
+			return false;
+		}
+		if (this.vibeModeEnabled) {
+			this.showWarning("Exit vibe mode first.");
+			return false;
+		}
+		const maxSize = clampInt(this.session.settings.get("task.team.maxSize"), 2, 32, 8);
+		const defaultSize = clampInt(this.session.settings.get("task.team.defaultSize"), 2, maxSize, 3);
+		const parsed = parseTeamCommandArgs(initialPrompt ?? "", defaultSize, maxSize);
+		if (parsed.action === "off" || (parsed.action === "toggle" && this.teamModeEnabled)) {
+			this.session.setTeamModeState(undefined);
+			this.teamModeEnabled = false;
+			this.sessionManager.appendModeChange("none");
+			this.showStatus("Team mode disabled.");
+			this.#updateTeamModeStatus();
+			return false;
+		}
+		if (this.session.settings.get("task.team.enabled") === false) {
+			this.showWarning("Team swarm is disabled. Enable it in settings (task.team.enabled).");
+			return false;
+		}
+		this.teamModeSize = parsed.size;
+		this.teamModeEnabled = true;
+		this.lastAssistantUsage = undefined;
+		this.session.setTeamModeState({ enabled: true, size: parsed.size });
+		this.sessionManager.appendModeChange("team", { size: parsed.size });
+		if (this.session.isStreaming) {
+			await this.session.sendTeamModeContext({ deliverAs: "steer" });
+		} else {
+			await this.session.sendTeamModeContext({ deliverAs: "nextTurn" });
+		}
+		this.#updateTeamModeStatus();
+		this.showStatus(`Team mode enabled (${parsed.size} agents). You orchestrate; do not implement yourself.`);
+		if (!parsed.prompt) return false;
+		if (isKnownSkillCommand(this, parsed.prompt)) {
+			await invokeSkillCommandFromText(this, parsed.prompt, "steer", {
+				images: input?.images,
+				propagateErrors: true,
+			});
+			return true;
+		}
+		if (this.session.isStreaming) {
+			const images = input?.images?.length ? input.images : undefined;
+			await this.withLocalSubmission(
+				parsed.prompt,
+				() => this.session.prompt(parsed.prompt!, { streamingBehavior: "steer", images }),
+				{ imageCount: images?.length ?? 0 },
+			);
+			return true;
+		}
+		if (this.onInputCallback) {
+			this.onInputCallback(this.startPendingSubmission({ text: parsed.prompt, ...input }, { preserveDraft: true }));
+			return true;
+		}
+		return false;
+	}
+
 	async #enterVibeMode(options?: { persistModeChange?: boolean; previousTools?: string[] }): Promise<void> {
 		if (this.vibeModeEnabled) {
 			return;
@@ -4224,6 +4387,10 @@ export class InteractiveMode implements InteractiveModeContext {
 		}
 		if (this.goalModeEnabled || this.goalModePaused) {
 			this.showWarning("Exit goal mode first.");
+			return;
+		}
+		if (this.teamModeEnabled) {
+			this.showWarning("Exit team mode first.");
 			return;
 		}
 

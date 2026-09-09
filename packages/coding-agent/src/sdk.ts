@@ -192,6 +192,7 @@ import {
 	projectSystemPromptToolMetadata,
 } from "./system-prompt";
 import { AgentOutputManager } from "./task/output-manager";
+import type { FileClaimBoard } from "./task/file-claim";
 import { wrapStreamFnWithProviderConcurrency } from "./task/provider-concurrency";
 import { sessionDelegationBias } from "./task/prompt-policy";
 import { isScoutSpawnable } from "./task/spawn-policy";
@@ -576,6 +577,8 @@ export interface CreateAgentSessionOptions {
 	parentMnemopiSessionState?: MnemopiSessionState;
 	/** Pre-allocated agent identity for IRC routing. Default: "Main" for top-level, parentTaskPrefix-derived for sub. */
 	agentId?: string;
+	/** Shared team file-claim board. Same object on Main and every team sibling. */
+	fileClaimBoard?: FileClaimBoard;
 	/** Display name for the agent in IRC. Default: "main" or "sub". */
 	agentDisplayName?: string;
 	/**
@@ -1836,6 +1839,7 @@ async function createAgentSessionScoped(options: CreateAgentSessionOptions): Pro
 			getHindsightSessionState: () => session?.getHindsightSessionState(),
 			getMnemopiSessionState: () => session?.getMnemopiSessionState(),
 			getAgentId: () => resolvedAgentId,
+			fileClaimBoard: options.fileClaimBoard,
 			getToolByName: name => session?.getToolByName(name),
 			getToolForEvalBridge: name => session?.getToolForEvalBridge(name),
 			getEvalBridgeToolNames: () => session?.getEvalBridgeToolNames() ?? [],

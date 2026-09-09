@@ -1,9 +1,10 @@
 /**
  * Contract: the anchored subagent HUD (rendered above the editor, next to the
- * Todos block) lists exactly the running *detached* subagents as
- * `Id: description` rows and yields no output once nothing qualifies, so the
- * block self-clears. Sync task spawns and eval `agent()` spawns are excluded:
- * their progress is already rendered inline (tool block / eval cell).
+ * Todos block) lists running detached subagents, plus any active swarm of 2+
+ * siblings that share a parent tool call, as `Id: description` (or live tool)
+ * rows and yields no output once nothing qualifies, so the block self-clears.
+ * Lone sync task spawns and eval `agent()` spawns are excluded: their
+ * progress is already rendered inline (tool block / eval cell).
  */
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "bun:test";
 import * as path from "node:path";
@@ -371,7 +372,10 @@ describe("subagent HUD lines", () => {
 		registry.subscribeToEventBus(eventBus, eventBus);
 
 		eventBus.emit(TASK_SUBAGENT_LIFECYCLE_CHANNEL, makeLifecycle("Detached", 0, "background work", true));
-		eventBus.emit(TASK_SUBAGENT_LIFECYCLE_CHANNEL, makeLifecycle("Inline", 1, "sync work"));
+		eventBus.emit(TASK_SUBAGENT_LIFECYCLE_CHANNEL, {
+			...makeLifecycle("Inline", 1, "sync work"),
+			parentToolCallId: "inline-call",
+		});
 		eventBus.emit(TASK_SUBAGENT_PROGRESS_CHANNEL, makeProgressPayload("FromProgress", 2, "background work", true));
 
 		const out = render(registry.getSessions());
@@ -457,6 +461,82 @@ describe("subagent HUD lines", () => {
 			expect(out).not.toContain(`${session.id}: ${session.description}`);
 		}
 		expect(out).toContain("2 more running");
+	});
+
+	it("lists a sync swarm under Team with dispatch indexes and hides a lone sibling", () => {
+		const out = render([
+			makeSession({
+				id: "AuthLoader",
+				detached: false,
+				parentToolCallId: "team-call",
+				index: 0,
+				description: "Refactor auth",
+			}),
+			makeSession({
+				id: "SchemaMigrator",
+				detached: false,
+				parentToolCallId: "team-call",
+				index: 1,
+				description: "Migrate users",
+			}),
+			makeSession({
+				id: "SoloScout",
+				detached: false,
+				parentToolCallId: "other-call",
+				index: 0,
+				description: "Scout alone",
+			}),
+		]);
+		expect(out).toContain("Team");
+		expect(out).toContain("1");
+		expect(out).toContain("2");
+		expect(out).toContain("AuthLoader");
+		expect(out).toContain("SchemaMigrator");
+		expect(out).not.toContain("SoloScout");
+	});
+
+	it("prefers live tool activity over spawn description on swarm rows", () => {
+		const out = render([
+			makeSession({
+				id: "AuthLoader",
+				detached: false,
+				parentToolCallId: "team-call",
+				index: 0,
+				description: "Inspect auth",
+				progress: makeProgress({ id: "AuthLoader", currentTool: "read", lastIntent: "src/foo.ts" }),
+			}),
+			makeSession({
+				id: "SchemaMigrator",
+				detached: false,
+				parentToolCallId: "team-call",
+				index: 1,
+				description: "Migrate users",
+			}),
+		]);
+		expect(out).toContain("read: src/foo.ts");
+		expect(out).not.toContain("Inspect auth");
+		expect(out).toContain("Migrate users");
+	});
+
+	it("hides a lone sync spawn even when it has a parent tool call", () => {
+		expect(
+			renderSubagentHudLines(
+				[makeSession({ id: "SoloSync", detached: false, parentToolCallId: "solo", description: "solo work" })],
+				120,
+			),
+		).toEqual([]);
+	});
+
+	it("shows live tool activity on a detached job under Subagents", () => {
+		const out = render([
+			makeSession({
+				id: "BackgroundSpawn",
+				description: "detached work",
+				progress: makeProgress({ id: "BackgroundSpawn", currentTool: "edit", currentToolArgs: "bar.ts" }),
+			}),
+		]);
+		expect(out).toContain("Subagents");
+		expect(out).toContain("edit: bar.ts");
 	});
 });
 

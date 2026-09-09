@@ -730,6 +730,7 @@ describe("ACP agent", () => {
 		expect(result.details.planFilePath).toBe("local://words-counter-plan.md");
 		expect(result.details.planExists).toBe(true);
 		expect(result.content[0]?.text).toMatch(/Plan approved/);
+		expect(result.content[0]?.text).toContain("team: true");
 		// Plan file keeps its agent-chosen name — no rename.
 		expect(await Bun.file(planPath).exists()).toBe(true);
 		// Mode + handler are cleared; the agent regains write tools next turn.
@@ -759,6 +760,38 @@ describe("ACP agent", () => {
 
 		harness.abortController.abort();
 		await Bun.sleep(0);
+	});
+
+	it("plan-proposal handler omits team fan-out when task.team.enabled is false", async () => {
+		const harness = await createHarness();
+		Settings.instance.set("plan.enabled", true);
+		const previousTeamEnabled = Settings.instance.get("task.team.enabled");
+		Settings.instance.set("task.team.enabled", false);
+		try {
+			const created = await harness.agent.newSession({ cwd: harness.cwdA, mcpServers: [] });
+			const session = harness.findSession(created.sessionId)!;
+			await harness.agent.setSessionMode({ sessionId: created.sessionId, modeId: "plan" });
+
+			const localOptions = {
+				getArtifactsDir: () => session.sessionManager.getArtifactsDir(),
+				getSessionId: () => session.sessionManager.getSessionId(),
+			};
+			cleanupRoots.push(resolveLocalUrlToPath("local://", localOptions));
+			const planPath = resolveLocalUrlToPath("local://words-counter-plan.md", localOptions);
+			await Bun.write(planPath, "# Words Counter\n\nFile contents.");
+
+			const handler = session.planProposalHandler!;
+			const result = (await handler("words-counter")) as {
+				content: Array<{ type: string; text: string }>;
+			};
+
+			expect(result.content[0]?.text).toMatch(/Plan approved/);
+			expect(result.content[0]?.text).not.toContain("team: true");
+		} finally {
+			Settings.instance.set("task.team.enabled", previousTeamEnabled);
+			harness.abortController.abort();
+			await Bun.sleep(0);
+		}
 	});
 
 	it("plan-proposal handler treats dismissed elicitation as refine, never approves", async () => {

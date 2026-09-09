@@ -98,7 +98,8 @@ export interface SubagentLifecyclePayload {
 	 * Spawn runs as a detached background job: the parent turn keeps working
 	 * while this agent runs. Sync task spawns (parent blocked on the call) and
 	 * eval `agent()` bridge spawns (rendered inside their eval cell) leave this
-	 * unset — surfaces like the subagent HUD only list detached spawns.
+	 * unset — surfaces like the subagent HUD list detached spawns and any
+	 * active swarm of 2+ siblings that share a parent tool call.
 	 */
 	detached?: boolean;
 }
@@ -172,11 +173,13 @@ const taskSchemaNoIsolation = type({
 });
 const taskSchemaBatch = type({
 	context: "string",
+	"team?": "boolean",
 	tasks: taskItemSchemaIsolated.array(),
 	"+": "delete",
 });
 const taskSchemaBatchNoIsolation = type({
 	context: "string",
+	"team?": "boolean",
 	tasks: taskItemSchema.array(),
 	"+": "delete",
 });
@@ -223,6 +226,7 @@ function createTaskSchema(options: {
 			});
 			return type.raw({
 				context: "string",
+				"team?": "boolean",
 				tasks: item.array(),
 				"+": "delete",
 			});
@@ -239,6 +243,7 @@ function createTaskSchema(options: {
 		});
 		return type.raw({
 			context: "string",
+			"team?": "boolean",
 			tasks: item.array(),
 			"+": "delete",
 		});
@@ -317,6 +322,8 @@ export interface TaskParams {
 	tasks?: TaskItem[];
 	/** Batch form: shared background prepended to every assignment; required by the batch schema. */
 	context?: string;
+	/** Batch form: spawn cooperating specialists on shared cwd with a file-claim board. */
+	team?: boolean;
 	/** Run in an isolated worktree (flat form; per-item in batch form). */
 	isolated?: boolean;
 }

@@ -31,6 +31,7 @@ import type { UsageStatistics } from "../session/session-entries";
 import type { SessionManager } from "../session/session-manager";
 import type { ToolChoiceQueue } from "../session/tool-choice-queue";
 import { TaskTool } from "../task";
+import type { FileClaimBoard } from "../task/file-claim";
 import type { AgentOutputManager } from "../task/output-manager";
 import { canSpawnAtDepth, type StructuredSubagentSchemaMode } from "../task/types";
 import type { WorkPoolYieldItem } from "../task/workpool-yield";
@@ -42,6 +43,7 @@ import { AstEditTool } from "./ast-edit";
 import { AstGrepTool } from "./ast-grep";
 import { BashTool } from "./bash";
 import { type BuiltinToolName, type HiddenToolName, normalizeToolNames } from "./builtin-names";
+import { ClaimTool } from "./claim";
 import { type CheckpointState, CheckpointTool, type CompletedRewindState, RewindTool } from "./checkpoint";
 import { ContextNotesTool, NewContextTool } from "./context-notes";
 import { DebugTool } from "./debug";
@@ -79,6 +81,7 @@ export * from "./ast-grep";
 export * from "./bash";
 export * from "./browser";
 export * from "./checkpoint";
+export * from "./claim";
 export * from "./computer";
 export * from "./computer/supervisor";
 export * from "./context-notes";
@@ -284,6 +287,8 @@ export interface ToolSession {
 	getMnemopiSessionState?: () => MnemopiSessionState | undefined;
 	/** Agent identity used for IRC routing. Returns the registry id (e.g. "Main", "AuthLoader"). */
 	getAgentId?: () => string | null;
+	/** Shared team file-claim board. Same object on Main and every team sibling. */
+	fileClaimBoard?: FileClaimBoard;
 	/** Look up a registered tool by name (used by the eval js backend's tool bridge). */
 	getToolByName?: (name: string) => AgentTool | undefined;
 	/** Look up an enabled tool through the eval bridge's normal permission pipeline. */
@@ -478,6 +483,7 @@ export const BUILTIN_TOOLS: Record<BuiltinToolName, ToolFactory> = {
 	new_context: NewContextTool.createIf,
 	task: s => TaskTool.create(s),
 	hub: s => new HubTool(s),
+	claim: s => new ClaimTool(s),
 	todo: s => new TodoTool(s),
 	web_search: s => new WebSearchTool(s),
 	write: s => new WriteTool(s),

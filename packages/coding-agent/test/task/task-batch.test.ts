@@ -120,6 +120,7 @@ describe("task.batch schema gating", () => {
 		expect(offProperties.outputSchema).toBeDefined();
 		expect(typeof offProperties.outputSchema).toBe("object");
 		expect(offProperties.schemaMode).toBeDefined();
+		expect(offProperties.team).toBeUndefined();
 
 		const on = await TaskTool.create(createSession({ settings: { "task.batch": true } }));
 		const onProperties = getSchemaProperties(on);
@@ -132,6 +133,7 @@ describe("task.batch schema gating", () => {
 		expect(onProperties.agent).toBeUndefined();
 		expect(onProperties.outputSchema).toBeUndefined();
 		expect(onProperties.schemaMode).toBeUndefined();
+		expect(onProperties.team).toBeDefined();
 		const itemProperties = getBatchItemProperties(on);
 		expect(itemProperties.task).toBeDefined();
 		expect(itemProperties.name).toBeDefined();
@@ -306,6 +308,22 @@ describe("task.batch validation", () => {
 		);
 		expect(text).toContain("task.batch is disabled");
 		expect(text).not.toContain("was missing");
+	});
+
+	it("rejects a team with fewer than two agents", async () => {
+		const text = await executeText(
+			{ team: true, context: "x", tasks: [{ task: "only one" }] },
+			{ "task.batch": true },
+		);
+		expect(text).toContain("at least 2");
+	});
+
+	it("rejects isolated team members", async () => {
+		const text = await executeText(
+			{ team: true, context: "x", tasks: [{ task: "a", isolated: true }, { task: "b" }] },
+			{ "task.batch": true, "task.isolation.enabled": true },
+		);
+		expect(text).toContain("isolated");
 	});
 });
 
@@ -703,5 +721,39 @@ describe("task.batch spawning", () => {
 		expect(last?.async?.state).toBe("failed");
 		expect(last?.progress?.find(p => p.id === "Second")?.status).toBe("aborted");
 		expect(last?.progress?.find(p => p.id === "First")?.status).toBe("completed");
+	});
+
+	it("spawns a team batch on a shared file-claim board", async () => {
+		mockDiscovery();
+		const seen: Array<{ team?: boolean; hasBoard: boolean }> = [];
+		vi.spyOn(executorModule, "runSubprocess").mockImplementation(async options => {
+			seen.push({ team: options.team, hasBoard: options.fileClaimBoard !== undefined });
+			return makeResult(options.id ?? "?");
+		});
+
+		const manager = createManager();
+		const session = createSession({ manager, settings: { "async.enabled": true, "task.batch": true } });
+		const tool = await TaskTool.create(session);
+		const result = await tool.execute("tc-team", {
+			team: true,
+			context: "x",
+			tasks: [{ task: "Map src/auth.ts" }, { task: "Map src/billing.ts" }],
+		} as TaskParams);
+
+		const text = getFirstText(result);
+		expect(text).not.toContain("at least 2");
+		expect(text).not.toContain("isolated");
+		expect(text).toContain("Spawned 2 background agents");
+		expect(session.fileClaimBoard).toBeDefined();
+
+		const jobs = [
+			manager.getJob(result.details?.progress?.[0]?.id ?? ""),
+			manager.getJob(result.details?.progress?.[1]?.id ?? ""),
+		];
+		await jobs[0]!.promise;
+		await jobs[1]!.promise;
+		expect(seen).toHaveLength(2);
+		expect(seen.every(spawn => spawn.team === true && spawn.hasBoard)).toBe(true);
+		expect(seen[0]!.hasBoard).toBe(true);
 	});
 });

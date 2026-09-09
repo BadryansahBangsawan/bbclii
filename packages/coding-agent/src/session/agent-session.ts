@@ -179,6 +179,7 @@ import planModeToolDecisionReminderPrompt from "../prompts/system/plan-mode-tool
 import rewindReportTemplate from "../prompts/system/rewind-report.md" with { type: "text" };
 import sideChannelNoToolsReminder from "../prompts/system/side-channel-no-tools.md" with { type: "text" };
 import skillfulNoticePrompt from "../prompts/system/skillful-notice.md" with { type: "text" };
+import teamModeActivePrompt from "../prompts/system/team-mode-active.md" with { type: "text" };
 import vibeModeActivePrompt from "../prompts/system/vibe-mode-active.md" with { type: "text" };
 import videoAttachmentPrompt from "../prompts/system/video-attachment.md" with { type: "text" };
 import {
@@ -233,6 +234,7 @@ import { videoPreviewSource } from "../utils/video";
 import { resumeCommand } from "../utils/resume-command";
 import { generateSessionTitle } from "../utils/title-generator";
 import { buildNamedToolChoice, isToolChoiceActive } from "../utils/tool-choice";
+import type { TeamModeState } from "../team-mode/state";
 import type { VibeModeState } from "../vibe/state";
 import type { AgentSessionEvent, AgentSessionEventListener } from "./agent-session-events";
 import type {
@@ -329,6 +331,7 @@ import {
 	SILENT_ABORT_MARKER,
 	SKILL_PROMPT_MESSAGE_TYPE,
 	sanitizeAssistantForReparentedHistory,
+	TEAM_MODE_CONTEXT_MESSAGE_TYPE,
 	USER_INTERRUPT_LABEL,
 	VIBE_MODE_CONTEXT_MESSAGE_TYPE,
 } from "./messages";
@@ -609,6 +612,7 @@ export class AgentSession {
 	#experimentalContextNotesReminder: { prompt: string; generation: number } | undefined;
 	#planModeState: PlanModeState | undefined;
 	#vibeModeState: VibeModeState | undefined;
+	#teamModeState: TeamModeState | undefined;
 	#goalModeState: GoalModeState | undefined;
 	#goalRuntime: GoalRuntime;
 	readonly #advisors: SessionAdvisors;
@@ -2812,7 +2816,11 @@ export class AgentSession {
 		if (message.role === "hookMessage" || message.role === "custom") {
 			// One-run instructions must not return from persisted history: prewalk
 			// nudges are consumed once, and Vibe context is rebuilt only while active.
-			if (!isPrewalkPlanNudge(message) && message.customType !== VIBE_MODE_CONTEXT_MESSAGE_TYPE) {
+			if (
+				!isPrewalkPlanNudge(message) &&
+				message.customType !== VIBE_MODE_CONTEXT_MESSAGE_TYPE &&
+				message.customType !== TEAM_MODE_CONTEXT_MESSAGE_TYPE
+			) {
 				this.sessionManager.appendCustomMessageEntry(
 					message.customType,
 					message.content,
@@ -5639,6 +5647,36 @@ export class AgentSession {
 		this.#closeCodexProviderSessionsForHistoryRewrite();
 	}
 
+	getTeamModeState(): TeamModeState | undefined {
+		return this.#teamModeState;
+	}
+
+	setTeamModeState(state: TeamModeState | undefined): void {
+		this.#teamModeState = state;
+		if (state?.enabled) return;
+
+		const isTeamContext = (message: AgentMessage): boolean =>
+			message.role === "custom" && message.customType === TEAM_MODE_CONTEXT_MESSAGE_TYPE;
+		const messages = this.agent.state.messages;
+		const filtered = messages.filter(message => !isTeamContext(message));
+		const historyChanged = filtered.length !== messages.length;
+		if (historyChanged) this.agent.replaceMessages(filtered);
+
+		const steering = this.agent.peekSteeringQueue();
+		const followUp = this.agent.peekFollowUpQueue();
+		const filteredSteering = steering.filter(message => !isTeamContext(message));
+		const filteredFollowUp = followUp.filter(message => !isTeamContext(message));
+		if (filteredSteering.length !== steering.length || filteredFollowUp.length !== followUp.length) {
+			this.agent.replaceQueues(filteredSteering, filteredFollowUp);
+			this.#reconcileQueuedMessageDrain();
+		}
+		this.#pendingNextTurnMessages = this.#pendingNextTurnMessages.filter(message => !isTeamContext(message));
+
+		if (!historyChanged) return;
+		this.#advisors.resetAllRuntimes("team-mode-exit");
+		this.#closeCodexProviderSessionsForHistoryRewrite();
+	}
+
 	#assertVibeSessionTransitionAllowed(action: string): void {
 		if (this.#vibeModeState?.enabled) {
 			throw new Error(`Cannot ${action} while vibe mode is active. Exit vibe mode first.`);
@@ -5785,6 +5823,21 @@ export class AgentSession {
 
 	async sendVibeModeContext(options?: { deliverAs?: "steer" | "followUp" | "nextTurn" | "aside" }): Promise<void> {
 		const message = this.#buildVibeModeMessage();
+		if (!message) return;
+		await this.sendCustomMessage(
+			{
+				customType: message.customType,
+				content: message.content,
+				display: message.display,
+				details: message.details,
+				attribution: message.attribution,
+			},
+			options ? { deliverAs: options.deliverAs } : undefined,
+		);
+	}
+
+	async sendTeamModeContext(options?: { deliverAs?: "steer" | "followUp" | "nextTurn" | "aside" }): Promise<void> {
+		const message = await this.#buildTeamModeMessage();
 		if (!message) return;
 		await this.sendCustomMessage(
 			{
@@ -5949,6 +6002,26 @@ export class AgentSession {
 			customType: VIBE_MODE_CONTEXT_MESSAGE_TYPE,
 			content: prompt.render(vibeModeActivePrompt, {
 				todoAvailable: this.getActiveToolNames().includes("todo"),
+			}),
+			display: false,
+			attribution: "agent",
+			timestamp: Date.now(),
+		};
+	}
+
+	async #buildTeamModeMessage(): Promise<CustomMessage | null> {
+		if (!this.#teamModeState?.enabled) return null;
+		let planFilePath = "";
+		if (!this.#planModeState?.enabled) {
+			const plan = await loadOverallPlanReference(this.#planReferencePath, this.#localProtocolOptions());
+			if (plan) planFilePath = plan.path;
+		}
+		return {
+			role: "custom",
+			customType: TEAM_MODE_CONTEXT_MESSAGE_TYPE,
+			content: prompt.render(teamModeActivePrompt, {
+				teamSize: this.#teamModeState.size,
+				planFilePath,
 			}),
 			display: false,
 			attribution: "agent",
@@ -6449,6 +6522,10 @@ export class AgentSession {
 			const vibeModeMessage = this.#buildVibeModeMessage();
 			if (vibeModeMessage) {
 				messages.push(vibeModeMessage);
+			}
+			const teamModeMessage = await this.#buildTeamModeMessage();
+			if (teamModeMessage) {
+				messages.push(teamModeMessage);
 			}
 			if (options?.prependMessages) {
 				messages.push(...options.prependMessages);
