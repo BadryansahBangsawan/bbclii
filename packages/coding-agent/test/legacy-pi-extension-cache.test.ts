@@ -36,7 +36,7 @@ test("legacy extension analysis persists and reads its SQLite parse cache", asyn
 	const tempDir = TempDir.createSync("@legacy-pi-extension-cache-");
 	tempDirs.push(tempDir);
 	const cacheRoot = tempDir.path();
-	await fs.mkdir(path.join(cacheRoot, "omp"), { recursive: true });
+	await fs.mkdir(path.join(cacheRoot, "bbcli"), { recursive: true });
 
 	expect(await runProbe(cacheRoot)).toBe('import value from "./dependency.js?mtime=7";\n');
 
@@ -57,14 +57,14 @@ test("legacy extension parse cache opens in WAL mode (#9549)", async () => {
 	const tempDir = TempDir.createSync("@legacy-pi-extension-cache-wal-");
 	tempDirs.push(tempDir);
 	const cacheRoot = tempDir.path();
-	await fs.mkdir(path.join(cacheRoot, "omp"), { recursive: true });
+	await fs.mkdir(path.join(cacheRoot, "bbcli"), { recursive: true });
 
 	await runProbe(cacheRoot);
 
 	// WAL is persisted in the db header, so a fresh connection reports it. The
 	// default delete-journal mode serialized cache writes behind per-entry
 	// journal create/delete + fsync and blocked startup for ~20s under
-	// concurrent omp processes.
+	// concurrent bbcli processes.
 	const cachePath = path.join(cacheRoot, "omp", "cache", "legacy-pi-extension-cache.db");
 	const db = new Database(cachePath);
 	try {
@@ -90,8 +90,8 @@ test("oversized-cache eviction keeps the parse cache usable when a concurrent pr
 	seed.run("INSERT INTO extension_parse_cache VALUES ('big', 'module', ?, '[]', '[]')", ["x".repeat(9 * 1024 * 1024)]);
 	seed.close();
 
-	// A concurrent omp process holds the cache open in WAL mode with
-	// uncheckpointed frames in its `-wal` (as a concurrently-starting omp does
+	// A concurrent bbcli process holds the cache open in WAL mode with
+	// uncheckpointed frames in its `-wal` (as a concurrently-starting bbcli does
 	// while writing its own parse-cache entries).
 	const concurrent = new Database(cachePath, { create: true });
 	try {

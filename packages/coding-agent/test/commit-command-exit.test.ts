@@ -4,7 +4,7 @@ import * as commitModule from "@bbcli/pi-coding-agent/commit";
 import * as themeModule from "@bbcli/pi-coding-agent/modes/theme/theme";
 import { postmortem } from "@bbcli/pi-utils";
 
-describe("omp commit command lifecycle (issue #1041)", () => {
+describe("bbcli commit command lifecycle (issue #1041)", () => {
 	afterEach(() => {
 		vi.restoreAllMocks();
 	});
@@ -19,7 +19,7 @@ describe("omp commit command lifecycle (issue #1041)", () => {
 		const quitSpy = vi.spyOn(postmortem, "quit").mockResolvedValue(undefined);
 
 		const command = new CommitCommand([], {
-			bin: "omp",
+			bin: "bbcli",
 			version: "0.0.0-test",
 			commands: new Map(),
 		});
@@ -39,7 +39,7 @@ describe("omp commit command lifecycle (issue #1041)", () => {
 		const quitSpy = vi.spyOn(postmortem, "quit").mockResolvedValue(undefined);
 
 		const command = new CommitCommand([], {
-			bin: "omp",
+			bin: "bbcli",
 			version: "0.0.0-test",
 			commands: new Map(),
 		});
@@ -59,7 +59,7 @@ describe("omp commit command lifecycle (issue #1041)", () => {
 		const quitSpy = vi.spyOn(postmortem, "quit").mockResolvedValue(undefined);
 
 		const command = new CommitCommand([], {
-			bin: "omp",
+			bin: "bbcli",
 			version: "0.0.0-test",
 			commands: new Map(),
 		});
@@ -77,7 +77,7 @@ describe("omp commit command lifecycle (issue #1041)", () => {
 		const quitSpy = vi.spyOn(postmortem, "quit").mockResolvedValue(undefined);
 
 		const command = new CommitCommand([], {
-			bin: "omp",
+			bin: "bbcli",
 			version: "0.0.0-test",
 			commands: new Map(),
 		});

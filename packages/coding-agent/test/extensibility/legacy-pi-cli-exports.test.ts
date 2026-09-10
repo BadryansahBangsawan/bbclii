@@ -3,7 +3,7 @@ import { CONFIG_DIR_NAME, parseArgs } from "@bbcli/pi-coding-agent/extensibility
 
 describe("legacy shim CLI exports", () => {
 	it("re-exports parseArgs and CONFIG_DIR_NAME from the legacy package root", () => {
-		expect(CONFIG_DIR_NAME).toBe(".omp");
+		expect(CONFIG_DIR_NAME).toBe(".bbcli");
 		expect(parseArgs(["hello"]).messages).toEqual(["hello"]);
 	});
 });

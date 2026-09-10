@@ -51,7 +51,7 @@ async function writePluginPackage(pluginsNodeModules: string, name: string, fixt
 				name,
 				version: fixture.version,
 				...(fixture.peerDependencies ? { peerDependencies: fixture.peerDependencies } : {}),
-				omp: { extensions: ["./dist/extension.ts"] },
+				bbcli: { extensions: ["./dist/extension.ts"] },
 			},
 			null,
 			2,
@@ -68,7 +68,7 @@ describe("PluginManager.install load validation", () => {
 	let pluginsPkgJson: string;
 
 	beforeEach(async () => {
-		tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-plugin-validation-"));
+		tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-plugin-validation-"));
 		pluginsDir = path.join(tmpRoot, "plugins");
 		pluginsNodeModules = path.join(pluginsDir, "node_modules");
 		pluginsPkgJson = path.join(pluginsDir, "package.json");
@@ -96,7 +96,7 @@ describe("PluginManager.install load validation", () => {
 					pluginsPkgJson,
 					JSON.stringify(
 						{
-							name: "omp-plugins",
+							name: "bbcli-plugins",
 							private: true,
 							dependencies: { "pi-figma-remote-auth": "npm:pi-figma-remote-auth" },
 						},
@@ -135,7 +135,7 @@ describe("PluginManager.install load validation", () => {
 					pluginsPkgJson,
 					JSON.stringify(
 						{
-							name: "omp-plugins",
+							name: "bbcli-plugins",
 							private: true,
 							dependencies: { "factory-failure-plugin": "1.0.0" },
 						},
@@ -176,7 +176,7 @@ describe("PluginManager.install load validation", () => {
 				await Bun.write(
 					pluginsPkgJson,
 					JSON.stringify(
-						{ name: "omp-plugins", private: true, dependencies: { "broken-plugin": "1.0.0" } },
+						{ name: "bbcli-plugins", private: true, dependencies: { "broken-plugin": "1.0.0" } },
 						null,
 						2,
 					),
@@ -208,7 +208,7 @@ describe("PluginManager.install load validation", () => {
 	test("restores the previous package tree when reinstall validation fails", async () => {
 		await Bun.write(
 			pluginsPkgJson,
-			JSON.stringify({ name: "omp-plugins", private: true, dependencies: { "broken-plugin": "1.0.0" } }, null, 2),
+			JSON.stringify({ name: "bbcli-plugins", private: true, dependencies: { "broken-plugin": "1.0.0" } }, null, 2),
 		);
 		await Bun.write(
 			path.join(tmpRoot, "bbcli-plugins.lock.json"),
@@ -230,7 +230,7 @@ describe("PluginManager.install load validation", () => {
 				await Bun.write(
 					pluginsPkgJson,
 					JSON.stringify(
-						{ name: "omp-plugins", private: true, dependencies: { "broken-plugin": "2.0.0" } },
+						{ name: "bbcli-plugins", private: true, dependencies: { "broken-plugin": "2.0.0" } },
 						null,
 						2,
 					),
@@ -270,7 +270,7 @@ describe("PluginManager.install load validation", () => {
 		await Bun.write(
 			pluginsPkgJson,
 			JSON.stringify(
-				{ name: "omp-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin#v1" } },
+				{ name: "bbcli-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin#v1" } },
 				null,
 				2,
 			),
@@ -296,7 +296,7 @@ describe("PluginManager.install load validation", () => {
 					await Bun.write(
 						pluginsPkgJson,
 						JSON.stringify(
-							{ name: "omp-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin#v2" } },
+							{ name: "bbcli-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin#v2" } },
 							null,
 							2,
 						),
@@ -352,7 +352,7 @@ describe("PluginManager.install load validation", () => {
 				await Bun.write(
 					pluginsPkgJson,
 					JSON.stringify(
-						{ name: "omp-plugins", private: true, dependencies: { "partial-plugin": "1.0.0" } },
+						{ name: "bbcli-plugins", private: true, dependencies: { "partial-plugin": "1.0.0" } },
 						null,
 						2,
 					),
@@ -365,7 +365,7 @@ describe("PluginManager.install load validation", () => {
 						{
 							name: "partial-plugin",
 							version: "1.0.0",
-							omp: { extensions: ["./dist/valid.ts", "./dist/missing.ts"] },
+							bbcli: { extensions: ["./dist/valid.ts", "./dist/missing.ts"] },
 						},
 						null,
 						2,
@@ -403,7 +403,7 @@ describe("PluginManager.install load validation", () => {
 		await Bun.write(
 			pluginsPkgJson,
 			JSON.stringify(
-				{ name: "omp-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin#v1" } },
+				{ name: "bbcli-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin#v1" } },
 				null,
 				2,
 			),
@@ -433,7 +433,7 @@ describe("PluginManager.install load validation", () => {
 					await Bun.write(
 						pluginsPkgJson,
 						JSON.stringify(
-							{ name: "omp-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin" } },
+							{ name: "bbcli-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin" } },
 							null,
 							2,
 						),
@@ -491,7 +491,7 @@ describe("PluginManager.install load validation", () => {
 				await Bun.write(
 					pluginsPkgJson,
 					JSON.stringify(
-						{ name: "omp-plugins", private: true, dependencies: { "broken-plugin": "1.0.0" } },
+						{ name: "bbcli-plugins", private: true, dependencies: { "broken-plugin": "1.0.0" } },
 						null,
 						2,
 					),
@@ -524,7 +524,7 @@ describe("PluginManager.install load validation", () => {
 		await Bun.write(
 			pluginsPkgJson,
 			JSON.stringify(
-				{ name: "omp-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin" } },
+				{ name: "bbcli-plugins", private: true, dependencies: { "git-plugin": "github:org/plugin" } },
 				null,
 				2,
 			),
@@ -544,7 +544,7 @@ describe("PluginManager.install load validation", () => {
 				{
 					name: "git-plugin",
 					version: "1.0.0",
-					omp: {
+					bbcli: {
 						extensions: ["./dist/extension.ts"],
 						features: { keep: { description: "keep me" } },
 					},

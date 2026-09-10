@@ -46,7 +46,7 @@ async function git(repoRoot: string, ...args: string[]): Promise<string> {
 }
 
 async function seedFooRepo(finalContent: string): Promise<{ repoRoot: string; patchPath: string }> {
-	const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-isolation-merge-"));
+	const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-isolation-merge-"));
 	tempRoots.push(repoRoot);
 
 	await git(repoRoot, "init", "-q", "-b", "main");
@@ -79,7 +79,7 @@ describe("runIsolatedSubprocess", () => {
 	});
 
 	it("preserves branch-mode output as a patch when branch transfer fails", async () => {
-		const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-isolation-run-"));
+		const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-isolation-run-"));
 		tempRoots.push(repoRoot);
 		const isolationDir = path.join(repoRoot, "isolated");
 		const artifactsDir = path.join(repoRoot, "artifacts");
@@ -155,18 +155,18 @@ describe("runIsolatedSubprocess", () => {
 		expect(await Bun.file(patchPath).text()).toBe(rootPatch);
 		expect(outcome.nestedPatches).toEqual([]);
 		expect(captureSpy).toHaveBeenCalledWith(isolationDir, baseline);
-		expect(deleteSpy).toHaveBeenCalledWith("omp/task/PreserveBranchFailure", true);
+		expect(deleteSpy).toHaveBeenCalledWith("bbcli/task/PreserveBranchFailure", true);
 		expect(cleanupSpy).toHaveBeenCalledTimes(1);
 		expect(AgentRegistry.global().get("PreserveBranchFailure")?.history?.patchPath).toBe(patchPath);
 	});
 
 	it("keeps the task branch when it already carries the agent's commits", async () => {
 		// Regression for #8868: `commitToBranch` fetches the agent's commits into
-		// the parent ODB and creates `omp/task/<id>` before it commits the leftover
+		// the parent ODB and creates `bbcli/task/<id>` before it commits the leftover
 		// working-tree delta. A throw from that trailing step used to delete the
 		// branch while the isolation worktree — the only other copy — was torn
 		// down in `finally`, losing committed work outright.
-		const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-isolation-rescue-"));
+		const repoRoot = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-isolation-rescue-"));
 		tempRoots.push(repoRoot);
 		const isolationDir = path.join(repoRoot, "isolated");
 		const artifactsDir = path.join(repoRoot, "artifacts");
@@ -235,11 +235,11 @@ describe("runIsolatedSubprocess", () => {
 			buildFailureResult: err => result({ exitCode: 1, error: String(err) }),
 		});
 
-		expect(rangeSpy).toHaveBeenCalledWith("base", "omp/task/RescueBranchCommits");
-		expect(refSpy).toHaveBeenCalledWith("refs/heads/omp/task/RescueBranchCommits");
+		expect(rangeSpy).toHaveBeenCalledWith("base", "bbcli/task/RescueBranchCommits");
+		expect(refSpy).toHaveBeenCalledWith("refs/heads/bbcli/task/RescueBranchCommits");
 		expect(deleteSpy).not.toHaveBeenCalled();
 		expect(outcome.error).toContain("git apply --3way failed");
-		expect(outcome.error).toContain("preserved on branch omp/task/RescueBranchCommits");
+		expect(outcome.error).toContain("preserved on branch bbcli/task/RescueBranchCommits");
 		expect(outcome.error).toContain("cherry-pick");
 		expect(cleanupSpy).toHaveBeenCalledTimes(1);
 	});
@@ -302,7 +302,7 @@ describe("runIsolatedSubprocess", () => {
 	});
 
 	it("captures a successful yield's patch when child cleanup is deferred (issue #9670)", async () => {
-		const artifactsDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-isolation-defer-ok-"));
+		const artifactsDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-isolation-defer-ok-"));
 		tempRoots.push(artifactsDir);
 		const rootPatch = "diff --git a/task.txt b/task.txt\n--- a/task.txt\n+++ b/task.txt\n@@ -1 +1 @@\n-old\n+new\n";
 		const cleanupGate = Promise.withResolvers<void>();
@@ -493,12 +493,12 @@ describe("mergeIsolatedChanges", () => {
 			repoRoot: "/repo",
 			mergeMode: "branch",
 			result: result({
-				error: "Merge failed: conflict. The agent's commits are preserved on branch omp/task/Rescued — merge or cherry-pick it manually.",
+				error: "Merge failed: conflict. The agent's commits are preserved on branch bbcli/task/Rescued — merge or cherry-pick it manually.",
 			}),
 		});
 
 		expect(outcome.changesApplied).toBe(false);
-		expect(outcome.summary).toContain("omp/task/Rescued");
+		expect(outcome.summary).toContain("bbcli/task/Rescued");
 		expect(outcome.summary).toContain("cherry-pick");
 	});
 

@@ -172,15 +172,17 @@ has_git_lfs() {
 }
 
 # Workspace checkouts do not ship prebuilt .node addons. Pull the published
-# same-version leaf from npm (@oh-my-pi until @bbcli natives are published).
+# same-version leaf from npm (@bbcli first, then @oh-my-pi).
 install_host_natives() {
     src="$1"
     case "$(uname -s)" in
         Linux)  tag="linux-$(host_arch)" ;;
         Darwin) tag="darwin-$(host_arch)" ;;
+        MINGW*|MSYS*|CYGWIN*|Windows_NT) tag="win32-$(host_arch)" ;;
         *)      return 0 ;;
     esac
     native_dir="$src/packages/natives/native"
+    mkdir -p "$native_dir"
     if ls "$native_dir"/pi_natives."$tag"* >/dev/null 2>&1; then
         return 0
     fi
@@ -190,10 +192,19 @@ install_host_natives() {
         return 0
     fi
     tmp=$(mktemp -d)
-    url="https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz"
     echo "Fetching native addon ${tag}@${version}..."
-    if ! curl -fsSL "$url" -o "$tmp/natives.tgz"; then
-        echo "warning: could not download $url"
+    downloaded=0
+    for url in \
+        "https://registry.npmjs.org/@bbcli/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz" \
+        "https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz"
+    do
+        if curl -fsSL "$url" -o "$tmp/natives.tgz"; then
+            downloaded=1
+            break
+        fi
+    done
+    if [ "$downloaded" -eq 0 ]; then
+        echo "warning: could not download natives for ${tag}@${version}"
         rm -rf "$tmp"
         return 0
     fi
@@ -262,6 +273,22 @@ EOF
     esac
 }
 
+# Install from a git checkout via bun.
+install_from_source() {
+    if ! has_bun; then
+        install_bun
+    fi
+    require_bun_version
+    if ! bun_arch_matches_host; then
+        echo "Error: bun reports architecture '$(bun_arch)' but this host is '$(host_arch)'."
+        echo "Installing from source with this bun would produce a mismatched binary"
+        echo "(e.g. x86_64 under Rosetta on Apple Silicon), causing slow startup and AVX warnings."
+        echo "Install a native bun for your architecture, or re-run without --source to fetch the prebuilt $(host_arch) binary."
+        exit 1
+    fi
+    install_via_bun
+}
+
 # Install binary from GitHub releases
 install_binary() {
     # Detect platform
@@ -298,13 +325,20 @@ install_binary() {
         fi
     else
         echo "Fetching latest release..."
-        RELEASE_JSON=$(curl -fsSL --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest")
-        LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+        if RELEASE_JSON=$(curl -fsSL --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest"); then
+            LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+        else
+            LATEST=""
+        fi
     fi
 
     if [ -z "$LATEST" ]; then
-        echo "Failed to fetch release tag"
-        exit 1
+        if [ "$MODE" = "binary" ]; then
+            echo "Failed to fetch release tag"
+            exit 1
+        fi
+        echo "No GitHub release asset; installing from source."
+        return 1
     fi
     echo "Using version: $LATEST"
 
@@ -312,7 +346,15 @@ install_binary() {
     # Download binary
     BINARY_URL="https://github.com/${REPO}/releases/download/${LATEST}/${BINARY}"
     echo "Downloading ${BINARY}..."
-    curl -fsSL --connect-timeout 10 --speed-limit 1024 --speed-time 30 "$BINARY_URL" -o "${INSTALL_DIR}/bbcli"
+    if ! curl -fsSL --connect-timeout 10 --speed-limit 1024 --speed-time 30 "$BINARY_URL" -o "${INSTALL_DIR}/bbcli"; then
+        rm -f "${INSTALL_DIR}/bbcli"
+        if [ "$MODE" = "binary" ]; then
+            echo "Failed to download ${BINARY}"
+            exit 1
+        fi
+        echo "No GitHub release asset; installing from source."
+        return 1
+    fi
     chmod +x "${INSTALL_DIR}/bbcli"
 
     # Verify the freshly installed binary can actually start before reporting
@@ -349,25 +391,15 @@ install_binary() {
 # Main logic
 case "$MODE" in
     source)
-        if ! has_bun; then
-            install_bun
-        fi
-        require_bun_version
-        if ! bun_arch_matches_host; then
-            echo "Error: bun reports architecture '$(bun_arch)' but this host is '$(host_arch)'."
-            echo "Installing from source with this bun would produce a mismatched binary"
-            echo "(e.g. x86_64 under Rosetta on Apple Silicon), causing slow startup and AVX warnings."
-            echo "Install a native bun for your architecture, or re-run without --source to fetch the prebuilt $(host_arch) binary."
-            exit 1
-        fi
-        install_via_bun
+        install_from_source
         ;;
     binary)
         install_binary
         ;;
     *)
         # Default: use bun only when it matches the host architecture, otherwise
-        # fall back to the prebuilt binary so Rosetta bun can't force an x86_64 build.
+        # try the prebuilt binary so Rosetta bun can't force an x86_64 build.
+        # Missing GitHub assets fall back to source.
         if has_bun && bun_arch_matches_host; then
             require_bun_version
             install_via_bun
@@ -375,7 +407,9 @@ case "$MODE" in
             if has_bun; then
                 echo "Detected bun with architecture '$(bun_arch)' on a '$(host_arch)' host; using the prebuilt binary instead."
             fi
-            install_binary
+            if ! install_binary; then
+                install_from_source
+            fi
         fi
         ;;
 esac

@@ -297,7 +297,7 @@ describe("browser run cancellation", () => {
 
 	it("keeps a real worker alive after floating browser and continuation rejections", async () => {
 		vi.useRealTimers();
-		const workerPath = `/tmp/omp-browser-rejections-${process.pid}.ts`;
+		const workerPath = `/tmp/bbcli-browser-rejections-${process.pid}.ts`;
 		await Bun.write(
 			workerPath,
 			`

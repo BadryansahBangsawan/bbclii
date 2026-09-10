@@ -3,7 +3,7 @@ import Plugin from "@bbcli/pi-coding-agent/commands/plugin";
 import type { CliConfig } from "@bbcli/pi-utils/cli";
 
 const TEST_CONFIG: CliConfig = {
-	bin: "omp",
+	bin: "bbcli",
 	version: "0.0.0-test",
 	commands: new Map(),
 };

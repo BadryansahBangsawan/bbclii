@@ -1,5 +1,5 @@
 /**
- * Routing tests for `omp plugin install <local-path>` (#1945).
+ * Routing tests for `bbcli plugin install <local-path>` (#1945).
  *
  * Two layers of coverage:
  *  1. Spy-based: `runPluginCommand` with a local path calls
@@ -40,7 +40,7 @@ async function createLocalPlugin(root: string): Promise<string> {
 		JSON.stringify({
 			name: "kimi-datasource",
 			version: "1.0.0",
-			omp: { extensions: ["./src/extension.ts"] },
+			bbcli: { extensions: ["./src/extension.ts"] },
 		}),
 	);
 	return localPlugin;
@@ -50,7 +50,7 @@ describe("runPluginCommand({ action: 'install', args: [<local>] })", () => {
 	let tmpRoot: string;
 
 	beforeEach(async () => {
-		tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-plugin-install-local-"));
+		tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-plugin-install-local-"));
 		const pluginsDir = path.join(tmpRoot, "plugins");
 		await fs.mkdir(path.join(pluginsDir, "node_modules"), { recursive: true });
 
@@ -125,7 +125,7 @@ describe("runPluginCommand({ action: 'install', args: [<local>] })", () => {
 		// End-to-end: stage a real plugin folder, route through plugin-cli
 		// (no spies on PluginManager.link), and verify the resulting symlink
 		// + lockfile entry. Pins the contract that local-path installs
-		// symlink rather than copy-install, matching `omp plugin link`.
+		// symlink rather than copy-install, matching `bbcli plugin link`.
 		const localPlugin = await createLocalPlugin(tmpRoot);
 
 		await runPluginCommand({ action: "install", args: [localPlugin], flags: { json: true } });
@@ -161,7 +161,7 @@ describe("runPluginCommand({ action: 'install', args: [<local>] })", () => {
 	test("doctor --fix preserves linked local plugin state without package dependencies", async () => {
 		await Bun.write(
 			path.join(tmpRoot, "plugins", "package.json"),
-			JSON.stringify({ name: "omp-plugins", private: true, dependencies: {} }),
+			JSON.stringify({ name: "bbcli-plugins", private: true, dependencies: {} }),
 		);
 		const localPlugin = await createLocalPlugin(tmpRoot);
 		const manager = new PluginManager(tmpRoot);

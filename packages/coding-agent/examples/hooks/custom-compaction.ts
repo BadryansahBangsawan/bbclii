@@ -10,7 +10,7 @@
  * which can be cheaper/faster than the main conversation model.
  *
  * Usage:
- *   omp --hook examples/hooks/custom-compaction.ts
+ *   bbcli --hook examples/hooks/custom-compaction.ts
  */
 import { complete, getModel } from "@bbcli/pi-ai";
 import type { HookAPI } from "@bbcli/pi-coding-agent";

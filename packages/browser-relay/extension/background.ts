@@ -48,13 +48,13 @@ function snapshot(tab: ChromeTab): TabSnapshot | null {
 	};
 }
 
-/** Title of the omp tab group; mirrored to session storage so a restarted service worker can still dissolve it. */
+/** Title of the bbcli tab group; mirrored to session storage so a restarted service worker can still dissolve it. */
 let ompGroupTitle: string | null = null;
 
 /**
  * Serialize group mutations. Chrome's query→group→set-title sequence is not
  * atomic: two concurrent runs both miss the not-yet-titled group and mint
- * duplicate "omp" groups in the same window.
+ * duplicate "bbcli" groups in the same window.
  */
 let groupOps: Promise<unknown> = Promise.resolve();
 function enqueueGroupOp<T>(fn: () => Promise<T>): Promise<T> {
@@ -63,7 +63,7 @@ function enqueueGroupOp<T>(fn: () => Promise<T>): Promise<T> {
 	return result;
 }
 
-/** Move tabs into the per-window omp group, creating or reusing it by title. */
+/** Move tabs into the per-window bbcli group, creating or reusing it by title. */
 async function groupTabs(tabIds: number[], title: string, color: string): Promise<{ grouped: Record<string, number> }> {
 	ompGroupTitle = title;
 	void chrome.storage.session.set({ ompGroupTitle: title });
@@ -102,7 +102,7 @@ async function groupTabs(tabIds: number[], title: string, color: string): Promis
 	return { grouped };
 }
 
-/** Dissolve every omp-titled group (relay disconnected or asked us to release tabs). */
+/** Dissolve every bbcli-titled group (relay disconnected or asked us to release tabs). */
 async function restoreGroups(): Promise<void> {
 	if (!ompGroupTitle) {
 		// Service worker restarted since the last group op; recover the title.
@@ -277,9 +277,9 @@ chrome.tabs.onRemoved.addListener(tabId => {
 
 // ---- lifecycle ----------------------------------------------------------------
 
-chrome.alarms.create("omp-relay-keepalive", { periodInMinutes: 0.5 });
+chrome.alarms.create("bbcli-relay-keepalive", { periodInMinutes: 0.5 });
 chrome.alarms.onAlarm.addListener(alarm => {
-	if (alarm.name === "omp-relay-keepalive") void connect();
+	if (alarm.name === "bbcli-relay-keepalive") void connect();
 });
 
 chrome.storage.onChanged.addListener((_changes, areaName) => {

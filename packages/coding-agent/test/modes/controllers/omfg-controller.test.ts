@@ -11,7 +11,7 @@ import type { InteractiveModeContext } from "@bbcli/pi-coding-agent/modes/types"
 import { Container, type TUI } from "@bbcli/pi-tui";
 import { removeWithRetries } from "@bbcli/pi-utils";
 
-const PROJECT_OPTION = "This project (.omp/rules)";
+const PROJECT_OPTION = "This project (.bbcli/rules)";
 
 const usage: Usage = {
 	input: 0,
@@ -171,6 +171,6 @@ describe("OmfgController", () => {
 		expect(harness.container.children).toHaveLength(0);
 		expect(signal?.aborted).toBe(true);
 		expect(controller.hasActiveRequest()).toBe(false);
-		expect(await Bun.file(path.join(harness.projectDir, ".omp", "rules", "ts-no-any.md")).exists()).toBe(false);
+		expect(await Bun.file(path.join(harness.projectDir, ".bbcli", "rules", "ts-no-any.md")).exists()).toBe(false);
 	});
 });

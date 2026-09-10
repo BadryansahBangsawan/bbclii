@@ -1,5 +1,5 @@
 /**
- * Resolve auth-broker connection configuration for the local omp client.
+ * Resolve auth-broker connection configuration for the local bbcli client.
  *
  * This is a thin coding-agent wrapper around the shared resolver in
  * `@bbcli/pi-ai/auth-broker/discover` that preserves the process-lifetime
@@ -8,9 +8,9 @@
  *
  * Precedence (highest first):
  *   1. `OMP_AUTH_BROKER_URL` / `OMP_AUTH_BROKER_TOKEN` env vars.
- *   2. `auth.broker.url` / `auth.broker.token` in `~/.omp/agent/config.yml`
+ *   2. `auth.broker.url` / `auth.broker.token` in `~/.bbcli/agent/config.yml`
  *      (hidden from the settings UI; `!command` resolution supported).
- *   3. Token file `~/.omp/auth-broker.token` (paired with URL from env or config).
+ *   3. Token file `~/.bbcli/auth-broker.token` (paired with URL from env or config).
  *
  * Returns null when no broker URL is configured — caller falls back to the
  * local SQLite store.
@@ -122,9 +122,9 @@ export async function describeAuthBrokerStartupError(error: unknown): Promise<st
 	const target = url ? ` at ${url}` : "";
 	return (
 		`Auth broker${target} is unreachable (${error.message}). ` +
-		"omp is configured to use this broker for credentials and will not fall back to local credentials automatically.\n" +
-		"Start the broker with `omp auth-broker serve`, or disable it with " +
-		"`omp config reset auth.broker.url` and `omp config reset auth.broker.token` " +
+		"bbcli is configured to use this broker for credentials and will not fall back to local credentials automatically.\n" +
+		"Start the broker with `bbcli auth-broker serve`, or disable it with " +
+		"`bbcli config reset auth.broker.url` and `bbcli config reset auth.broker.token` " +
 		"(or unset OMP_AUTH_BROKER_URL / OMP_AUTH_BROKER_TOKEN)."
 	);
 }

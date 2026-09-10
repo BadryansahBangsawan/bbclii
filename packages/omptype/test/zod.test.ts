@@ -150,7 +150,7 @@ describe("zod-like parsing", () => {
 	});
 
 	it("supports string and number refinements plus nullable and optional values", () => {
-		expect(z.string().regex(/^omp$/).url().safeParse("omp").success).toBe(false);
+		expect(z.string().regex(/^bbcli$/).url().safeParse("bbcli").success).toBe(false);
 		expect(z.string().url().parse("https://omp.sh")).toBe("https://omp.sh");
 		expect(z.number().int().nonnegative().parse(0)).toBe(0);
 		expect(z.number().int().safeParse(1.5).success).toBe(false);

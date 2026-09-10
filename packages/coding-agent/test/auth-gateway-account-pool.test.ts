@@ -19,7 +19,7 @@ describe("auth-gateway account pool", () => {
 
 	beforeEach(async () => {
 		savedEnv = Object.fromEntries(ENV_KEYS.map(key => [key, process.env[key]])) as typeof savedEnv;
-		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-auth-gateway-pool-"));
+		tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-auth-gateway-pool-"));
 		brokerStore = await SqliteAuthCredentialStore.open(path.join(tempDir, "agent.db"));
 		brokerStore.saveOAuth("anthropic", {
 			access: "allowed-access",

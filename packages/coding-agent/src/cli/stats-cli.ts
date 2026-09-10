@@ -1,7 +1,7 @@
 /**
  * Stats CLI command handlers.
  *
- * Handles `omp stats` subcommand for viewing AI usage statistics.
+ * Handles `bbcli stats` subcommand for viewing AI usage statistics.
  */
 
 import { truncateToWidth } from "@bbcli/pi-tui/utils";

@@ -9,7 +9,7 @@ import { DEFAULT_MODEL_PER_PROVIDER, PROVIDER_DESCRIPTORS } from "@bbcli/pi-cata
 import { DEEPINFRA_BASE_URL, deepinfraModelManagerOptions } from "@bbcli/pi-catalog/provider-models/openai-compat";
 import type { ModelSpec } from "@bbcli/pi-catalog/types";
 
-const DISCOVERY_URL = "https://api.deepinfra.com/v1/openai/models?filter=with_meta&sort_by=omp";
+const DISCOVERY_URL = "https://api.deepinfra.com/v1/openai/models?filter=with_meta&sort_by=bbcli";
 
 function catalogFixture(): Response {
 	return Response.json({

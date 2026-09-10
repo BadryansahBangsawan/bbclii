@@ -2,13 +2,13 @@
  * Agent discovery from filesystem.
  *
  * Discovers agent definitions from OMP-native task-agent roots:
- *   - ~/.omp/agent/agents/*.md (user-level)
- *   - .omp/agents/*.md (project-level)
+ *   - ~/.bbcli/agent/agents/*.md (user-level)
+ *   - .bbcli/agents/*.md (project-level)
  *   - <ext>/agents/*.md for every OMP extension package wired through
  *     `listOmpExtensionRoots` (CLI `--extension` roots, `extensions:` in
  *     settings, and enabled npm/link plugins under `<plugins>/node_modules/`).
  *     Mirrors the same sub-discovery convention applied to `skills/`,
- *     `hooks/`, `tools/`, etc. by `discovery/omp-plugins.ts`.
+ *     `hooks/`, `tools/`, etc. by `discovery/bbcli-plugins.ts`.
  *
  * Claude Code marketplace plugin agents are discovered separately via the
  * claude-plugins provider. Direct cross-harness roots such as .claude/agents
@@ -25,11 +25,11 @@ import { isProviderEnabled, isUserSourceEnabled } from "../capability";
 import type { EffectiveExtensionRoots } from "../capability/types";
 import { findAllNearestProjectConfigDirs, getConfigDirs } from "../config";
 import { listClaudePluginRoots } from "../discovery/helpers";
-import { listOmpExtensionRoots } from "../discovery/omp-extension-roots";
+import { listOmpExtensionRoots } from "../discovery/bbcli-extension-roots";
 import { loadBundledAgents, parseAgent } from "./agents";
 import type { AgentDefinition, AgentSource } from "./types";
 
-const TASK_AGENT_CONFIG_SOURCE = ".omp";
+const TASK_AGENT_CONFIG_SOURCE = ".bbcli";
 
 /** Result of agent discovery */
 export interface DiscoveryResult {
@@ -71,7 +71,7 @@ async function loadAgentsFromDir({ dir, source, ignoreModel }: AgentDirectory): 
 
 /**
  * Discover agents from filesystem and merge with bundled agents.
- * Precedence (highest wins): project `.omp/agents`, user `.omp/agents`,
+ * Precedence (highest wins): project `.bbcli/agents`, user `.bbcli/agents`,
  * OMP extension-package agents from the effective `extensions` setting,
  * installed npm/link plugins, Claude marketplace plugin agents (project scope
  * before user), then bundled.
@@ -108,7 +108,7 @@ export async function discoverAgents(
 
 	// Extension-package agents use the same effective root set as sibling
 	// skills/hooks/tools, threaded whole so explicit roots and mode survive.
-	const packageRoots = isProviderEnabled("omp-plugins")
+	const packageRoots = isProviderEnabled("bbcli-plugins")
 		? await listOmpExtensionRoots({ cwd: resolvedCwd, home, repoRoot: null, extensionRoots })
 		: [];
 	for (const root of packageRoots) {
@@ -116,10 +116,10 @@ export async function discoverAgents(
 	}
 
 	// Load agents from Claude Code marketplace plugins (respects disabledProviders and opt-in).
-	// User-scope roots whose origin is not the foreign ~/.claude/plugins tree (omp's own
+	// User-scope roots whose origin is not the foreign ~/.claude/plugins tree (bbcli's own
 	// installs and `--plugin-dir` roots) survive the claude-plugins opt-in gate, mirroring
 	// isSourceEnabled in extensibility/skills.ts (#10743). Without this, `--plugin-dir` and
-	// omp-installed agents are dropped at user scope whenever the Claude source is disabled.
+	// bbcli-installed agents are dropped at user scope whenever the Claude source is disabled.
 	const claudePluginsUserEnabled = isUserSourceEnabled("claude-plugins") || isUserSourceEnabled("claude");
 	const { roots: pluginRoots } = isProviderEnabled("claude-plugins")
 		? await listClaudePluginRoots(home, resolvedCwd)

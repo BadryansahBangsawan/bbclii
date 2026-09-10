@@ -162,7 +162,7 @@ describe("opencode and gpt session header on OpenAI transports", () => {
 		expect(setup.headers[OPENCODE_SESSION_HEADER]).toBeUndefined();
 	});
 
-	it("applies omp's common User-Agent as the global inference default", async () => {
+	it("applies bbcli's common User-Agent as the global inference default", async () => {
 		const userAgents: Array<string | null> = [];
 		const fetchMock = async (_input: string | URL | Request, init?: RequestInit) => {
 			userAgents.push(new Headers(init?.headers).get("User-Agent"));
@@ -337,7 +337,7 @@ describe("usage fetch carries attribution headers", () => {
 		expect(report?.provider).toBe("opencode-go");
 		expect(seen).toHaveLength(1);
 		// Background poll outside any conversation: stable install id keeps
-		// OpenCode attribution working (required from 09/06), and omp's UA
+		// OpenCode attribution working (required from 09/06), and bbcli's UA
 		// replaces Bun's default.
 		expect(seen[0]?.["user-agent"]).toBe(USER_AGENT);
 		expect(typeof seen[0]?.[OPENCODE_SESSION_HEADER]).toBe("string");

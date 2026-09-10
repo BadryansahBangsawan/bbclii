@@ -265,7 +265,7 @@ function resolveShellConfigPath(
 			// a hard-coded ~/.config would be silently ignored when the user relocates
 			// their XDG config root, leaving the alias unsourced after a restart.
 			const configHome = env.XDG_CONFIG_HOME ? toPosix(env.XDG_CONFIG_HOME) : posixJoinUnc(posixHome, ".config");
-			return posixJoinUnc(configHome, "fish", "conf.d", "omp-profiles.fish");
+			return posixJoinUnc(configHome, "fish", "conf.d", "bbcli-profiles.fish");
 		}
 		case "pwsh":
 			return platform === "win32"

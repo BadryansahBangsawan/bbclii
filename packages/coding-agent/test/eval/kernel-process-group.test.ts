@@ -28,7 +28,7 @@ function processGroupExists(pid: number): boolean {
 
 describe("isSignalableProcessGroup", () => {
 	test("rejects the degenerate kill(2) group targets", () => {
-		// `-0` would signal omp's own process group and `-1` would signal every
+		// `-0` would signal bbcli's own process group and `-1` would signal every
 		// process the user can reach; both must never be negated into a kill.
 		expect(isSignalableProcessGroup(0)).toBe(false);
 		expect(isSignalableProcessGroup(1)).toBe(false);
@@ -80,7 +80,7 @@ describe("killProcessGroup", () => {
 
 describe("BaseKernel shutdown", () => {
 	test.skipIf(!POSIX)("kills TERM-resistant descendants after the group leader exits", async () => {
-		const pidFile = `/tmp/omp-kernel-process-group-${process.pid}-${Date.now()}`;
+		const pidFile = `/tmp/bbcli-kernel-process-group-${process.pid}-${Date.now()}`;
 		const proc = Bun.spawn(
 			["sh", "-c", `trap 'exit 7' TERM; sh -c 'trap "" TERM; sleep 30' & echo $! > '${pidFile}'; wait`],
 			{ detached: true, stdin: "pipe", stdout: "pipe", stderr: "pipe" },

@@ -183,7 +183,7 @@ describe("structured subagent primitive", () => {
 		expect(discover).not.toHaveBeenCalled();
 	});
 	it("reloads project task and retry policy before resolving an agent added during the session", async () => {
-		const root = await fs.mkdtemp(path.join(os.tmpdir(), "omp-task-hot-reload-"));
+		const root = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-task-hot-reload-"));
 		const projectDir = path.join(root, "project");
 		const agentDir = path.join(root, "agent");
 		await fs.mkdir(projectDir, { recursive: true });
@@ -200,11 +200,11 @@ describe("structured subagent primitive", () => {
 
 		try {
 			await Bun.write(
-				path.join(projectDir, ".omp", "config.yml"),
+				path.join(projectDir, ".bbcli", "config.yml"),
 				"task:\n  agentModelOverrides:\n    hot-worker: xai-oauth/grok-4.6:medium\n  enableEffort: false\nretry:\n  modelFallback: false\n",
 			);
 			await Bun.write(
-				path.join(projectDir, ".omp", "agents", "hot-worker.md"),
+				path.join(projectDir, ".bbcli", "agents", "hot-worker.md"),
 				"---\nname: hot-worker\ndescription: Newly added worker.\nmodel: openai/gpt-4o\n---\n\nInspect the assignment.\n",
 			);
 
@@ -371,7 +371,7 @@ describe("structured subagent primitive", () => {
 			mode: "permissive",
 			data: { ok: true },
 		});
-		expect(path.basename(settled.artifactsDir)).toStartWith("omp-task-");
+		expect(path.basename(settled.artifactsDir)).toStartWith("bbcli-task-");
 		await fs.rm(settled.artifactsDir, { recursive: true, force: true });
 	});
 
@@ -454,10 +454,10 @@ describe("structured subagent primitive", () => {
 	});
 
 	it("persists nested patch text with the compatible recovery path and wording", async () => {
-		const artifactsDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-structured-subagent-"));
+		const artifactsDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-structured-subagent-"));
 		const completed = result();
 		completed.patchPath = "/recovery/Worker.patch";
-		completed.branchName = "omp/task/Worker";
+		completed.branchName = "bbcli/task/Worker";
 		completed.nestedPatches = [{ relativePath: "sub/nested", patch: "diff --git a/file b/file\n" }];
 
 		const hint = await buildStructuredSubagentRecoveryHint(completed, artifactsDir);
@@ -465,7 +465,7 @@ describe("structured subagent primitive", () => {
 
 		expect(hint).toContain("Captured patch preserved at /recovery/Worker.patch.");
 		expect(hint).toContain(`Captured nested patch preserved at ${nestedPath}.`);
-		expect(hint).toContain("Captured branch preserved as omp/task/Worker.");
+		expect(hint).toContain("Captured branch preserved as bbcli/task/Worker.");
 		expect(await fs.readFile(nestedPath, "utf8")).toBe("diff --git a/file b/file\n");
 		await fs.rm(artifactsDir, { recursive: true, force: true });
 	});

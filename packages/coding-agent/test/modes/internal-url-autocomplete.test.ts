@@ -154,7 +154,7 @@ describe("internal-url-autocomplete", () => {
 				"history",
 				"local",
 				"memory",
-				"omp",
+				"bbcli",
 				"rule",
 				"security",
 				"skill",

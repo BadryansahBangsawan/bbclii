@@ -21,7 +21,7 @@ const cargoTomlGlob = new Glob("crates/*/Cargo.toml");
  * leading `v` and NO prerelease suffix. Prereleases are rejected because the
  * downstream publish (`scripts/ci-release-publish.ts`) runs `npm publish` with
  * no `--tag`, which would promote a prerelease to the npm `latest` dist-tag —
- * hitting every unqualified install and the `/latest` endpoint `omp update`
+ * hitting every unqualified install and the `/latest` endpoint `bbcli update`
  * reads. Bump keywords (major/minor/patch) are handled separately and must not
  * be routed through this check.
  *
@@ -44,6 +44,9 @@ function git(args: readonly string[]) {
 // =============================================================================
 
 async function watchCI(): Promise<boolean> {
+	if (process.env.BBCLI_RELEASE_REMOTE && !process.env.GH_REPO) {
+		process.env.GH_REPO = "BadryansahBangsawan/bbclii";
+	}
 	const commitSha = (await git(["rev-parse", "HEAD"]).text()).trim();
 	console.log(`  Commit: ${commitSha.slice(0, 8)}`);
 
@@ -427,7 +430,8 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 	const tagRef = `v${version}`;
 	const sha = (await git(["rev-parse", "HEAD"]).text()).trim();
 	await git(["tag", "-f", tagRef]);
-	await git(["push", "--atomic", "origin", "refs/heads/main:refs/heads/main", `${sha}:refs/tags/${tagRef}`]);
+	const pushRemote = process.env.BBCLI_RELEASE_REMOTE ?? "origin";
+	await git(["push", "--atomic", pushRemote, "refs/heads/main:refs/heads/main", `${sha}:refs/tags/${tagRef}`]);
 	console.log();
 
 	// 9. Watch CI
@@ -445,7 +449,7 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 		console.log(`  git commit -m "chore: bump version to ${version}" -m "<what was fixed>"`);
 		console.log(`  git tag -f v${version}`);
 		console.log(
-			`  git push --atomic origin refs/heads/main:refs/heads/main "+$(git rev-parse HEAD):refs/tags/v${version}"`,
+			`  git push --atomic ${process.env.BBCLI_RELEASE_REMOTE ?? "origin"} refs/heads/main:refs/heads/main "+$(git rev-parse HEAD):refs/tags/v${version}"`,
 		);
 		console.log("  bun scripts/release.ts watch");
 		process.exit(1);

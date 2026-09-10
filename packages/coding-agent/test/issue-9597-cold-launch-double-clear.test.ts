@@ -62,7 +62,7 @@ describe("issue #9597 — cold-launch welcome duplication", () => {
 		resetSettingsForTest();
 	});
 
-	// `resuming` mirrors `main.ts` `runInteractiveMode`: `false` on a plain `omp`
+	// `resuming` mirrors `main.ts` `runInteractiveMode`: `false` on a plain `bbcli`
 	// launch, `true` for --continue/--resume/--fork.
 	async function coldLaunch(resuming: boolean): Promise<{
 		resets: number;

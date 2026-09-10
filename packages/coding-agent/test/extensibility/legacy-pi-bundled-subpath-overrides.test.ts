@@ -16,11 +16,11 @@ const bundledModuleKeys = new Set(bundledEntries.map(entry => entry.key));
 // `rewriteLegacyPiImports` catch left the original specifier in place and
 // Bun's native resolver couldn't find a peer install. The build plugin now
 // derives every module key from current package exports, so subpaths route to
-// the same `omp-legacy-pi-bundled:` virtual namespace as package roots without
+// the same `bbcli-legacy-pi-bundled:` virtual namespace as package roots without
 // a generated registry or duplicate key list.
 describe("legacy pi compat compiled-mode subpath overrides (issue #3442)", () => {
 	it("does not evaluate unrelated host modules while loading the registry", async () => {
-		using tempDir = TempDir.createSync("@omp-legacy-pi-loaders-");
+		using tempDir = TempDir.createSync("@bbcli-legacy-pi-loaders-");
 		const alphaPath = path.join(tempDir.path(), "alpha.ts");
 		const betaPath = path.join(tempDir.path(), "beta.ts");
 		const registryPath = path.join(tempDir.path(), "registry.ts");
@@ -64,7 +64,7 @@ export const finalBeta = Reflect.get(globalThis, "__betaLoads") ?? 0;
 
 	it("serves @bbcli/pi-ai/oauth through the bundled virtual namespace in compiled mode", () => {
 		const overrides = __buildLegacyPiPackageRootOverrides(true, bundledModuleKeys);
-		expect(overrides["@bbcli/pi-ai/oauth"]).toBe("omp-legacy-pi-bundled:@bbcli/pi-ai/oauth");
+		expect(overrides["@bbcli/pi-ai/oauth"]).toBe("bbcli-legacy-pi-bundled:@bbcli/pi-ai/oauth");
 	});
 
 	it("expands wildcard exports for concrete on-disk targets (issue #3442 follow-up)", () => {
@@ -75,7 +75,7 @@ export const finalBeta = Reflect.get(globalThis, "__betaLoads") ?? 0;
 		// fall-through. The generator now globs each wildcard's source pattern
 		// and registers every concrete `.ts` match against the virtual namespace.
 		const overrides = __buildLegacyPiPackageRootOverrides(true, bundledModuleKeys);
-		expect(overrides["@bbcli/pi-ai/oauth/anthropic"]).toBe("omp-legacy-pi-bundled:@bbcli/pi-ai/oauth/anthropic");
+		expect(overrides["@bbcli/pi-ai/oauth/anthropic"]).toBe("bbcli-legacy-pi-bundled:@bbcli/pi-ai/oauth/anthropic");
 		// Sanity: the wildcard expansion also reaches deeper subroots so plugins
 		// pinned to e.g. `@bbcli/pi-ai/providers/openai` keep resolving.
 		expect(bundledModuleKeys.has("@bbcli/pi-ai/oauth/anthropic")).toBe(true);
@@ -119,7 +119,7 @@ export const observed = [
 		}
 
 		const overrides = __buildLegacyPiPackageRootOverrides(true, bundledModuleKeys);
-		expect(overrides[key]).toBe(`omp-legacy-pi-bundled:${key}`);
+		expect(overrides[key]).toBe(`bbcli-legacy-pi-bundled:${key}`);
 	});
 
 	it("expands web search provider wildcard exports for compiled plugin imports", () => {
@@ -133,7 +133,7 @@ export const observed = [
 
 		for (const key of providerKeys) {
 			expect(bundledModuleKeys.has(key)).toBe(true);
-			expect(overrides[key]).toBe(`omp-legacy-pi-bundled:${key}`);
+			expect(overrides[key]).toBe(`bbcli-legacy-pi-bundled:${key}`);
 		}
 	});
 
@@ -141,7 +141,7 @@ export const observed = [
 		const key = "@bbcli/pi-coding-agent/registry/agent-registry";
 		const overrides = __buildLegacyPiPackageRootOverrides(true, bundledModuleKeys);
 		expect(bundledModuleKeys.has(key)).toBe(true);
-		expect(overrides[key]).toBe(`omp-legacy-pi-bundled:${key}`);
+		expect(overrides[key]).toBe(`bbcli-legacy-pi-bundled:${key}`);
 	});
 
 	it("does not enumerate root catch-all wildcards (./* / ./*.js)", () => {
@@ -172,7 +172,7 @@ export const observed = [
 			// TYPEBOX_SHIM_PATH.
 			if (key === "@bbcli/pi-ai" || key === "@bbcli/pi-coding-agent" || key === "@bbcli/pi-tui" || key === "typebox")
 				continue;
-			if (overrides[key] !== `omp-legacy-pi-bundled:${key}`) {
+			if (overrides[key] !== `bbcli-legacy-pi-bundled:${key}`) {
 				missing.push(key);
 			}
 		}
@@ -187,7 +187,7 @@ export const observed = [
 		// `defineTool` helpers the canonical entrypoints dropped.
 		const overrides = __buildLegacyPiPackageRootOverrides(true, bundledModuleKeys);
 		expect(overrides["@bbcli/pi-ai"]).toBeDefined();
-		expect(overrides["@bbcli/pi-ai"]).not.toBe("omp-legacy-pi-bundled:@bbcli/pi-ai/oauth");
+		expect(overrides["@bbcli/pi-ai"]).not.toBe("bbcli-legacy-pi-bundled:@bbcli/pi-ai/oauth");
 		expect(overrides["@bbcli/pi-coding-agent"]).toBeDefined();
 		expect(overrides["@bbcli/pi-tui"]).toBeDefined();
 	});

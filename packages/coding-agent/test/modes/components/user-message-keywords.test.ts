@@ -90,7 +90,7 @@ describe("UserMessageComponent magic-keyword highlighting", () => {
 	});
 
 	it("wraps image references in file hyperlinks when a blob path is available", () => {
-		const imagePath = path.resolve("/tmp/omp-image.png");
+		const imagePath = path.resolve("/tmp/bbcli-image.png");
 		const imageUri = url.pathToFileURL(path.resolve(imagePath)).href;
 		const raw = new UserMessageComponent("please inspect [Image #1]", false, [imagePath]).render(80).join("\n");
 		expect(Bun.stripANSI(raw)).toContain(chipLabel("image", 1));
@@ -99,7 +99,7 @@ describe("UserMessageComponent magic-keyword highlighting", () => {
 	});
 
 	it("renders a video marker as a video chip linked to its source", () => {
-		const videoPath = path.resolve("/tmp/omp-video.mp4");
+		const videoPath = path.resolve("/tmp/bbcli-video.mp4");
 		const videoUri = url.pathToFileURL(videoPath).href;
 		const raw = new UserMessageComponent("please inspect [Video #1, 960x480]", false, [videoPath])
 			.render(80)
@@ -113,7 +113,7 @@ describe("UserMessageComponent magic-keyword highlighting", () => {
 	it("wraps draft editor image references in file hyperlinks when a blob path is available", () => {
 		const editor = new CustomEditor(getEditorTheme());
 		editor.imageReferenceHyperlink = imageReferenceHyperlink;
-		const imagePath = path.resolve("/tmp/omp-image.png");
+		const imagePath = path.resolve("/tmp/bbcli-image.png");
 		const imageUri = url.pathToFileURL(path.resolve(imagePath)).href;
 		editor.imageLinks = [imagePath];
 		editor.setText("please inspect [Image #1]");
@@ -177,7 +177,7 @@ describe("UserMessageComponent magic-keyword highlighting", () => {
 	it("hyperlinks the metadata-bearing image marker format", () => {
 		const editor = new CustomEditor(getEditorTheme());
 		editor.imageReferenceHyperlink = imageReferenceHyperlink;
-		const imagePath = path.resolve("/tmp/omp-image.png");
+		const imagePath = path.resolve("/tmp/bbcli-image.png");
 		const imageUri = url.pathToFileURL(path.resolve(imagePath)).href;
 		editor.imageLinks = [imagePath];
 		editor.setText("see [Image #1, 800x600] now");

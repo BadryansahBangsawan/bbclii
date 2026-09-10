@@ -523,7 +523,7 @@ const SESSION_CWD_CHANGE_REJECTED = Symbol("sessionCwdChangeRejected");
 export function powerAssertionOptions(mode: "off" | "idle" | "display" | "system"): PowerAssertionOptions | undefined {
 	if (mode === "off") return undefined;
 	return {
-		reason: "Oh My Pi agent session",
+		reason: "BBCLI agent session",
 		idle: true,
 		display: mode === "display" || mode === "system",
 		system: mode === "system",
@@ -4410,7 +4410,7 @@ export class AgentSession {
 	 * `metadata.user_id` shaped like real Claude Code's `getAPIMetadata` output:
 	 * `{ session_id, account_uuid, device_id }`. `account_uuid` is included only
 	 * when an Anthropic OAuth credential with a known account UUID is loaded;
-	 * `device_id` is derived from both the persistent omp install id and that
+	 * `device_id` is derived from both the persistent bbcli install id and that
 	 * account UUID. Resolving live keeps the value in sync with auth-state changes
 	 * (login/logout, token refresh that surfaces a new account UUID) without
 	 * needing to re-call `#syncAgentSessionId()` on every such event.
@@ -10655,7 +10655,7 @@ export class AgentSession {
 			})),
 			messages: llmMessages,
 		};
-		const filePath = path.join(os.tmpdir(), `omp-llm-request-${Snowflake.next()}.json`);
+		const filePath = path.join(os.tmpdir(), `bbcli-llm-request-${Snowflake.next()}.json`);
 		await Bun.write(filePath, `${JSON.stringify(payload, null, 2)}\n`);
 		return filePath;
 	}

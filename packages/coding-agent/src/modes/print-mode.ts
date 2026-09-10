@@ -2,8 +2,8 @@
  * Print mode (single-shot): Send prompts, output result, exit.
  *
  * Used for:
- * - `omp -p "prompt"` - text output
- * - `omp --mode json "prompt"` - JSON event stream
+ * - `bbcli -p "prompt"` - text output
+ * - `bbcli --mode json "prompt"` - JSON event stream
  */
 import type { AgentMessage } from "@bbcli/pi-agent-core";
 import type { ImageContent } from "@bbcli/pi-ai";

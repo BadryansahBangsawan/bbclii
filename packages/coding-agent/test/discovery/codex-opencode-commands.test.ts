@@ -58,7 +58,7 @@ describe("Codex and OpenCode slash-command frontmatter", () => {
 		clearFsCache();
 		resetSettingsForTest();
 		originalHome = process.env.HOME;
-		root = await fs.mkdtemp(path.join(os.tmpdir(), "omp-provider-commands-"));
+		root = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-provider-commands-"));
 		home = path.join(root, "home");
 		project = path.join(root, "project");
 		process.env.HOME = home;

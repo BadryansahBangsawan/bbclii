@@ -1472,7 +1472,7 @@ export { getProjectDir } from "@bbcli/pi-utils";
  * `getPackageDir()` contract (extensions do `path.join(getPackageDir(), ...)`
  * to auto-allow bundled docs/resources).
  *
- * omp's canonical `getPackageDir()` (`../config`) returns `undefined` inside a
+ * bbcli's canonical `getPackageDir()` (`../config`) returns `undefined` inside a
  * `bun --compile` binary — `import.meta.dir` is `/$bunfs/root` and no owning
  * `package.json` exists (issue #1423). Returning `undefined` there would crash
  * every legacy `path.join(getPackageDir(), ...)` at runtime in the shipped
@@ -1487,7 +1487,7 @@ export function getPackageDir(): string {
 
 // Legacy pi's `@earendil-works/pi-coding-agent` re-exported `estimateTokens`,
 // `compact`, `serializeConversation`, and `calculateContextTokens` from its
-// package root (via `./core/compaction/index.ts`). In omp these live in
+// package root (via `./core/compaction/index.ts`). In bbcli these live in
 // `@bbcli/pi-agent-core/compaction`, and the coding-agent barrel below does
 // not forward them, so legacy extensions importing them fail Bun's static
 // export check during validation (issues #6583, #7174, #7403, #10278).
@@ -1507,7 +1507,7 @@ export function estimateTokens(message: AgentMessage, tokenizer?: Tokenizer, opt
 }
 
 // Same barrel gap for two more legacy package-root exports: pi re-exported the
-// `CONFIG_DIR_NAME` constant and the CLI parser `parseArgs`. In omp
+// `CONFIG_DIR_NAME` constant and the CLI parser `parseArgs`. In bbcli
 // `CONFIG_DIR_NAME` lives in `@bbcli/pi-utils` and `parseArgs` in
 // `../cli/args`, neither of which the barrel below forwards, so legacy
 // extensions importing either fail Bun's static export check during validation.
@@ -1521,12 +1521,12 @@ export { Type } from "./legacy-typebox";
 
 // Legacy pi's `@earendil-works/pi-coding-agent` root exported an `is<Tool>ToolResult`
 // family of type guards that narrow a `tool_result` event (`ToolResultEvent`) by
-// tool name. omp removed them from the public API in 10.2.3, and the barrel above
+// tool name. bbcli removed them from the public API in 10.2.3, and the barrel above
 // does not forward them, so legacy extensions importing them (e.g.
 // `pi-lean-ctx@3.9.18`, which uses `isEditToolResult`/`isWriteToolResult` to
 // invalidate its read cache after a native edit/write) fail Bun's static export
 // check during validation (issue #8161). Restore the full guard family; legacy
-// `find`/`ls` tool results arrive through omp's custom-event branch, so those
+// `find`/`ls` tool results arrive through bbcli's custom-event branch, so those
 // guards narrow the tool name while leaving their details unknown.
 
 /** Narrow a `tool_result` event to the `bash` tool. */
@@ -1554,7 +1554,7 @@ export function isGrepToolResult(e: ToolResultEvent): e is GrepToolResultEvent {
 	return e.toolName === "grep";
 }
 
-/** Legacy `find` result event represented by omp's custom-event branch. */
+/** Legacy `find` result event represented by bbcli's custom-event branch. */
 export type FindToolResultEvent = ToolResultEvent & { toolName: "find" };
 
 /** Narrow a `tool_result` event to the legacy `find` tool. */
@@ -1562,7 +1562,7 @@ export function isFindToolResult(e: ToolResultEvent): e is FindToolResultEvent {
 	return e.toolName === "find";
 }
 
-/** Legacy `ls` result event represented by omp's custom-event branch. */
+/** Legacy `ls` result event represented by bbcli's custom-event branch. */
 export type LsToolResultEvent = ToolResultEvent & { toolName: "ls" };
 
 /** Narrow a `tool_result` event to the legacy `ls` tool. */

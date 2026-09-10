@@ -3,7 +3,7 @@
   "name": "@bbcli/collab-web",
   "version": "16.3.6",
   "private": true,
-  "description": "Browser guest client and local relay tools for omp collab live sessions",
+  "description": "Browser guest client and local relay tools for bbcli collab live sessions",
   "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
   "license": "MIT",

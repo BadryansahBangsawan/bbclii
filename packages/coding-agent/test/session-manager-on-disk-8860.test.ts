@@ -12,7 +12,7 @@ import { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
 import { MemorySessionStorage } from "@bbcli/pi-coding-agent/session/session-storage";
 
 function freshSession(): SessionManager {
-	const cwd = join("/tmp", `omp-on-disk-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+	const cwd = join("/tmp", `bbcli-on-disk-test-${Date.now()}-${Math.random().toString(36).slice(2)}`);
 	return SessionManager.create(cwd, join(cwd, "sessions"), new MemorySessionStorage());
 }
 

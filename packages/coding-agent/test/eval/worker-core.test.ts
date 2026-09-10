@@ -363,8 +363,8 @@ describe("WorkerCore", () => {
 	});
 
 	it("keeps the process cwd while another cell is mid-run", async () => {
-		const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "omp-cwd-a-"));
-		const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "omp-cwd-b-"));
+		const dirA = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-cwd-a-"));
+		const dirB = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-cwd-b-"));
 		const chdirs: string[] = [];
 		const hostListeners = new Set<(message: WorkerOutbound) => void>();
 		const workerListeners = new Set<(message: WorkerInbound) => void>();
@@ -510,7 +510,7 @@ console.log("survived concurrent setCwd");
 process.exit(0);
 `;
 
-		const root = await fs.mkdtemp(path.join(os.tmpdir(), "omp-same-realm-"));
+		const root = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-same-realm-"));
 		const probePath = path.join(root, "probe.ts");
 		try {
 			await Bun.write(probePath, probe);

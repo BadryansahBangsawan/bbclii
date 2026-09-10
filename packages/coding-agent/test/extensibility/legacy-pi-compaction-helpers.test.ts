@@ -15,7 +15,7 @@ import {
 // `Tokenizer.countMessage`, so the shim now defines a compat wrapper that keeps
 // the legacy export surface — a named import must not throw Bun's static
 // "Export named X not found" during plugin validation (e.g.
-// `omp plugin install pi-blackhole`). This pins the export through the public
+// `bbcli plugin install pi-blackhole`). This pins the export through the public
 // package specifier.
 describe("legacy shim compaction helpers", () => {
 	it("exports estimateTokens as a callable token estimator", () => {
@@ -31,7 +31,7 @@ describe("legacy shim compaction helpers", () => {
 
 	// Issue #7174: `compact` (same `@bbcli/pi-agent-core/compaction` module as
 	// `estimateTokens`) was likewise absent from the shim surface, so
-	// `omp plugin install npm:pi-claude-bridge` failed with "Export named
+	// `bbcli plugin install npm:pi-claude-bridge` failed with "Export named
 	// 'compact' not found". Pin the callable re-export.
 	it("re-exports compact as a callable function", () => {
 		expect(typeof compact).toBe("function");
@@ -46,7 +46,7 @@ describe("legacy shim compaction helpers", () => {
 
 	// Issue #10278: `calculateContextTokens` is another package-root compaction
 	// helper (same `@bbcli/pi-agent-core/compaction` module) used by
-	// pi-blackhole. Its absence made `omp plugin install pi-blackhole` fail Bun's
+	// pi-blackhole. Its absence made `bbcli plugin install pi-blackhole` fail Bun's
 	// static "Export named 'calculateContextTokens' not found" check.
 	it("re-exports calculateContextTokens with its usage-sizing behavior", () => {
 		expect(typeof calculateContextTokens).toBe("function");

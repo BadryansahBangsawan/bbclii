@@ -1,7 +1,7 @@
 /**
  * Web search CLI command handlers.
  *
- * Handles `omp q`/`omp web-search` subcommands for testing web search providers.
+ * Handles `bbcli q`/`bbcli web-search` subcommands for testing web search providers.
  */
 
 import { APP_NAME, getProjectDir } from "@bbcli/pi-utils";

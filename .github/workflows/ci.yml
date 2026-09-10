@@ -933,7 +933,7 @@ jobs:
               NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
            run: bun run ci:release:publish
 
-   # Regenerate the Homebrew tap formula (can1357/homebrew-tap) from the freshly
+   # Regenerate the Homebrew tap formula (BadryansahBangsawan/homebrew-bbcli) from the freshly
    # published release assets and push it. Gated on release_github_verify so the
    # tap only cuts over to a release whose published binary was verified (matches
    # how release_npm is gated). No-ops when HOMEBREW_TAP_DEPLOY_KEY is unset, so a
@@ -958,7 +958,7 @@ jobs:
            if: env.HAS_TAP_KEY == 'true'
            uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
            with:
-              repository: can1357/homebrew-tap
+              repository: BadryansahBangsawan/homebrew-bbcli
               ssh-key: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
               path: homebrew-tap
          - name: Regenerate and push the formula
@@ -966,13 +966,13 @@ jobs:
            env:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
            run: |
-              bun scripts/ci-update-brew-formula.ts "${{ needs.release_metadata.outputs.release-tag }}" --out homebrew-tap/Formula/omp.rb
+              bun scripts/ci-update-brew-formula.ts "${{ needs.release_metadata.outputs.release-tag }}" --out homebrew-tap/Formula/bbcli.rb
               cd homebrew-tap
-              if git diff --quiet -- Formula/omp.rb; then
+              if git diff --quiet -- Formula/bbcli.rb; then
                 echo "formula already up to date for ${{ needs.release_metadata.outputs.release-tag }}"
                 exit 0
               fi
               git -c user.name="github-actions[bot]" \
                   -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-                  commit -m "omp ${{ needs.release_metadata.outputs.release-tag }}" -- Formula/omp.rb
+                  commit -m "bbcli ${{ needs.release_metadata.outputs.release-tag }}" -- Formula/bbcli.rb
               git push origin HEAD:main

@@ -55,7 +55,7 @@ const INTERNAL_SCHEMES_WITH_SELECTORS: Record<string, true> = {
 	history: true,
 	local: true,
 	memory: true,
-	omp: true,
+	bbcli: true,
 	pr: true,
 	rule: true,
 	security: true,

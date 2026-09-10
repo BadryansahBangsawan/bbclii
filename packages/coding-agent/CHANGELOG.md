@@ -26,6 +26,9 @@
 ### Changed
 
 - Rebranded the CLI, installer, and self-update to `bbcli` (`~/.bbcli`, GitHub `BadryansahBangsawan/bbclii`).
+- Default `curl …/install.sh | sh` falls back to a source install when no GitHub release asset exists.
+- `bbcli update` checks GitHub releases first (then npm) and can update Homebrew, npm, bun, and source installs.
+- Windows source installs fetch host natives from `@bbcli/pi-natives-*`, falling back to `@oh-my-pi`.
 - Approving a plan now tells the executor to fan independent slices through one `task` `{ team: true }` batch when team swarm is enabled.
 
 ## [18.1.15] - 2026-09-08

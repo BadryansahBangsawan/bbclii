@@ -403,7 +403,7 @@ let warnedStopSequencesTrim = false;
 const ANTHROPIC_PROVIDER_SESSION_STATE_KEY = "anthropic-messages";
 
 /**
- * A mid-conversation `role: "system"` message omp inserts at a fixed slot in
+ * A mid-conversation `role: "system"` message bbcli inserts at a fixed slot in
  * the wire history so top-level `tools` and `output_config.effort` can stay
  * byte-stable for preserved thinking and the prompt cache. `messageCount` is
  * the number of wire messages preceding the control; `anchor` fingerprints the
@@ -781,8 +781,8 @@ export function generateClaudeCloakingUserId(): string {
 	return `user_${userHash}_account_${accountId}_session_${sessionId}`;
 }
 
-const CLAUDE_DEVICE_ID_INSTALL_HASH_DOMAIN = "omp-claude-device-id-v1:";
-const CLAUDE_DEVICE_ID_ACCOUNT_HASH_DOMAIN = "omp-claude-device-id-v2";
+const CLAUDE_DEVICE_ID_INSTALL_HASH_DOMAIN = "bbcli-claude-device-id-v1:";
+const CLAUDE_DEVICE_ID_ACCOUNT_HASH_DOMAIN = "bbcli-claude-device-id-v2";
 
 export function deriveClaudeDeviceId(installId: string, accountId?: string): string {
 	const hash = nodeCrypto.createHash("sha256");
@@ -3695,7 +3695,7 @@ function syncAnthropicControlState(state: AnthropicControlState, messages: reado
  * captured on the first request are replayed verbatim (with the current
  * request's cache breakpoints) while their text is unchanged. A text change
  * re-baselines instead of duplicating the prompt as a mid-conversation
- * system message: omp's system prompt is one rendered segment that embeds
+ * system message: bbcli's system prompt is one rendered segment that embeds
  * the tool roster, so replaying a second copy on every later request would
  * cost the full prompt again per change. The prefix rewrite is absorbed by
  * `prefix_mismatch_behavior: "drop_block"` and one cache miss.
@@ -4234,7 +4234,7 @@ function toWellFormedDeep(value: unknown): unknown {
 }
 
 /**
- * Serialize omp {@link Message}s to Anthropic wire messages.
+ * Serialize bbcli {@link Message}s to Anthropic wire messages.
  *
  * `opts.serverSideFallbackEnabled` — when the CURRENT request itself
  * opts into the server-side-fallback beta chain. Only then may a persisted

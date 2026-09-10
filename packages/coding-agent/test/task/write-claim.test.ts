@@ -15,7 +15,7 @@ describe("WriteTool team claims", () => {
 	});
 
 	it("lets A write a file and rejects B writing the same path", async () => {
-		tmp = await fs.mkdtemp(path.join(os.tmpdir(), "omp-file-claim-"));
+		tmp = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-file-claim-"));
 		const board = new FileClaimBoard(tmp);
 		const settings = Settings.isolated({});
 		const sessionA = {

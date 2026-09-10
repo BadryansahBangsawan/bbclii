@@ -1,5 +1,5 @@
 /**
- * Regression test for issue #2100: omp startup blocked >25s while connecting
+ * Regression test for issue #2100: bbcli startup blocked >25s while connecting
  * to MCP servers.
  *
  * The scenario: a configured MCP server is reachable at the transport layer
@@ -31,7 +31,7 @@ describe("MCP startup (issue #2100)", () => {
 	let workDir: string;
 
 	beforeEach(() => {
-		workDir = fs.mkdtempSync(path.join(os.tmpdir(), "omp-mcp-startup-"));
+		workDir = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-mcp-startup-"));
 	});
 
 	afterEach(() => {

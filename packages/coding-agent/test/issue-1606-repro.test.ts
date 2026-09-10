@@ -10,8 +10,8 @@
  * The fix relocates the worker to its own process: `title-client.ts` spawns
  * `process.execPath … __omp_worker_tiny_inference` (detached, owning a
  * per-model socket), `cli.ts` dispatches that flag into `runTinyWorker`, and
- * the omp process only ever holds a socket to it — the native finalizer never
- * runs in an omp address space. These tests pin that contract so a future
+ * the bbcli process only ever holds a socket to it — the native finalizer never
+ * runs in an bbcli address space. These tests pin that contract so a future
  * refactor cannot quietly land the original crash again.
  */
 import { describe, expect, it } from "bun:test";
@@ -36,7 +36,7 @@ describe("issue #1606 — tiny model lives in an isolated process", () => {
 		// fault callers via the `onError` channel — an earlier fix swallowed
 		// unexpected exits and left `TinyTitleClient.#pending` hanging forever —
 		// while a `terminate()` we issued ourselves MUST NOT.
-		const runtimeDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-tiny-1606-"));
+		const runtimeDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-tiny-1606-"));
 		try {
 			const launch = onnxLaunch("lfm2.5-230m", {});
 			const quiet = await connectTinyWorker(launch, "lfm2.5-230m", runtimeDir);

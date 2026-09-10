@@ -1290,12 +1290,12 @@ export function novitaModelManagerOptions(
 export const DEEPINFRA_BASE_URL = "https://api.deepinfra.com/v1/openai";
 /**
  * `filter=with_meta` attaches per-model `metadata` (limits, pricing, tags);
- * `sort_by=omp` asks DeepInfra to return models in omp-priority order
+ * `sort_by=bbcli` asks DeepInfra to return models in bbcli-priority order
  * (earlier = better). The mapper does not stamp `priority` yet — see
  * `mapDeepinfraModel` — but the params are sent so discovery picks the
  * ordering up as soon as the server honors it.
  */
-const DEEPINFRA_MODELS_QUERY = "?filter=with_meta&sort_by=omp";
+const DEEPINFRA_MODELS_QUERY = "?filter=with_meta&sort_by=bbcli";
 const DEEPINFRA_EFFORTS = [Effort.Low, Effort.Medium, Effort.High] as const;
 
 /** DeepInfra OpenAI-compatible discovery configuration. */
@@ -1319,7 +1319,7 @@ function deepinfraTags(metadata: Record<string, unknown>): readonly string[] {
  * Map one DeepInfra catalog entry to a chat model spec. Non-`chat` entries
  * (`tts`, `stt`, `embed`, `image-gen`, `video-gen`) are dropped — those
  * surfaces are served by dedicated tool backends, not the chat catalog.
- * DeepInfra reports token prices in USD per 1M tokens — omp's `ModelCost`
+ * DeepInfra reports token prices in USD per 1M tokens — bbcli's `ModelCost`
  * unit, used verbatim. A bundled reference (when the generated catalog has
  * one) is spread first so compat/tooling metadata can contribute, but the
  * live metadata always wins for limits, pricing, and modalities.
@@ -1395,7 +1395,7 @@ function mapDeepinfraModel(
  * Bespoke fetch instead of `fetchOpenAICompatibleModels`: the shared helper
  * cannot carry the `filter`/`sort_by` query params and re-sorts results by id,
  * which would destroy DeepInfra's priority ordering once the server honors
- * `sort_by=omp`. Response order is preserved (dedupe keeps the first, i.e.
+ * `sort_by=bbcli`. Response order is preserved (dedupe keeps the first, i.e.
  * highest-priority, occurrence).
  */
 async function fetchDeepinfraModels(options: {
@@ -3089,7 +3089,7 @@ function openCodeModelManagerOptions(
 					apiKey,
 					// Live discovery hits the OpenCode gateway outside any
 					// conversation: attribute with the stable install id
-					// (x-opencode-session required from 09/06) and omp's UA
+					// (x-opencode-session required from 09/06) and bbcli's UA
 					// instead of Bun's default.
 					headers: { "User-Agent": USER_AGENT, "x-opencode-session": getInstallId() },
 					mapModel: (entry, defaults) => {

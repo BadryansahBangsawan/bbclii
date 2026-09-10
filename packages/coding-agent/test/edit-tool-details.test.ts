@@ -26,7 +26,7 @@ let tempDir: string;
 
 beforeEach(async () => {
 	resetSettingsForTest();
-	tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-edit-tool-details-"));
+	tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-edit-tool-details-"));
 });
 
 afterEach(async () => {

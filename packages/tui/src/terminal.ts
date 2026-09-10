@@ -399,7 +399,7 @@ export function emergencyTerminalRestore(): void {
 		const terminal = activeTerminal;
 		if (terminal) {
 			// Keyboard enhancement state is screen-local: pop the alt-screen
-			// frame before leaving it, then let stop() pop omp's main-screen frame.
+			// frame before leaving it, then let stop() pop bbcli's main-screen frame.
 			if (altScreenActive) {
 				const keyboardExit =
 					terminal.keyboardEnhancementExitSequence ?? (terminal.kittyEnableSequence ? "\x1b[<u" : "");
@@ -931,7 +931,7 @@ export class ProcessTerminal implements Terminal {
 		this.#safeWrite("\x1b[?2004h");
 
 		// Force normal cursor-key (DECCKM) and numeric-keypad mode (terminfo
-		// `rmkx` = "\x1b[?1l\x1b>"). omp decodes both CSI ("\x1b[A") and SS3
+		// `rmkx` = "\x1b[?1l\x1b>"). bbcli decodes both CSI ("\x1b[A") and SS3
 		// ("\x1bOA") arrow encodings, so it never enables application mode
 		// itself — but a prior program that left the TTY in application-cursor-
 		// keys mode makes arrows arrive as SS3. Normalizing on entry keeps input
@@ -1442,7 +1442,7 @@ export class ProcessTerminal implements Terminal {
 		this.#osc99ResponseBuffer = "";
 		if (this.#dead || !this.#shouldQueryOsc99Support()) return;
 
-		const id = `omp-probe-${nextOsc99ProbeId++}`;
+		const id = `bbcli-probe-${nextOsc99ProbeId++}`;
 		this.#osc99PendingId = id;
 		this.#da1SentinelOwners.push({ kind: "osc99Probe", id });
 		// The probe never runs under a multiplexer (see #shouldQueryOsc99Support),
@@ -1726,7 +1726,7 @@ export class ProcessTerminal implements Terminal {
 		// `rmkx`). Symmetric with the normalize in start(): a TTY-sharing child
 		// can leave the terminal in application-cursor-keys mode, and without
 		// this reset the parent shell inherits SS3 arrows so Up/Down history
-		// navigation stays broken after omp exits (#6374).
+		// navigation stays broken after bbcli exits (#6374).
 		this.#safeWrite("\x1b[?1l\x1b>");
 
 		// Disable bracketed paste mode

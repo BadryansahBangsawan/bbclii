@@ -30,7 +30,7 @@ async function writeCustomTheme(name: string, extraSymbols: Record<string, unkno
 
 describe("theme symbols.spinnerFrames", () => {
 	beforeEach(async () => {
-		tmpAgentDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-spinner-frames-"));
+		tmpAgentDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-spinner-frames-"));
 		setAgentDir(tmpAgentDir);
 	});
 

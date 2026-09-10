@@ -18,7 +18,7 @@ let settings: Settings;
 let output: string[] = [];
 
 beforeEach(async () => {
-	temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "omp-security-slash-"));
+	temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-security-slash-"));
 	repositoryRoot = path.join(temporaryRoot, "repo");
 	await fs.mkdir(repositoryRoot);
 	previousStateHome = process.env.XDG_STATE_HOME;

@@ -454,7 +454,7 @@ async function acquireTabImpl(
 	};
 	worker.onMessage(msg => handleTabMessage(tab, msg));
 	tabs.set(name, tab);
-	// Durably record ownership so another live omp process can reap this page if
+	// Durably record ownership so another live bbcli process can reap this page if
 	// this process dies abnormally before its own teardown closes the tab.
 	const scope = sharedScopeOf(browser);
 	if (scope) void recordSharedTarget(scope, info.targetId);

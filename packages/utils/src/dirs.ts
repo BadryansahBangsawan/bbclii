@@ -53,14 +53,14 @@ function migrateLegacyDir(src: string, dest: string): void {
 			fs.cpSync(src, dest, { recursive: true });
 			return;
 		}
-		// leave ~/.omp in place; resolver uses dest (.bbcli), which may be empty
+		// leave ~/.bbcli in place; resolver uses dest (.bbcli), which may be empty
 	}
 }
 
 function migrateLegacyConfigRoots(): void {
 	if (process.env.BBCLI_CONFIG_DIR || process.env.PI_CONFIG_DIR) return;
 	const home = os.homedir();
-	migrateLegacyDir(path.join(home, ".omp"), path.join(home, ".bbcli"));
+	migrateLegacyDir(path.join(home, ".bbcli"), path.join(home, ".bbcli"));
 	for (const envName of ["XDG_DATA_HOME", "XDG_STATE_HOME", "XDG_CACHE_HOME"] as const) {
 		const root = process.env[envName];
 		if (!root) continue;
@@ -117,8 +117,8 @@ export function normalizeProfileName(profile: string | undefined): string | unde
  * inheriting `PI_PROFILE`. Delegates validation/normalization to
  * {@link normalizeProfileName} (which throws on a syntactically invalid value).
  */
-export function resolveProfileEnv(omp: string | undefined, pi: string | undefined): string | undefined {
-	return normalizeProfileName(omp !== undefined ? omp : pi);
+export function resolveProfileEnv(bbcli: string | undefined, pi: string | undefined): string | undefined {
+	return normalizeProfileName(bbcli !== undefined ? bbcli : pi);
 }
 
 function getProfileFromEnv(): string | undefined {
@@ -330,7 +330,7 @@ function writeCodingAgentDirEnv(dir: string | undefined): void {
 	process.env.PI_CODING_AGENT_DIR = dir;
 }
 
-/** Get the config agent directory name relative to home (e.g. ".omp/agent" or PI_CONFIG_DIR + "/agent"). */
+/** Get the config agent directory name relative to home (e.g. ".bbcli/agent" or PI_CONFIG_DIR + "/agent"). */
 export function getConfigAgentDirName(): string {
 	const profile = getActiveProfile();
 	return profile ? path.join(getConfigDirName(), "profiles", profile, "agent") : `${getConfigDirName()}/agent`;
@@ -343,8 +343,8 @@ export function getConfigAgentDirName(): string {
 type XdgCategory = "data" | "state" | "cache";
 
 /**
- * Resolves and caches all omp directory paths. On Linux, when XDG environment
- * variables are set, paths are redirected under $XDG_*_HOME/omp/. A new
+ * Resolves and caches all bbcli directory paths. On Linux, when XDG environment
+ * variables are set, paths are redirected under $XDG_*_HOME/bbcli/. A new
  * instance is created whenever the agent directory changes, which naturally
  * invalidates all cached paths.
  */
@@ -353,7 +353,7 @@ class DirResolver {
 	readonly agentDir: string;
 
 	// Per-category base dirs. Without XDG, all three equal configRoot / agentDir.
-	// With XDG on Linux, they point to $XDG_*_HOME/omp/.
+	// With XDG on Linux, they point to $XDG_*_HOME/bbcli/.
 	readonly #rootDirs: Record<XdgCategory, string>;
 	readonly #agentDirs: Record<XdgCategory, string>;
 
@@ -370,14 +370,14 @@ class DirResolver {
 		const isDefault = this.agentDir === defaultAgent;
 
 		// XDG is a Linux convention. On supported platforms, default profile state
-		// resolves under $XDG_*_HOME/omp once `omp config init-xdg` has migrated
+		// resolves under $XDG_*_HOME/bbcli once `bbcli config init-xdg` has migrated
 		// the user's data. Named profiles follow a stricter rule: the XDG choice
 		// is keyed on the profile-specific XDG path, never the base app root.
 		//
 		// Why: if we consulted the base app root for named profiles too, the same
-		// profile could resolve to `~/.omp/profiles/<name>` on first activation
-		// (when no $XDG_*_HOME/omp exists yet) and then silently move to
-		// `$XDG_*_HOME/omp/profiles/<name>` the moment the base appeared, orphaning
+		// profile could resolve to `~/.bbcli/profiles/<name>` on first activation
+		// (when no $XDG_*_HOME/bbcli exists yet) and then silently move to
+		// `$XDG_*_HOME/bbcli/profiles/<name>` the moment the base appeared, orphaning
 		// the earlier state. Pinning on the profile path means a profile's location
 		// is decided at first activation and stays put until the user explicitly
 		// migrates it (e.g. by mkdir'ing the XDG profile dir).
@@ -413,7 +413,7 @@ class DirResolver {
 			state: xdgState ?? this.configRoot,
 			cache: xdgCache ?? this.configRoot,
 		};
-		// XDG flattens the agent/ prefix: ~/.omp/agent/sessions → $XDG_DATA_HOME/omp/sessions
+		// XDG flattens the agent/ prefix: ~/.bbcli/agent/sessions → $XDG_DATA_HOME/bbcli/sessions
 		this.#agentDirs = {
 			data: xdgData ?? this.agentDir,
 			state: xdgState ?? this.agentDir,
@@ -453,7 +453,7 @@ class DirResolver {
  * agent dir. The profile source can be the active profile or a lower-priority
  * `PI_PROFILE` that was bypassed because `OMP_PROFILE` explicitly selected the
  * default profile. Returns `undefined` in those cases so reset falls back to the
- * standard `~/.omp/agent`.
+ * standard `~/.bbcli/agent`.
  */
 function resolvePreProfileAgentDir(
 	profile: string | undefined,
@@ -490,7 +490,7 @@ let dirs = new DirResolver({
  * unconditionally deleting the env var. Without the snapshot, a process started
  * with `PI_CODING_AGENT_DIR=/custom` then `setProfile("work")` then
  * `setProfile(undefined)` would silently lose `/custom` and fall back to
- * `~/.omp/agent`. Captured at module load — ignoring a profile-derived value
+ * `~/.bbcli/agent`. Captured at module load — ignoring a profile-derived value
  * inherited from a parent's `setProfile` (see {@link resolvePreProfileAgentDir})
  * — and refreshed on `setAgentDir`, since that call is the user explicitly
  * redefining the baseline.
@@ -527,7 +527,7 @@ export function refreshDirsFromEnv(): void {
 // Root directories
 // =============================================================================
 
-/** Get the config root directory (~/.omp). */
+/** Get the config root directory (~/.bbcli). */
 export function getConfigRootDir(): string {
 	return dirs.configRoot;
 }
@@ -607,7 +607,7 @@ export function getActiveProfile(): string | undefined {
 export function getProfileRootDir(profile: string | undefined): string {
 	return getProfileConfigRoot(normalizeProfileName(profile));
 }
-/** Get the agent config directory (~/.omp/agent). */
+/** Get the agent config directory (~/.bbcli/agent). */
 export function getAgentDir(): string {
 	return dirs.agentDir;
 }
@@ -616,32 +616,32 @@ export function getAgentDir(): string {
 export function getProjectAgentDir(cwd: string = getProjectDir()): string {
 	const dest = path.join(cwd, CONFIG_DIR_NAME);
 	if (!fs.existsSync(dest)) {
-		migrateLegacyDir(path.join(cwd, ".omp"), dest);
+		migrateLegacyDir(path.join(cwd, ".bbcli"), dest);
 	}
 	return dest;
 }
 
 // =============================================================================
-// Config-root subdirectories (~/.omp/*)
+// Config-root subdirectories (~/.bbcli/*)
 // =============================================================================
 
-/** Get the reports directory (~/.omp/reports). */
+/** Get the reports directory (~/.bbcli/reports). */
 export function getReportsDir(): string {
 	return dirs.rootSubdir("reports", "state");
 }
 
-/** Get the logs directory (~/.omp/logs). */
+/** Get the logs directory (~/.bbcli/logs). */
 export function getLogsDir(): string {
 	return dirs.rootSubdir("logs", "state");
 }
 
-/** Get this process's dated log path (~/.omp/logs/omp.YYYY-MM-DD.PID.log). */
+/** Get this process's dated log path (~/.bbcli/logs/bbcli.YYYY-MM-DD.PID.log). */
 export function getLogPath(date = new Date(), pid = process.pid): string {
 	return path.join(getLogsDir(), `${APP_NAME}.${date.toISOString().slice(0, 10)}.${pid}.log`);
 }
 
 /**
- * Get the plugins directory (~/.omp/plugins or its XDG equivalent).
+ * Get the plugins directory (~/.bbcli/plugins or its XDG equivalent).
  *
  * No-arg form (production callers) goes through the XDG-aware DirResolver so
  * reads and writes always agree. The optional `home` parameter is for test
@@ -657,22 +657,22 @@ export function getPluginsDir(home?: string): string {
 	return dirs.rootSubdir("plugins", "data");
 }
 
-/** Where npm installs packages (~/.omp/plugins/node_modules). */
+/** Where npm installs packages (~/.bbcli/plugins/node_modules). */
 export function getPluginsNodeModules(home?: string): string {
 	return path.join(getPluginsDir(home), "node_modules");
 }
 
-/** Plugin manifest (~/.omp/plugins/package.json). */
+/** Plugin manifest (~/.bbcli/plugins/package.json). */
 export function getPluginsPackageJson(home?: string): string {
 	return path.join(getPluginsDir(home), "package.json");
 }
 
-/** Plugin lock file (~/.omp/plugins/omp-plugins.lock.json). */
+/** Plugin lock file (~/.bbcli/plugins/bbcli-plugins.lock.json). */
 export function getPluginsLockfile(home?: string): string {
 	return path.join(getPluginsDir(home), "bbcli-plugins.lock.json");
 }
 
-/** Get the remote mount directory (~/.omp/remote). */
+/** Get the remote mount directory (~/.bbcli/remote). */
 export function getRemoteDir(): string {
 	return dirs.rootSubdir("remote", "data");
 }
@@ -682,8 +682,8 @@ export function getRemoteDir(): string {
  * empty/whitespace input or a path that is still relative after expansion.
  *
  * A worktree base is process-global and consumed by both creation
- * (PR checkout, task isolation) and cleanup (`omp worktree`). A relative value
- * would resolve against whatever cwd happened to launch `omp`, so checkout and
+ * (PR checkout, task isolation) and cleanup (`bbcli worktree`). A relative value
+ * would resolve against whatever cwd happened to launch `bbcli`, so checkout and
  * cleanup could disagree — we refuse it rather than silently bind it to cwd.
  */
 function resolveWorktreeBase(value: string | undefined): string | undefined {
@@ -699,9 +699,9 @@ let worktreesDirOverride: string | undefined;
 
 /**
  * Relocate the base directory for agent-managed worktrees (PR checkouts, task
- * isolation, and `omp worktree` cleanup all read the same base). Driven by the
+ * isolation, and `bbcli worktree` cleanup all read the same base). Driven by the
  * `worktree.base` setting in coding-agent; pass `undefined`/empty to clear and
- * fall back to `OMP_WORKTREE_DIR` or the `~/.omp/wt` default.
+ * fall back to `OMP_WORKTREE_DIR` or the `~/.bbcli/wt` default.
  *
  * `~` is expanded and a relative path is rejected (see {@link resolveWorktreeBase}).
  * Returns the absolute path that took effect, or `undefined` if the input was
@@ -716,7 +716,7 @@ export function setWorktreesDir(dir: string | undefined): string | undefined {
 /**
  * Get the agent-managed worktrees directory. Resolution order: the
  * `OMP_WORKTREE_DIR` env var, then the {@link setWorktreesDir} override (the
- * `worktree.base` setting), then the `~/.omp/wt` default. The env var and the
+ * `worktree.base` setting), then the `~/.bbcli/wt` default. The env var and the
  * override are both `~`-expanded and must be absolute; a relative value is
  * ignored and resolution falls through.
  */
@@ -724,32 +724,32 @@ export function getWorktreesDir(): string {
 	return resolveWorktreeBase(readBrandedEnv("WORKTREE_DIR")) ?? worktreesDirOverride ?? dirs.rootSubdir("wt", "data");
 }
 
-/** Get the SSH control socket directory (~/.omp/ssh-control). */
+/** Get the SSH control socket directory (~/.bbcli/ssh-control). */
 export function getSshControlDir(): string {
 	return dirs.rootSubdir("ssh-control", "state");
 }
 
-/** Get the remote host info directory (~/.omp/remote-host). */
+/** Get the remote host info directory (~/.bbcli/remote-host). */
 export function getRemoteHostDir(): string {
 	return dirs.rootSubdir("remote-host", "data");
 }
 
-/** Get the managed Python venv directory (~/.omp/python-env). */
+/** Get the managed Python venv directory (~/.bbcli/python-env). */
 export function getPythonEnvDir(): string {
 	return dirs.rootSubdir("python-env", "data");
 }
 
-/** Get the shared Python gateway state directory (~/.omp/agent/python-gateway; XDG default: $XDG_STATE_HOME/omp/python-gateway). */
+/** Get the shared Python gateway state directory (~/.bbcli/agent/python-gateway; XDG default: $XDG_STATE_HOME/bbcli/python-gateway). */
 export function getPythonGatewayDir(): string {
 	return dirs.agentSubdir(undefined, "python-gateway", "state");
 }
 
-/** Get the puppeteer sandbox directory (~/.omp/puppeteer). */
+/** Get the puppeteer sandbox directory (~/.bbcli/puppeteer). */
 export function getPuppeteerDir(): string {
 	return dirs.rootSubdir("puppeteer", "cache");
 }
 
-/** Get the browser relay extension install directory (~/.omp/browser-relay). */
+/** Get the browser relay extension install directory (~/.bbcli/browser-relay). */
 export function getBrowserRelayDir(): string {
 	return dirs.rootSubdir("browser-relay", "data");
 }
@@ -759,7 +759,7 @@ export function getDocsRsCacheDir(): string {
 	return dirs.rootSubdir("webcache", "cache");
 }
 
-/** Get the auto-QA grievances SQLite database path (~/.omp/autoqa.db; XDG: $XDG_DATA_HOME/omp/autoqa.db). */
+/** Get the auto-QA grievances SQLite database path (~/.bbcli/autoqa.db; XDG: $XDG_DATA_HOME/bbcli/autoqa.db). */
 export function getAutoQaDbPath(): string {
 	return dirs.rootSubdir("autoqa.db", "data");
 }
@@ -767,7 +767,7 @@ export function getAutoQaDbPath(): string {
  * Stable 7-character hex digest of an absolute filesystem path.
  *
  * Used to pack the project identity into a single short fs-safe segment
- * (e.g. PR-checkout and task-isolation worktree dirs under `~/.omp/wt/`).
+ * (e.g. PR-checkout and task-isolation worktree dirs under `~/.bbcli/wt/`).
  * Bun.hash is non-cryptographic — collision space is ~2^28, which is fine
  * for naming a handful of repos on a single machine. Same input on the
  * same Bun runtime yields the same output.
@@ -776,18 +776,18 @@ export function hashPath(absPath: string): string {
 	return Bun.hash(path.resolve(absPath)).toString(16).padStart(16, "0").slice(-7);
 }
 
-/** Get the path to a single worktree directory (~/.omp/wt/<segment>). */
+/** Get the path to a single worktree directory (~/.bbcli/wt/<segment>). */
 export function getWorktreeDir(segment: string): string {
 	return path.join(getWorktreesDir(), segment);
 }
 
-/** Get the GPU cache path (~/.omp/gpu_cache.json). */
+/** Get the GPU cache path (~/.bbcli/gpu_cache.json). */
 export function getGpuCachePath(): string {
 	return dirs.rootSubdir("gpu_cache.json", "cache");
 }
 
 /**
- * Get the GitHub view cache database path (~/.omp/cache/github-cache.db).
+ * Get the GitHub view cache database path (~/.bbcli/cache/github-cache.db).
  * Honors the `OMP_GITHUB_CACHE_DB` env var when set so tests can isolate the
  * cache file without touching the rest of the config root.
  */
@@ -797,7 +797,7 @@ export function getGithubCacheDbPath(): string {
 	return dirs.rootSubdir(path.join("cache", "github-cache.db"), "cache");
 }
 /**
- * Get the conventional commit inference cache database path (~/.omp/cache/commit-inference.db).
+ * Get the conventional commit inference cache database path (~/.bbcli/cache/commit-inference.db).
  * Honors `OMP_COMMIT_CACHE_DB` so tests and operators can isolate the cache.
  */
 export function getCommitCacheDbPath(): string {
@@ -812,7 +812,7 @@ export function getLegacyPiExtensionCacheDbPath(): string {
 }
 
 /**
- * Get the encrypted auth-broker snapshot cache path (~/.omp/cache/auth-broker-snapshot.enc).
+ * Get the encrypted auth-broker snapshot cache path (~/.bbcli/cache/auth-broker-snapshot.enc).
  * Honors the `OMP_AUTH_BROKER_SNAPSHOT_CACHE` env var when set so tests and
  * operators can isolate or relocate the cache file.
  */
@@ -822,63 +822,63 @@ export function getAuthBrokerSnapshotCachePath(): string {
 	return dirs.rootSubdir(path.join("cache", "auth-broker-snapshot.enc"), "cache");
 }
 
-/** Get the commit-author avatar cache directory (~/.omp/cache/avatars). */
+/** Get the commit-author avatar cache directory (~/.bbcli/cache/avatars). */
 export function getAvatarCacheDir(): string {
 	return dirs.rootSubdir(path.join("cache", "avatars"), "cache");
 }
 
-/** Get the local FastEmbed model cache directory (~/.omp/cache/fastembed). */
+/** Get the local FastEmbed model cache directory (~/.bbcli/cache/fastembed). */
 export function getFastembedCacheDir(): string {
 	return dirs.rootSubdir(path.join("cache", "fastembed"), "cache");
 }
 
-/** Get the on-demand fastembed runtime install root (~/.omp/cache/fastembed-runtime). */
+/** Get the on-demand fastembed runtime install root (~/.bbcli/cache/fastembed-runtime). */
 export function getFastembedRuntimeDir(): string {
 	return dirs.rootSubdir(path.join("cache", "fastembed-runtime"), "cache");
 }
 
-/** Get the natives directory (~/.omp/natives). */
+/** Get the natives directory (~/.bbcli/natives). */
 export function getNativesDir(): string {
 	return dirs.rootSubdir("natives", "cache");
 }
 
-/** Get the stats database path (~/.omp/stats.db). */
+/** Get the stats database path (~/.bbcli/stats.db). */
 export function getStatsDbPath(): string {
 	return dirs.rootSubdir("stats.db", "data");
 }
 
-/** Get the autoresearch state directory (~/.omp/autoresearch). */
+/** Get the autoresearch state directory (~/.bbcli/autoresearch). */
 export function getAutoresearchDir(): string {
 	return dirs.rootSubdir("autoresearch", "state");
 }
 
-/** Get the per-project autoresearch state directory (~/.omp/autoresearch/<encoded-project>). */
+/** Get the per-project autoresearch state directory (~/.bbcli/autoresearch/<encoded-project>). */
 export function getAutoresearchProjectDir(encodedProject: string): string {
 	return path.join(getAutoresearchDir(), encodedProject);
 }
 
-/** Get the per-project autoresearch SQLite database path (~/.omp/autoresearch/<encoded-project>.db). */
+/** Get the per-project autoresearch SQLite database path (~/.bbcli/autoresearch/<encoded-project>.db). */
 export function getAutoresearchDbPath(encodedProject: string): string {
 	return path.join(getAutoresearchDir(), `${encodedProject}.db`);
 }
 
-/** Get the per-run artifact directory (~/.omp/autoresearch/<encoded-project>/runs/<runId>). */
+/** Get the per-run artifact directory (~/.bbcli/autoresearch/<encoded-project>/runs/<runId>). */
 export function getAutoresearchRunDir(encodedProject: string, runId: number): string {
 	return path.join(getAutoresearchProjectDir(encodedProject), "runs", String(runId).padStart(4, "0"));
 }
 
-/** Get the security-analysis state directory (~/.omp/security). */
+/** Get the security-analysis state directory (~/.bbcli/security). */
 export function getSecurityDir(): string {
 	return dirs.rootSubdir("security", "state");
 }
 
-/** Get one project's security-analysis state directory (~/.omp/security/<project-key>). */
+/** Get one project's security-analysis state directory (~/.bbcli/security/<project-key>). */
 export function getSecurityProjectDir(projectKey: string): string {
 	return path.join(getSecurityDir(), projectKey);
 }
 
 // =============================================================================
-// Agent subdirectories (~/.omp/agent/*)
+// Agent subdirectories (~/.bbcli/agent/*)
 // =============================================================================
 
 /** Get the path to agent.db (SQLite database for settings and auth storage). */
@@ -886,7 +886,7 @@ export function getAgentDbPath(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "agent.db", "data");
 }
 
-/** Get the last-seen-changelog-version marker file (~/.omp/agent/last-changelog-version). */
+/** Get the last-seen-changelog-version marker file (~/.bbcli/agent/last-changelog-version). */
 export function getLastChangelogVersionPath(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "last-changelog-version", "state");
 }
@@ -901,71 +901,71 @@ export function getModelDbPath(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "models.db", "data");
 }
 
-/** Get the tiny title model cache directory (~/.omp/agent/cache/tiny-models). */
+/** Get the tiny title model cache directory (~/.bbcli/agent/cache/tiny-models). */
 export function getTinyModelsCacheDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, path.join("cache", "tiny-models"), "cache");
 }
 
-/** Get the document conversion cache directory (~/.omp/agent/cache/document-conversions; XDG default: $XDG_CACHE_HOME/omp/cache/document-conversions). */
+/** Get the document conversion cache directory (~/.bbcli/agent/cache/document-conversions; XDG default: $XDG_CACHE_HOME/bbcli/cache/document-conversions). */
 export function getDocumentConversionCacheDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, path.join("cache", "document-conversions"), "cache");
 }
-/** Get the per-project composer speculative cache directory (~/.omp/agent/cache/composer; XDG default: $XDG_CACHE_HOME/omp/cache/composer). */
+/** Get the per-project composer speculative cache directory (~/.bbcli/agent/cache/composer; XDG default: $XDG_CACHE_HOME/bbcli/cache/composer). */
 export function getComposerCacheDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, path.join("cache", "composer"), "cache");
 }
 
-/** Get the sessions directory (~/.omp/agent/sessions). */
+/** Get the sessions directory (~/.bbcli/agent/sessions). */
 export function getSessionsDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "sessions", "data");
 }
 
-/** Get the content-addressed blob store directory (~/.omp/agent/blobs). */
+/** Get the content-addressed blob store directory (~/.bbcli/agent/blobs). */
 export function getBlobsDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "blobs", "data");
 }
 
-/** Get the custom themes directory (~/.omp/agent/themes). */
+/** Get the custom themes directory (~/.bbcli/agent/themes). */
 export function getCustomThemesDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "themes");
 }
 
-/** Get the tools directory (~/.omp/agent/tools). */
+/** Get the tools directory (~/.bbcli/agent/tools). */
 export function getToolsDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "tools");
 }
 
-/** Get the slash commands directory (~/.omp/agent/commands). */
+/** Get the slash commands directory (~/.bbcli/agent/commands). */
 export function getCommandsDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "commands");
 }
 
-/** Get the prompts directory (~/.omp/agent/prompts). */
+/** Get the prompts directory (~/.bbcli/agent/prompts). */
 export function getPromptsDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "prompts");
 }
 
-/** Get the user-level Python modules directory (~/.omp/agent/modules). */
+/** Get the user-level Python modules directory (~/.bbcli/agent/modules). */
 export function getAgentModulesDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "modules");
 }
 
-/** Get the memories directory (~/.omp/agent/memories). */
+/** Get the memories directory (~/.bbcli/agent/memories). */
 export function getMemoriesDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "memories", "state");
 }
 
-/** Get the terminal sessions directory (~/.omp/agent/terminal-sessions). */
+/** Get the terminal sessions directory (~/.bbcli/agent/terminal-sessions). */
 export function getTerminalSessionsDir(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, "terminal-sessions", "state");
 }
 
-/** Get the crash log path (~/.omp/agent/omp-crash.log). */
+/** Get the crash log path (~/.bbcli/agent/bbcli-crash.log). */
 export function getCrashLogPath(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, `${APP_NAME}-crash.log`, "state");
 }
 
-/** Get the debug log path (~/.omp/agent/omp-debug.log). */
+/** Get the debug log path (~/.bbcli/agent/bbcli-debug.log). */
 export function getDebugLogPath(agentDir?: string): string {
 	return dirs.agentSubdir(agentDir, `${APP_NAME}-debug.log`, "state");
 }
@@ -974,7 +974,7 @@ export function getDebugLogPath(agentDir?: string): string {
  * Best-effort one-time copy of a legacy config-root file to its redirected XDG
  * location. Existing installs that enable XDG after the file was created keep
  * their data (e.g. a placeholder key whose loss would break deobfuscation of
- * persisted transcripts). The legacy file is left in place for older omp
+ * persisted transcripts). The legacy file is left in place for older bbcli
  * versions sharing the profile.
  */
 function adoptLegacyFile(legacyPath: string, targetPath: string): void {
@@ -989,24 +989,24 @@ function adoptLegacyFile(legacyPath: string, targetPath: string): void {
 	}
 }
 
-/** Get the secret placeholder key path (~/.omp/agent/secret-placeholder.key; XDG default: $XDG_STATE_HOME/omp/secret-placeholder.key). Adopts a legacy key on first XDG resolution. */
+/** Get the secret placeholder key path (~/.bbcli/agent/secret-placeholder.key; XDG default: $XDG_STATE_HOME/bbcli/secret-placeholder.key). Adopts a legacy key on first XDG resolution. */
 export function getSecretPlaceholderKeyPath(): string {
 	const keyPath = dirs.agentSubdir(undefined, "secret-placeholder.key", "state");
 	adoptLegacyFile(path.join(dirs.agentDir, "secret-placeholder.key"), keyPath);
 	return keyPath;
 }
 
-/** Directory holding the per-model tiny-worker sockets and logs (~/.omp/run/tiny; XDG default: $XDG_STATE_HOME/omp/run/tiny). */
+/** Directory holding the per-model tiny-worker sockets and logs (~/.bbcli/run/tiny; XDG default: $XDG_STATE_HOME/bbcli/run/tiny). */
 export function getTinyWorkerRuntimeDir(): string {
 	return dirs.rootSubdir(path.join("run", "tiny"), "state");
 }
 
-/** Root directory containing every per-project daemon runtime scope (~/.omp/run/daemons; XDG default: $XDG_STATE_HOME/omp/run/daemons). */
+/** Root directory containing every per-project daemon runtime scope (~/.bbcli/run/daemons; XDG default: $XDG_STATE_HOME/bbcli/run/daemons). */
 export function getDaemonRuntimeRoot(): string {
 	return dirs.rootSubdir(path.join("run", "daemons"), "state");
 }
 
-/** Get the daemon runtime directory for a project (~/.omp/run/daemons/<hash>; XDG default: $XDG_STATE_HOME/omp/run/daemons/<hash>). */
+/** Get the daemon runtime directory for a project (~/.bbcli/run/daemons/<hash>; XDG default: $XDG_STATE_HOME/bbcli/run/daemons/<hash>). */
 export function getDaemonRuntimeDir(projectDir: string): string {
 	const key = Bun.hash.wyhash(path.resolve(projectDir)).toString(16).padStart(16, "0");
 	return path.join(getDaemonRuntimeRoot(), key);
@@ -1025,12 +1025,12 @@ export function getGlobalDaemonRuntimeDir(service: string): string {
 	return path.join(getGlobalDaemonRuntimeRoot(), service);
 }
 
-/** Get the provider in-flight root directory (~/.omp/run/provider-inflight; XDG default: $XDG_STATE_HOME/omp/run/provider-inflight). */
+/** Get the provider in-flight root directory (~/.bbcli/run/provider-inflight; XDG default: $XDG_STATE_HOME/bbcli/run/provider-inflight). */
 export function getProviderInFlightRoot(): string {
 	return dirs.rootSubdir(path.join("run", "provider-inflight"), "state");
 }
 
-/** Get the marketplaces registry path (~/.omp/marketplaces.json; XDG default: $XDG_DATA_HOME/omp/marketplaces.json). Adopts a legacy registry on first XDG resolution. */
+/** Get the marketplaces registry path (~/.bbcli/marketplaces.json; XDG default: $XDG_DATA_HOME/bbcli/marketplaces.json). Adopts a legacy registry on first XDG resolution. */
 export function getMarketplacesRegistryPath(): string {
 	const registryPath = dirs.rootSubdir("marketplaces.json", "data");
 	adoptLegacyFile(path.join(dirs.configRoot, "marketplaces.json"), registryPath);
@@ -1038,20 +1038,20 @@ export function getMarketplacesRegistryPath(): string {
 }
 
 // =============================================================================
-// Project subdirectories (.omp/*)
+// Project subdirectories (.bbcli/*)
 // =============================================================================
 
-/** Get the project-level Python modules directory (.omp/modules). */
+/** Get the project-level Python modules directory (.bbcli/modules). */
 export function getProjectModulesDir(cwd: string = getProjectDir()): string {
 	return path.join(getProjectAgentDir(cwd), "modules");
 }
 
-/** Get the project-level prompts directory (.omp/prompts). */
+/** Get the project-level prompts directory (.bbcli/prompts). */
 export function getProjectPromptsDir(cwd: string = getProjectDir()): string {
 	return path.join(getProjectAgentDir(cwd), "prompts");
 }
 
-/** Get the project-level plugin overrides path (.omp/plugin-overrides.json). */
+/** Get the project-level plugin overrides path (.bbcli/plugin-overrides.json). */
 export function getProjectPluginOverridesPath(cwd: string = getProjectDir()): string {
 	return path.join(getProjectAgentDir(cwd), "plugin-overrides.json");
 }
@@ -1096,15 +1096,15 @@ export function getAppName(): string {
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
- * Persistent per-install UUID stored at `~/.omp/install-id`.
+ * Persistent per-install UUID stored at `~/.bbcli/install-id`.
  *
  * Generated lazily on first call and persisted with `O_CREAT|O_EXCL` so
  * concurrent first-call races don't clobber each other (loser re-reads the
  * winner's id). Survives independently of agent state: deleting
- * `~/.omp/agent/` does not regenerate it. Server-side dedup for grievance
+ * `~/.bbcli/agent/` does not regenerate it. Server-side dedup for grievance
  * pushes (and similar telemetry) keys on this id.
  *
- * Anchored to the base config root (`~/.omp/install-id`) regardless of the
+ * Anchored to the base config root (`~/.bbcli/install-id`) regardless of the
  * active profile: install identity is per-install, not per-profile, so every
  * profile shares one id and the global cache stays correct no matter the
  * profile / `getInstallId` call order.

@@ -83,7 +83,7 @@ beforeEach(async () => {
 	resetSettingsForTest();
 	setSearchProviderOrder([]);
 	setExcludedSearchProviders([]);
-	tempAgentDir = TempDir.createSync("@omp-search-cli-");
+	tempAgentDir = TempDir.createSync("@bbcli-search-cli-");
 	setAgentDir(tempAgentDir.path());
 	await Settings.init({
 		inMemory: true,

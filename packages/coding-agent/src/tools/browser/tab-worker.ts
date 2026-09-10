@@ -1137,8 +1137,8 @@ export class WorkerCore {
 	}
 
 	/**
-	 * Tell the omp browser relay this worker drives the adopted page, so the
-	 * relay adds it to the per-window "omp" tab group. Best-effort: plain CDP
+	 * Tell the bbcli browser relay this worker drives the adopted page, so the
+	 * relay adds it to the per-window "bbcli" tab group. Best-effort: plain CDP
 	 * backends (real Chrome, cmux) reject the relay-private method.
 	 */
 	async #claimRelayTarget(page: Page): Promise<void> {
@@ -1150,7 +1150,7 @@ export class WorkerCore {
 			const raw = session as unknown as { send(method: string): Promise<unknown> };
 			await raw.send("OMP.claimTarget");
 		} catch {
-			// Not the omp relay; nothing to claim.
+			// Not the bbcli relay; nothing to claim.
 		} finally {
 			await session?.detach().catch(() => undefined);
 		}
@@ -1937,7 +1937,7 @@ export class WorkerCore {
 					session.browserScreenshotDir,
 					`screenshot-${new Date().toISOString().replace(/[:.]/g, "-").slice(0, -1)}.${ext}`,
 				)
-			: path.join(os.tmpdir(), `omp-sshots-${Snowflake.next()}.${ext}`);
+			: path.join(os.tmpdir(), `bbcli-sshots-${Snowflake.next()}.${ext}`);
 		await fs.promises.mkdir(path.dirname(dest), { recursive: true });
 		await Bun.write(dest, savedBuffer);
 		const info: ScreenshotResult = {

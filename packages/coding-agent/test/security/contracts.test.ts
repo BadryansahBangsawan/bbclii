@@ -37,7 +37,7 @@ function fixtureFinding(): SecurityFinding {
 		validation: { status: "unvalidated", evidenceIds: [] },
 		disposition: { status: "open" },
 		provenance: {
-			producer: { kind: "omp-native", name: "omp-security", version: "test" },
+			producer: { kind: "bbcli-native", name: "bbcli-security", version: "test" },
 			createdAt: "2026-07-29T00:00:00.000Z",
 		},
 	};
@@ -107,7 +107,7 @@ describe("security contracts", () => {
 		const finding = fixtureFinding();
 		const bundle: SecurityScanBundle = {
 			scan: {
-				documentType: "omp-security.scan",
+				documentType: "bbcli-security.scan",
 				schemaVersion: "1.0",
 				id: finding.scanId,
 				projectKey: "fixture-project",

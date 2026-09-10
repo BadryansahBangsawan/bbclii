@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"homepage": "https://github.com/BadryansahBangsawan/bbclii",
 	"type": "module",
-	"omp": {
+	"bbcli": {
 		"extensions": [
 			"./index.ts"
 		]

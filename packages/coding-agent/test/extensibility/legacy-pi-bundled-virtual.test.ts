@@ -98,35 +98,35 @@ describe("legacy-pi bundled virtual module synthesizer (issue #3423)", () => {
 	});
 
 	it("routes Bun plugin resolution through the bundled namespace so onLoad can serve extension imports", async () => {
-		using tempDir = TempDir.createSync("@omp-legacy-pi-bundled-virtual-");
+		using tempDir = TempDir.createSync("@bbcli-legacy-pi-bundled-virtual-");
 		const entryPath = tempDir.join("extension-entry.ts");
 		const bundlePath = tempDir.join("extension-entry.bundle.mjs");
 
 		await Bun.write(
 			entryPath,
-			['export { legacyAnswer } from "omp-legacy-pi-bundled:@bbcli/pi-utils";', ""].join("\n"),
+			['export { legacyAnswer } from "bbcli-legacy-pi-bundled:@bbcli/pi-utils";', ""].join("\n"),
 		);
 
 		expect(resolveBundledVirtualSpecifier("@bbcli/pi-utils")).toEqual({
-			namespace: "omp-legacy-pi-bundled",
+			namespace: "bbcli-legacy-pi-bundled",
 			path: "@bbcli/pi-utils",
 		});
-		expect(resolveBundledVirtualSpecifier("omp-legacy-pi-bundled:@bbcli/pi-utils")).toEqual({
-			namespace: "omp-legacy-pi-bundled",
+		expect(resolveBundledVirtualSpecifier("bbcli-legacy-pi-bundled:@bbcli/pi-utils")).toEqual({
+			namespace: "bbcli-legacy-pi-bundled",
 			path: "@bbcli/pi-utils",
 		});
 
 		const onLoadPaths: string[] = [];
 		const plugin: BunPlugin = {
-			name: "omp-legacy-pi-bundled-virtual-regression",
+			name: "bbcli-legacy-pi-bundled-virtual-regression",
 			setup(build) {
-				build.onResolve({ filter: /^omp-legacy-pi-bundled:.+$/, namespace: "file" }, args =>
+				build.onResolve({ filter: /^bbcli-legacy-pi-bundled:.+$/, namespace: "file" }, args =>
 					resolveBundledVirtualSpecifier(args.path),
 				);
-				build.onResolve({ filter: /.*/, namespace: "omp-legacy-pi-bundled" }, args =>
+				build.onResolve({ filter: /.*/, namespace: "bbcli-legacy-pi-bundled" }, args =>
 					resolveBundledVirtualSpecifier(args.path),
 				);
-				build.onLoad({ filter: /.*/, namespace: "omp-legacy-pi-bundled" }, args => {
+				build.onLoad({ filter: /.*/, namespace: "bbcli-legacy-pi-bundled" }, args => {
 					onLoadPaths.push(args.path);
 					return {
 						contents: `export const legacyAnswer = ${JSON.stringify(`served:${args.path}`)};`,

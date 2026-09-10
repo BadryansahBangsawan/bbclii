@@ -1,5 +1,5 @@
 /**
- * Render `omp gallery` output to PNG screenshots via VHS.
+ * Render `bbcli gallery` output to PNG screenshots via VHS.
  *
  * ANSI escapes are invisible to anything that can only read raw bytes (e.g.
  * agents), so `--screenshot` drives the rendered gallery through a real virtual
@@ -62,7 +62,7 @@ export async function captureGalleryScreenshots(
 	const vhs = $which("vhs");
 	if (!vhs) {
 		throw new Error(
-			"`omp gallery --screenshot` requires VHS, which is not installed. " +
+			"`bbcli gallery --screenshot` requires VHS, which is not installed. " +
 				"Install it (e.g. `brew install vhs`, or see https://github.com/charmbracelet/vhs) and retry.",
 		);
 	}
@@ -77,7 +77,7 @@ export async function captureGalleryScreenshots(
 
 	const baseDir = options.out
 		? path.dirname(path.resolve(options.out))
-		: fs.mkdtempSync(path.join(os.tmpdir(), "omp-gallery-"));
+		: fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-gallery-"));
 	await fs.promises.mkdir(baseDir, { recursive: true });
 
 	const outPaths: string[] = [];
@@ -194,7 +194,7 @@ function buildVhsTheme(): string {
 	const foreground = theme.isLight ? "#1a1a1a" : "#d4d4d4";
 	const selection = theme.isLight ? "#c8d6ff" : "#404862";
 	return JSON.stringify({
-		name: "omp-gallery",
+		name: "bbcli-gallery",
 		background,
 		foreground,
 		cursor: foreground,

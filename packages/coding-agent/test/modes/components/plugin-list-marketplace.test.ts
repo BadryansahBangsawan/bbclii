@@ -118,8 +118,8 @@ describe("PluginListComponent", () => {
 
 		const text = stripVTControlCharacters(component.render(120).join("\n"));
 		expect(text).toContain("No plugins installed");
-		expect(text).toContain("omp plugin install <package>");
-		expect(text).toContain("omp plugin install <name>@<marketplace>");
+		expect(text).toContain("bbcli plugin install <package>");
+		expect(text).toContain("bbcli plugin install <name>@<marketplace>");
 	});
 
 	it("routes enter on a marketplace entry to onMarketplaceSelect", () => {
@@ -328,7 +328,7 @@ describe("MarketplacePluginDetailComponent", () => {
 
 	it("renders and updates settings from the marketplace runtime package", async () => {
 		const manager = new PluginManager(process.cwd());
-		const runtimePlugin = npm("omp-commit", {
+		const runtimePlugin = npm("bbcli-commit", {
 			manifest: {
 				version: "1.0.0",
 				settings: {
@@ -343,7 +343,7 @@ describe("MarketplacePluginDetailComponent", () => {
 		spyOn(manager, "getPluginSettings").mockResolvedValue({});
 		const changes: Array<[string, string, unknown]> = [];
 		let renderRequests = 0;
-		const component = new MarketplacePluginDetailComponent(marketplace("omp-commit@market"), manager, {
+		const component = new MarketplacePluginDetailComponent(marketplace("bbcli-commit@market"), manager, {
 			onEnabledChange: () => {},
 			onConfigChange: (pluginName, key, value) => changes.push([pluginName, key, value]),
 			requestRender: () => renderRequests++,
@@ -356,12 +356,12 @@ describe("MarketplacePluginDetailComponent", () => {
 		component.handleInput("\x1b[B");
 		component.handleInput(" ");
 
-		expect(changes).toEqual([["omp-commit", "mainBranchProtection", false]]);
+		expect(changes).toEqual([["bbcli-commit", "mainBranchProtection", false]]);
 	});
 
 	it("shortens home-relative install paths to ~ before rendering", async () => {
 		const home = os.homedir();
-		const installPath = `${home}/.omp/cache/plugins/sample@mkt`;
+		const installPath = `${home}/.bbcli/cache/plugins/sample@mkt`;
 		const plugin = marketplace("sample@mkt", { entry: { installPath } });
 		const manager = new PluginManager(process.cwd());
 		spyOn(manager, "getPlugin").mockResolvedValue(undefined);
@@ -372,7 +372,7 @@ describe("MarketplacePluginDetailComponent", () => {
 			onBack: () => {},
 		});
 
-		const text = await renderMarketplaceDetail(component, "~/.omp/cache/plugins/sample@mkt");
+		const text = await renderMarketplaceDetail(component, "~/.bbcli/cache/plugins/sample@mkt");
 		expect(text).not.toContain(home);
 	});
 });

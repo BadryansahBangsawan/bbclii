@@ -60,7 +60,7 @@ describe("profile directories", () => {
 		originalXdgStateHome = process.env.XDG_STATE_HOME;
 		originalXdgCacheHome = process.env.XDG_CACHE_HOME;
 		tempRoot = path.join(os.tmpdir(), "pi-utils-profiles", Snowflake.next());
-		configDir = `.omp-profile-test-${Snowflake.next()}`;
+		configDir = `.bbcli-profile-test-${Snowflake.next()}`;
 		await fs.mkdir(tempRoot, { recursive: true });
 		process.env.PI_CONFIG_DIR = configDir;
 		// Other suites that run before this one (e.g. dirs-python-gateway) may have
@@ -148,16 +148,16 @@ describe("profile directories", () => {
 		process.env.XDG_CACHE_HOME = path.join(tempRoot, "cache");
 		// Named profiles only adopt XDG when their *own* XDG path already exists,
 		// so the profile location stays stable across activations.
-		await fs.mkdir(path.join(process.env.XDG_DATA_HOME, "omp", "profiles", "work"), { recursive: true });
-		await fs.mkdir(path.join(process.env.XDG_STATE_HOME, "omp", "profiles", "work"), { recursive: true });
-		await fs.mkdir(path.join(process.env.XDG_CACHE_HOME, "omp", "profiles", "work"), { recursive: true });
+		await fs.mkdir(path.join(process.env.XDG_DATA_HOME, "bbcli", "profiles", "work"), { recursive: true });
+		await fs.mkdir(path.join(process.env.XDG_STATE_HOME, "bbcli", "profiles", "work"), { recursive: true });
+		await fs.mkdir(path.join(process.env.XDG_CACHE_HOME, "bbcli", "profiles", "work"), { recursive: true });
 
 		setProfile("work");
 
-		expect(getAgentDbPath()).toBe(path.join(process.env.XDG_DATA_HOME, "omp", "profiles", "work", "agent.db"));
-		expect(getSessionsDir()).toBe(path.join(process.env.XDG_DATA_HOME, "omp", "profiles", "work", "sessions"));
+		expect(getAgentDbPath()).toBe(path.join(process.env.XDG_DATA_HOME, "bbcli", "profiles", "work", "agent.db"));
+		expect(getSessionsDir()).toBe(path.join(process.env.XDG_DATA_HOME, "bbcli", "profiles", "work", "sessions"));
 		expect(getPythonGatewayDir()).toBe(
-			path.join(process.env.XDG_STATE_HOME, "omp", "profiles", "work", "python-gateway"),
+			path.join(process.env.XDG_STATE_HOME, "bbcli", "profiles", "work", "python-gateway"),
 		);
 	});
 
@@ -168,19 +168,19 @@ describe("profile directories", () => {
 		process.env.XDG_STATE_HOME = path.join(tempRoot, "state");
 		process.env.XDG_CACHE_HOME = path.join(tempRoot, "cache");
 
-		// Fresh install: XDG vars are set (typical Linux) but no $XDG/omp exists yet.
+		// Fresh install: XDG vars are set (typical Linux) but no $XDG/bbcli exists yet.
 		// First activation must land in ~/<config-dir>/profiles/work because
 		// the profile-specific XDG path does not exist.
 		setProfile("work");
 		const firstAgentDir = getAgentDir();
 		expect(firstAgentDir).toBe(path.join(os.homedir(), configDir, "profiles", "work", "agent"));
 
-		// Later, the base XDG app dir materializes (e.g. via `omp config init-xdg`
+		// Later, the base XDG app dir materializes (e.g. via `bbcli config init-xdg`
 		// migrating only the default-profile data). The named profile must stay
 		// in its original location until the user explicitly migrates it.
-		await fs.mkdir(path.join(process.env.XDG_DATA_HOME, "omp"), { recursive: true });
-		await fs.mkdir(path.join(process.env.XDG_STATE_HOME, "omp"), { recursive: true });
-		await fs.mkdir(path.join(process.env.XDG_CACHE_HOME, "omp"), { recursive: true });
+		await fs.mkdir(path.join(process.env.XDG_DATA_HOME, "bbcli"), { recursive: true });
+		await fs.mkdir(path.join(process.env.XDG_STATE_HOME, "bbcli"), { recursive: true });
+		await fs.mkdir(path.join(process.env.XDG_CACHE_HOME, "bbcli"), { recursive: true });
 
 		setProfile(undefined);
 		setProfile("work");
@@ -366,7 +366,7 @@ describe("dirs module import behavior", () => {
 
 	it("ignores inherited profile agent dir when OMP_PROFILE explicitly selects default", async () => {
 		const root = await fs.mkdtemp(path.join(os.tmpdir(), "pi-utils-dirs-default-profile-"));
-		const probeConfigDir = `.omp-default-profile-${Snowflake.next()}`;
+		const probeConfigDir = `.bbcli-default-profile-${Snowflake.next()}`;
 		try {
 			const dirsUrl = url.pathToFileURL(path.join(import.meta.dir, "..", "src", "dirs.ts")).href;
 			const workAgentDir = path.join(os.homedir(), probeConfigDir, "profiles", "work", "agent");
@@ -420,7 +420,7 @@ describe("dirs module import behavior", () => {
 		const root = await fs.mkdtemp(path.join(os.tmpdir(), "pi-utils-profile-env-xdg-"));
 		const homeDir = path.join(root, "home");
 		const xdgStateRoot = path.join(root, "xdg-state");
-		const profileConfigDir = `.omp-env-xdg-${Snowflake.next()}`;
+		const profileConfigDir = `.bbcli-env-xdg-${Snowflake.next()}`;
 		try {
 			const envUrl = url.pathToFileURL(path.join(import.meta.dir, "..", "src", "env.ts")).href;
 			const dirsUrl = url.pathToFileURL(path.join(import.meta.dir, "..", "src", "dirs.ts")).href;
@@ -431,7 +431,7 @@ describe("dirs module import behavior", () => {
 			// import time — the exact ordering refreshDirsFromEnv() guards.
 			await Bun.write(path.join(agentDir, ".env"), `XDG_STATE_HOME=${xdgStateRoot}\n`);
 			// Named profiles only adopt XDG when their own XDG path already exists.
-			const xdgProfileRoot = path.join(xdgStateRoot, "omp", "profiles", "work");
+			const xdgProfileRoot = path.join(xdgStateRoot, "bbcli", "profiles", "work");
 			await fs.mkdir(xdgProfileRoot, { recursive: true });
 
 			const probePath = path.join(root, "probe.ts");

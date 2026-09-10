@@ -66,7 +66,7 @@ interface DisposableExecutable {
 }
 
 async function spawnDisposableExecutable(args: string[] = []): Promise<DisposableExecutable> {
-	const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-browser-app-path-"));
+	const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-browser-app-path-"));
 	const executablePath = path.join(tempDir, path.basename(process.execPath));
 	await Bun.write(executablePath, Bun.file(process.execPath));
 	if (process.platform !== "win32") await fs.chmod(executablePath, 0o755);
@@ -191,7 +191,7 @@ describe("pickElectronTarget", () => {
 	}, 10_000);
 
 	test("rejects a user-data-dir already used by the running executable", async () => {
-		const profile = path.join(os.tmpdir(), `omp-browser-profile-${process.pid}-${Date.now()}`);
+		const profile = path.join(os.tmpdir(), `bbcli-browser-profile-${process.pid}-${Date.now()}`);
 		const existing = await spawnDisposableExecutable([`--user-data-dir=${profile}`]);
 		try {
 			await expect(

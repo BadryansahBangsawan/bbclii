@@ -557,7 +557,7 @@ export class ModelRegistry {
 	 *
 	 * Unlike {@link refreshProvider}, this does no static reload and never
 	 * re-fetches the other runtime managers, so restoring a saved
-	 * discovery-backed model (e.g. on `omp --resume`) cannot wait on — or
+	 * discovery-backed model (e.g. on `bbcli --resume`) cannot wait on — or
 	 * duplicate — an unrelated provider's network/OAuth work. Ids that are not
 	 * configured discovery providers are ignored by the underlying filter.
 	 */
@@ -2390,7 +2390,7 @@ export class ModelRegistry {
 
 	/**
 	 * Whether a config-declared discovery provider has not yet produced a
-	 * catalog in this process. A cold discovery cache (e.g. after `omp update`
+	 * catalog in this process. A cold discovery cache (e.g. after `bbcli update`
 	 * bumps the cache namespace) leaves the provider in its initial `idle`
 	 * state with no models, so a selector the provider will supply looks
 	 * unknown until background discovery lands (#10048).

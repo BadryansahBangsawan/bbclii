@@ -58,7 +58,7 @@ describe("nativeLibraryPathOverlay", () => {
 
 describe("tinyWorkerLogPath", () => {
 	// Regression: the log used to be `${endpoint}.log`, which on Windows turns
-	// the named-pipe endpoint (`\\.\pipe\omp-tiny-…`) into an unopenable file
+	// the named-pipe endpoint (`\\.\pipe\bbcli-tiny-…`) into an unopenable file
 	// path and crashed `--smoke-test` with ENOENT.
 	it("stays under the runtime directory instead of deriving from the endpoint", () => {
 		const logPath = tinyWorkerLogPath("/runtime", "lfm2.5-230m", "onnx");

@@ -409,7 +409,7 @@ describe("openai-codex streaming", () => {
 		expect(requestHeaders?.get("Authorization")).toBe("Bearer opaque-proxy-key");
 		expect(requestHeaders?.has("chatgpt-account-id")).toBe(false);
 		expect(requestHeaders?.get("OpenAI-Beta")).toBe("responses=experimental");
-		expect(requestHeaders?.get("originator")).toBe("omp");
+		expect(requestHeaders?.get("originator")).toBe("bbcli");
 		// An opaque proxy key is not a JWT, so no residency claim to declare.
 		expect(requestHeaders?.has("x-openai-internal-codex-residency")).toBe(false);
 	});
@@ -531,7 +531,7 @@ describe("openai-codex streaming", () => {
 		expect(capturedHeaders?.authorization).toBe("Bearer opaque-proxy-key");
 		expect(capturedHeaders?.["chatgpt-account-id"]).toBeUndefined();
 		expect(capturedHeaders?.["openai-beta"]).toBe("responses_websockets=2026-02-06");
-		expect(capturedHeaders?.originator).toBe("omp");
+		expect(capturedHeaders?.originator).toBe("bbcli");
 		expect(capturedHeaders?.["x-openai-internal-codex-residency"]).toBeUndefined();
 	});
 
@@ -1917,7 +1917,7 @@ describe("openai-codex streaming", () => {
 				expect(headers?.get("Authorization")).toBe(`Bearer ${token}`);
 				expect(headers?.get("chatgpt-account-id")).toBe("acc_test");
 				expect(headers?.get("OpenAI-Beta")).toBe("responses=experimental");
-				expect(headers?.get("originator")).toBe("omp");
+				expect(headers?.get("originator")).toBe("bbcli");
 				expect(headers?.get("accept")).toBe("text/event-stream");
 				expect(headers?.has("x-api-key")).toBe(false);
 				return new Response(stream, {

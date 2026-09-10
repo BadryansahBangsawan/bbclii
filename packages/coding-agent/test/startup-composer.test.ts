@@ -259,7 +259,7 @@ describe("Composer prepaint", () => {
 		try {
 			await mode.init({ suppressWelcomeIntro: true });
 
-			// The `omp "prompt"` launch shape: the CLI message is dispatched after
+			// The `bbcli "prompt"` launch shape: the CLI message is dispatched after
 			// init and its first turn is still in flight when the user types. The
 			// input loop has not reached getUserInput yet.
 			prompt.mockReturnValueOnce(turn.promise);
@@ -429,7 +429,7 @@ describe("Composer prepaint", () => {
 			.map(r => Bun.stripANSI(r))
 			.join("\n");
 		expect(output).toContain("Welcome back!");
-		expect(output).toContain("omp");
+		expect(output).toContain("bbcli");
 		expect(output).toContain("9.9.9");
 		expect(output).toContain("prior work");
 		expect(output).not.toContain("Starting OMP");

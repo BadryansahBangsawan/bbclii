@@ -12,8 +12,8 @@ import {
 	SessionManager,
 } from "@bbcli/pi-coding-agent";
 
-// Default: discoverAuthStorage() uses ~/.omp/agent/agent.db
-// discoverModels() loads built-in + custom models from ~/.omp/agent/models.json
+// Default: discoverAuthStorage() uses ~/.bbcli/agent/agent.db
+// discoverModels() loads built-in + custom models from ~/.bbcli/agent/models.json
 const authStorage = await discoverAuthStorage();
 const modelRegistry = await discoverModels(authStorage);
 

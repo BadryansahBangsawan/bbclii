@@ -65,17 +65,17 @@ describe("libkitty end-to-end", () => {
 		const pending = mode.getUserInput();
 		await term.waitForRender();
 
-		term.sendInput("hi there omp");
+		term.sendInput("hi there bbcli");
 		await term.waitForRender();
 		term.sendInput("\r");
 		const input = await pending;
-		expect(input.text).toBe("hi there omp");
+		expect(input.text).toBe("hi there bbcli");
 
 		// The optimistic user-message block must be on the physical screen now,
 		// before any assistant output exists.
-		await term.waitForRender(() => plainRows(term.getViewport()).some(row => row.includes("hi there omp")));
+		await term.waitForRender(() => plainRows(term.getViewport()).some(row => row.includes("hi there bbcli")));
 		const viewport = plainRows(term.getViewport());
-		const hits = viewport.filter(row => row.includes("hi there omp"));
+		const hits = viewport.filter(row => row.includes("hi there bbcli"));
 		if (hits.length !== 1) dump("viewport after submit", viewport);
 		expect(hits.length).toBe(1);
 	});

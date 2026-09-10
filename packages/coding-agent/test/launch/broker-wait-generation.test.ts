@@ -57,7 +57,7 @@ async function shutdown(client: DaemonBrokerClient, broker: Promise<void>): Prom
 
 describe("daemon wait generation binding", () => {
 	it("rejects a pattern wait when the observed generation automatically restarts", async () => {
-		using tempDir = TempDir.createSync("@omp-wait-generation-");
+		using tempDir = TempDir.createSync("@bbcli-wait-generation-");
 		const projectDir = path.join(tempDir.path(), "project");
 		const runtimeDir = path.join(tempDir.path(), "runtime");
 		await fs.mkdir(projectDir);

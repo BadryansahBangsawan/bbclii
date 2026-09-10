@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT / "python/omp-rpc/src"))
+sys.path.insert(0, str(REPO_ROOT / "python/bbcli-rpc/src"))
 
 from omp_rpc import (
     MessageEndEvent,
@@ -639,10 +639,10 @@ def resolve_omp_bin(raw: str | None) -> str:
     repo_bin = resolve_repo_omp_bin()
     if repo_bin:
         return repo_bin
-    found = shutil.which("omp")
+    found = shutil.which("bbcli")
     if not found:
         raise SystemExit(
-            "Could not find `omp` on PATH and could not resolve the repo CLI. Set --omp-bin or OMP_BIN."
+            "Could not find `bbcli` on PATH and could not resolve the repo CLI. Set --bbcli-bin or OMP_BIN."
         )
     return found
 
@@ -910,9 +910,9 @@ async def run_all(
 def parse_args(description: str) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
-        "--omp-bin",
+        "--bbcli-bin",
         default=os.environ.get("OMP_BIN"),
-        help="Executable to launch. Defaults to the repo checkout CLI, then falls back to `omp` on PATH.",
+        help="Executable to launch. Defaults to the repo checkout CLI, then falls back to `bbcli` on PATH.",
     )
     parser.add_argument(
         "--timeout", type=float, default=60.0, help="Per-turn timeout in seconds."

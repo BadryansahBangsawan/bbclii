@@ -15,7 +15,7 @@ import { type BrowserHandle, releaseBrowser } from "@bbcli/pi-coding-agent/tools
 import * as piUtils from "@bbcli/pi-utils";
 
 async function makeProfileDir(): Promise<string> {
-	const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "omp-chrome-profile-test-"));
+	const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "bbcli-chrome-profile-test-"));
 	await Bun.write(path.join(dir, "SingletonLock"), "lock");
 	await Bun.write(path.join(dir, "Default", "Preferences"), "{}");
 	return dir;

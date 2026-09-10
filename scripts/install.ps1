@@ -175,6 +175,69 @@ function Install-Bun {
     Assert-BunVersion $MinimumBunVersion
 }
 
+function Install-HostNatives {
+    param([string]$srcDir)
+    try {
+        $tag = "win32-$NativeArchitecture"
+        $nativeDir = Join-Path $srcDir "packages\natives\native"
+        if (-not (Test-Path $nativeDir)) {
+            New-Item -ItemType Directory -Force -Path $nativeDir | Out-Null
+        }
+        if (Get-ChildItem -Path $nativeDir -Filter "pi_natives.$tag*" -ErrorAction SilentlyContinue) {
+            return
+        }
+        $nativesPkg = Join-Path $srcDir "packages\natives\package.json"
+        if (-not (Test-Path $nativesPkg)) {
+            Write-Host "warning: could not read natives package version"
+            return
+        }
+        $version = (Get-Content $nativesPkg -Raw | ConvertFrom-Json).version
+        if (-not $version) {
+            Write-Host "warning: could not read natives package version"
+            return
+        }
+        $urls = @(
+            "https://registry.npmjs.org/@bbcli/pi-natives-$tag/-/pi-natives-$tag-$version.tgz",
+            "https://registry.npmjs.org/@oh-my-pi/pi-natives-$tag/-/pi-natives-$tag-$version.tgz"
+        )
+        $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
+        New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+        try {
+            $tgz = Join-Path $tmp "natives.tgz"
+            $downloaded = $false
+            Write-Host "Fetching native addon ${tag}@${version}..."
+            foreach ($url in $urls) {
+                try {
+                    Invoke-WebRequest -Uri $url -OutFile $tgz -TimeoutSec 120
+                    $downloaded = $true
+                    break
+                } catch {
+                    continue
+                }
+            }
+            if (-not $downloaded) {
+                Write-Host "warning: could not download natives for $tag@$version"
+                return
+            }
+            tar -xzf $tgz -C $tmp
+            if ($LASTEXITCODE -ne 0) {
+                Write-Host "warning: failed to extract native addon tarball"
+                return
+            }
+            $pkgDir = Join-Path $tmp "package"
+            if (Test-Path $pkgDir) {
+                Get-ChildItem -Path $pkgDir -Filter "*.node" | ForEach-Object {
+                    Copy-Item $_.FullName -Destination $nativeDir
+                }
+            }
+        } finally {
+            Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
+        }
+    } catch {
+        Write-Host "warning: could not install host natives"
+    }
+}
+
 function Install-ViaBun {
     Write-Host "Installing via bun..."
     if (-not (Test-GitInstalled)) {
@@ -230,6 +293,7 @@ function Install-ViaBun {
         if ($LASTEXITCODE -ne 0) {
             throw "Failed to install from $srcDir via bun"
         }
+        Install-HostNatives $srcDir
     } finally {
         Pop-Location
     }
@@ -313,11 +377,20 @@ if ($Source) {
 } elseif ($Binary) {
     Install-Binary
 } else {
-    # Default: use bun if available, otherwise binary
+    # Default: use bun if available, otherwise binary, then source if no release asset.
     if (Test-BunInstalled) {
         Assert-BunVersion $MinimumBunVersion
         Install-ViaBun
     } else {
-        Install-Binary
+        try {
+            Install-Binary
+        } catch {
+            Write-Host "No GitHub release asset; installing from source."
+            if (-not (Test-BunInstalled)) {
+                Install-Bun
+            }
+            Assert-BunVersion $MinimumBunVersion
+            Install-ViaBun
+        }
     }
 }

@@ -56,7 +56,7 @@ describe("AgentSession extension-root discovery (post-startup)", () => {
 	let tempDir: string;
 
 	beforeEach(() => {
-		tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "omp-session-ext-"));
+		tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-session-ext-"));
 	});
 
 	afterEach(async () => {

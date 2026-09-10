@@ -488,7 +488,7 @@ async function createHarness(
 		sessionUpdateHook?: (notification: SessionNotification) => Promise<void> | void;
 	} = {},
 ): Promise<AgentHarness> {
-	const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "omp-acp-test-"));
+	const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "bbcli-acp-test-"));
 	cleanupRoots.push(root);
 	const agentDir = path.join(root, "agent");
 	const cwdA = path.join(root, "cwd-a");
@@ -1107,7 +1107,7 @@ describe("ACP agent", () => {
 
 		expect(Array.isArray(result.sessions)).toBe(true);
 		expect(typeof result.total).toBe("number");
-		await expect(harness.agent.extMethod("omp/sessions/listAll", { limit: 2 })).rejects.toThrow(
+		await expect(harness.agent.extMethod("bbcli/sessions/listAll", { limit: 2 })).rejects.toThrow(
 			"Unknown ACP ext method",
 		);
 
@@ -1751,7 +1751,7 @@ describe("ACP agent", () => {
 
 	it("refreshes task agent descriptions on ACP /reload-plugins", async () => {
 		const harness = await createHarness();
-		const agentDir = path.join(harness.cwdA, ".omp", "agents");
+		const agentDir = path.join(harness.cwdA, ".bbcli", "agents");
 		const agentFile = path.join(agentDir, "acp-reload-agent.md");
 		await fs.promises.mkdir(agentDir, { recursive: true });
 		await fs.promises.writeFile(

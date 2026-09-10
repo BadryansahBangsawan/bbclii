@@ -5,14 +5,14 @@
  * `extensions:` in user/project settings or the `--extension`/`-e` CLI flag
  * that points to a packaged extension on disk. The package's standard
  * sub-directories (`skills/`, `hooks/`, `tools/`, `commands/`, `rules/`,
- * `prompts/`, `.mcp.json`) are wired into discovery by `omp-plugins.ts`.
+ * `prompts/`, `.mcp.json`) are wired into discovery by `bbcli-plugins.ts`.
  *
  * CLI-provided paths are injected via {@link injectOmpExtensionCliRoots}
  * before discovery runs. Capability loads supply the effective `extensions`
  * setting; direct callers reconstruct its array-replacement precedence from
  * canonical YAML config and legacy `settings.json`.
  *
- * @see ./omp-plugins.ts
+ * @see ./bbcli-plugins.ts
  * @see ./builtin.ts `loadExtensionModules`
  */
 import { AsyncLocalStorage } from "node:async_hooks";
@@ -71,7 +71,7 @@ export interface InjectOmpExtensionCliRootOptions {
 	/**
 	 * `explicit-only` exposes only roots named by this CLI invocation. Use it
 	 * with `--no-extensions` so configured and installed packages cannot
-	 * contribute sibling capabilities through the `omp-plugins` provider.
+	 * contribute sibling capabilities through the `bbcli-plugins` provider.
 	 */
 	mode?: OmpExtensionRootMode;
 	/** Replace roots from an earlier invocation instead of extending them. */
@@ -159,7 +159,7 @@ interface ScopeDirs {
 
 function scopeDirs(ctx: LoadContext): ScopeDirs {
 	return {
-		project: path.join(ctx.cwd, ".omp"),
+		project: path.join(ctx.cwd, ".bbcli"),
 		user: getAgentDir(),
 	};
 }
@@ -176,7 +176,7 @@ async function readSettingsExtensions(settingsPath: string): Promise<string[] | 
 	return readExtensionsArray(parsed?.extensions);
 }
 
-/** Project native config filename; matches the single `.omp/config.yml` the settings loader reads. */
+/** Project native config filename; matches the single `.bbcli/config.yml` the settings loader reads. */
 const PROJECT_CONFIG_FILENAMES = ["config.yml"] as const;
 
 interface YamlExtensions {
@@ -267,8 +267,8 @@ async function isDirectory(p: string): Promise<boolean> {
  *    `merge` mode. Its provenance (`configuredLevel`) is carried from
  *    `Settings` (the authority that merges every project provider, incl.
  *    `.claude/settings.json`, and honors overlays/overrides), never re-derived
- *    from a partial `.omp` disk scan; scopeless callers read the persisted
- *    `.omp` config, which supplies its own level.
+ *    from a partial `.bbcli` disk scan; scopeless callers read the persisted
+ *    `.bbcli` config, which supplies its own level.
  * 3. Installed npm/link plugins under `<plugins>/node_modules/`, added only in
  *    `merge` mode. Marketplace installs load via the `claude-plugins` provider.
  *
@@ -300,7 +300,7 @@ export async function listOmpExtensionRoots(ctx: LoadContext): Promise<OmpExtens
 		// `Settings` — the authority that merges every project provider (incl.
 		// `.claude/settings.json`) and honors overlays/overrides — so trust the
 		// carried `configuredLevel` verbatim. When no session value is present,
-		// read the persisted `.omp` config on disk, which is the authoritative
+		// read the persisted `.bbcli` config on disk, which is the authoritative
 		// source (and its own provenance) in that scopeless path.
 		const configuredEntries = ctx.extensionRoots?.configured ?? scopedRoots?.configuredExtensions;
 		const configured =

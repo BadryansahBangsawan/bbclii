@@ -45,13 +45,13 @@ export default class Bench extends Command {
 	};
 
 	static examples = [
-		"# Compare two models across mixed challenges (chat, prefill, generation)\n  omp bench anthropic/claude-opus-4-5 openai/gpt-5.2",
-		"# Fuzzy selectors work\n  omp bench opus sonnet",
-		"# Average over 3 runs each\n  omp bench opus gpt-5.2 --runs 3",
-		"# Isolate prompt-ingestion speed with a 64 KiB cache-busted input\n  omp bench opus sonnet --profile prefill --prefill-bytes 65536",
-		"# Isolate sustained decode throughput\n  omp bench opus sonnet --profile generation",
-		"# Force priority serving tier\n  omp bench openai-codex/gpt-5.5:low --runs 10 --service-tier priority",
-		"# Measure one cold/warm prompt-cache pair\n  omp bench openai/gpt-5.6 --cache --json",
+		"# Compare two models across mixed challenges (chat, prefill, generation)\n  bbcli bench anthropic/claude-opus-4-5 openai/gpt-5.2",
+		"# Fuzzy selectors work\n  bbcli bench opus sonnet",
+		"# Average over 3 runs each\n  bbcli bench opus gpt-5.2 --runs 3",
+		"# Isolate prompt-ingestion speed with a 64 KiB cache-busted input\n  bbcli bench opus sonnet --profile prefill --prefill-bytes 65536",
+		"# Isolate sustained decode throughput\n  bbcli bench opus sonnet --profile generation",
+		"# Force priority serving tier\n  bbcli bench openai-codex/gpt-5.5:low --runs 10 --service-tier priority",
+		"# Measure one cold/warm prompt-cache pair\n  bbcli bench openai/gpt-5.6 --cache --json",
 	];
 
 	async run(): Promise<void> {

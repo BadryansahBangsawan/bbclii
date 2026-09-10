@@ -388,7 +388,7 @@ describe("pi-native gateway usage attribution", () => {
 
 describe("pi-native encodeStream", () => {
 	it("ships every AssistantMessageEvent verbatim, terminated by [DONE]", async () => {
-		// Pi-native is omp-talks-to-omp: the client feeds parsed events directly
+		// Pi-native is bbcli-talks-to-bbcli: the client feeds parsed events directly
 		// into `AssistantMessageEventStream.push()`, so the wire IS the canonical
 		// event type. No partial-stripping, no per-event re-shaping.
 		const finalMessage = baseAssistant({

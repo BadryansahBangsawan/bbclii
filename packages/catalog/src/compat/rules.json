@@ -15088,7 +15088,7 @@
 					"authorizeParams": {
 						"id_token_add_organizations": "true",
 						"codex_cli_simplified_flow": "true",
-						"originator": "omp"
+						"originator": "bbcli"
 					},
 					"clientId": {
 						"value": "app_EMoamEEZ73f0CkXaXp7hrann"
@@ -15337,7 +15337,7 @@
 							]
 						}
 					},
-					"instructions": "Complete Z.ai login in your browser. On supported local desktops, omp captures the zcode:// callback and restores its previous handler automatically. You can also paste the final redirect URL or authorization code when prompted.",
+					"instructions": "Complete Z.ai login in your browser. On supported local desktops, bbcli captures the zcode:// callback and restores its previous handler automatically. You can also paste the final redirect URL or authorization code when prompted.",
 					"token": {
 						"url": {
 							"value": "https://zcode.z.ai/api/v1/oauth/token",

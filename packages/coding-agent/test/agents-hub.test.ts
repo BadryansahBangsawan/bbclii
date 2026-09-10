@@ -78,7 +78,7 @@ async function createHub(settings: Settings): Promise<{
 
 beforeAll(async () => {
 	await initTheme(false);
-	tempCwd = await fs.mkdtemp(path.join(os.tmpdir(), "omp-agents-hub-"));
+	tempCwd = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-agents-hub-"));
 });
 
 afterAll(async () => {

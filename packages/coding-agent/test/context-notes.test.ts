@@ -101,7 +101,7 @@ describe("experimental context notes", () => {
 	});
 
 	it("persists a replacement for resume and refuses disabled or parent-bound tool sessions", async () => {
-		using tempDir = TempDir.createSync("@omp-context-notes-");
+		using tempDir = TempDir.createSync("@bbcli-context-notes-");
 		const sessionDir = path.join(tempDir.path(), "sessions");
 		const sessionManager = SessionManager.create(tempDir.path(), sessionDir);
 		const settings = Settings.isolated({ "compaction.experimentalContextManagement": true });

@@ -7,7 +7,7 @@ interface BrowserAppOptions {
 	path?: string;
 	/** HTTP Chrome DevTools Protocol discovery endpoint to attach to. */
 	cdp_url?: string;
-	/** Drive the user's existing Chrome tabs through the omp Browser Relay. */
+	/** Drive the user's existing Chrome tabs through the bbcli Browser Relay. */
 	relay?: boolean;
 	/** Extra command-line arguments for a spawned executable. */
 	args?: string[];

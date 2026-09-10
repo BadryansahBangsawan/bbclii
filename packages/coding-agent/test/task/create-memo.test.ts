@@ -61,7 +61,7 @@ describe("TaskTool.create discovery memo", () => {
 			.mockResolvedValue({ agents: TEST_AGENTS, projectAgentsDir: null });
 
 		await TaskTool.create(createSession("/tmp"));
-		await TaskTool.create(createSession("/tmp/omp-memo-other"));
+		await TaskTool.create(createSession("/tmp/bbcli-memo-other"));
 
 		expect(spy).toHaveBeenCalledTimes(2);
 	});
@@ -72,8 +72,8 @@ describe("TaskTool.create discovery memo", () => {
 			.mockResolvedValueOnce({ agents: TEST_AGENTS, projectAgentsDir: null })
 			.mockResolvedValueOnce({ agents: REFRESHED_AGENTS, projectAgentsDir: null });
 
-		const first = await TaskTool.create(createSession("/tmp/omp-memo-shared", ["/extensions/first"]));
-		const second = await TaskTool.create(createSession("/tmp/omp-memo-shared", ["/extensions/second"]));
+		const first = await TaskTool.create(createSession("/tmp/bbcli-memo-shared", ["/extensions/first"]));
+		const second = await TaskTool.create(createSession("/tmp/bbcli-memo-shared", ["/extensions/second"]));
 
 		expect(spy).toHaveBeenCalledTimes(2);
 		expect(first.description).toContain("General-purpose task agent");
@@ -100,7 +100,7 @@ describe("TaskTool.create discovery memo", () => {
 			.mockResolvedValueOnce({ agents: REFRESHED_AGENTS, projectAgentsDir: null });
 		const settings = Settings.isolated({ extensions: [] });
 		const session = {
-			cwd: "/tmp/omp-memo-live",
+			cwd: "/tmp/bbcli-memo-live",
 			hasUI: false,
 			settings,
 			// Provider reads settings live — a stored snapshot would freeze the key.
@@ -128,7 +128,7 @@ describe("TaskTool.create discovery memo", () => {
 			.spyOn(discoveryModule, "discoverAgents")
 			.mockResolvedValueOnce({ agents: TEST_AGENTS, projectAgentsDir: null })
 			.mockResolvedValueOnce({ agents: REFRESHED_AGENTS, projectAgentsDir: null });
-		const session = createSession("/tmp/omp-memo-refresh");
+		const session = createSession("/tmp/bbcli-memo-refresh");
 		const existing = await TaskTool.create(session);
 
 		expect(existing.description).toContain("General-purpose task agent");

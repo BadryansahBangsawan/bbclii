@@ -87,12 +87,12 @@ describe("buildNonInteractiveEnv", () => {
 });
 
 it("filters expanded dotenv values while preserving matching and empty launcher values", async () => {
-	const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "omp-env-"));
+	const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-env-"));
 	try {
 		await Bun.write(
 			path.join(tmp, ".env"),
 			[
-				"BASE=loaded-by-omp",
+				"BASE=loaded-by-bbcli",
 				"EMPTY_PARENT_VAR=project-secret",
 				"TEST_ENV_FROM_DOTENV=$BASE-suffix",
 				"NODE_ENV=development",

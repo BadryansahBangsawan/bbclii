@@ -55,12 +55,28 @@ function startupMarker(text) {
 	}
 }
 
+function migrateLegacyDir(src, dest) {
+	if (fs.existsSync(dest) || !fs.existsSync(src)) return;
+	try {
+		fs.mkdirSync(path.dirname(dest), { recursive: true });
+		fs.renameSync(src, dest);
+	} catch (err) {
+		if (err && typeof err === "object" && "code" in err && err.code === "EXDEV") {
+			fs.cpSync(src, dest, { recursive: true });
+		}
+	}
+}
+
 function getNativesDir() {
 	const xdgDataHome = process.env.XDG_DATA_HOME;
-	if (xdgDataHome && fs.existsSync(path.join(xdgDataHome, "omp"))) {
-		return path.join(xdgDataHome, "omp", "natives");
+	if (xdgDataHome) {
+		const dest = path.join(xdgDataHome, "bbcli", "natives");
+		migrateLegacyDir(path.join(xdgDataHome, "omp", "natives"), dest);
+		return dest;
 	}
-	return path.join(os.homedir(), ".omp", "natives");
+	const dest = path.join(os.homedir(), ".bbcli", "natives");
+	migrateLegacyDir(path.join(os.homedir(), ".bbcli", "natives"), dest);
+	return dest;
 }
 
 function resolveLeafPackageDir(platformTag) {
@@ -111,14 +127,14 @@ export function getAddonFilenames({ tag, arch, variant }) {
 
 /**
  * Decide whether the loader should mirror the package's `native/<filename>.node`
- * into the per-version cache directory (`~/.omp/natives/<version>/`) before loading.
+ * into the per-version cache directory (`~/.bbcli/natives/<version>/`) before loading.
  *
- * Windows-only safety net for `bun install -g` updates: when a previous `omp`
+ * Windows-only safety net for `bun install -g` updates: when a previous `bbcli`
  * process is running, bun cannot overwrite the locked `.node` inside
  * `node_modules/@bbcli/pi-natives/native/`, leaving an old binary next to a
  * newer `index.js` and producing `<sym> is not a function` crashes on the next
  * launch. Staging into the version-pinned cache:
- *   1. Gives every package version its own filesystem path, so concurrent omp
+ *   1. Gives every package version its own filesystem path, so concurrent bbcli
  *      processes never collide on the same file.
  *   2. Makes the running process keep its handle on the cache copy, freeing bun
  *      to overwrite the `node_modules` copy on subsequent updates.
@@ -714,9 +730,9 @@ export function validateLoadedBindings(ctx, bindings, candidate) {
 		throw new Error(
 			`Loaded ${candidate}, which exposes the @bbcli/pi-natives@${residentVersion} version ` +
 				`sentinel \`${residentSentinel}\` but not the @${ctx.packageVersion} sentinel ` +
-				`\`${ctx.versionSentinelExport}\` this loader expects. omp was upgraded to ` +
+				`\`${ctx.versionSentinelExport}\` this loader expects. bbcli was upgraded to ` +
 				`${ctx.packageVersion} while this session was running; the ${residentVersion} addon is ` +
-				"still resident in this process. Disk is already consistent — restart omp to pick up " +
+				"still resident in this process. Disk is already consistent — restart bbcli to pick up " +
 				`${ctx.packageVersion} (reinstalling changes nothing).`,
 		);
 	}
@@ -788,7 +804,7 @@ export function initLoaderContext(overrides = {}) {
 	const versionedDir = path.join(nativesDir, packageVersion);
 	const userDataDir =
 		platform === "win32"
-			? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData", "Local"), "omp")
+			? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData", "Local"), "bbcli")
 			: path.join(os.homedir(), ".local", "bin");
 
 	const isCompiledBinary =

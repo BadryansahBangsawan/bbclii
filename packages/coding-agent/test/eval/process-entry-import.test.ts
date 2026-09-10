@@ -4,7 +4,7 @@ import * as path from "node:path";
 import { TempDir } from "@bbcli/pi-utils";
 
 it("imports the CLI entry graph without loading dotenv before profile bootstrap", async () => {
-	using tempDir = TempDir.createSync("@omp-js-process-import-");
+	using tempDir = TempDir.createSync("@bbcli-js-process-import-");
 	await Bun.write(path.join(tempDir.path(), ".env"), "OMP_PROCESS_ENTRY_ENV_PROBE=loaded-too-early\n");
 	const env = Object.fromEntries(
 		Object.entries(process.env).filter((entry): entry is [string, string] => typeof entry[1] === "string"),
@@ -110,7 +110,7 @@ it("dispatches the computer worker from a single npm-style host bundle", async (
 });
 
 it("keeps non-computer selectors isolated in a compiled single-entry worker host", async () => {
-	using tempDir = TempDir.createSync("@omp-compiled-worker-selector-");
+	using tempDir = TempDir.createSync("@bbcli-compiled-worker-selector-");
 	const packageDir = path.resolve(import.meta.dir, "../..");
 	const outfile = path.join(tempDir.path(), process.platform === "win32" ? "worker-host.exe" : "worker-host");
 	const build = Bun.spawn(

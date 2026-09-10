@@ -4,7 +4,7 @@ Local observability dashboard for AI usage statistics.
 
 ## Features
 
-- **Session log parsing**: Reads JSONL session logs from `~/.omp/agent/sessions/`
+- **Session log parsing**: Reads JSONL session logs from `~/.bbcli/agent/sessions/`
 - **SQLite aggregation**: Efficient stats storage and querying using `bun:sqlite`
 - **Web dashboard**: Real-time metrics visualization with Chart.js
 - **Incremental sync**: Only processes new/modified log entries
@@ -29,16 +29,16 @@ Subscription-backed models use matching public API prices when an exact public m
 
 ```bash
 # Start dashboard server (default: http://localhost:3847)
-omp stats
+bbcli stats
 
 # Custom port
-omp stats --port 8080
+bbcli stats --port 8080
 
 # Print summary to console
-omp stats --summary
+bbcli stats --summary
 
 # Output as JSON (for scripting)
-omp stats --json
+bbcli stats --json
 ```
 
 ### Programmatic
@@ -67,8 +67,8 @@ console.log(stats.byModel[0].avgTokensPerSecond);
 
 ## Data Storage
 
-- **Session logs**: `~/.omp/agent/sessions/` (JSONL files)
-- **Stats database**: `~/.omp/stats.db` (SQLite)
+- **Session logs**: `~/.bbcli/agent/sessions/` (JSONL files)
+- **Stats database**: `~/.bbcli/stats.db` (SQLite)
 
 ## Dashboard
 

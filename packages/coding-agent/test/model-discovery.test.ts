@@ -725,14 +725,14 @@ describe("ModelRegistry runtime discovery", () => {
 	});
 
 	test("keeps OLLAMA_BASE_URL precedence over OLLAMA_HOST", async () => {
-		using _baseUrl = withEnv("OLLAMA_BASE_URL", "http://omp-ollama.example:2222");
+		using _baseUrl = withEnv("OLLAMA_BASE_URL", "http://bbcli-ollama.example:2222");
 		using _host = withEnv("OLLAMA_HOST", "ollama-host.example:3333");
-		const fetchMock = mockOllamaDiscovery(["phi4-mini"], "http://omp-ollama.example:2222");
+		const fetchMock = mockOllamaDiscovery(["phi4-mini"], "http://bbcli-ollama.example:2222");
 		const registry = new ModelRegistry(authStorage, modelsJsonPath, { fetch: fetchMock });
 		await registry.refresh();
 
 		const model = registry.find("ollama", "phi4-mini");
-		expect(model?.baseUrl).toBe("http://omp-ollama.example:2222/v1");
+		expect(model?.baseUrl).toBe("http://bbcli-ollama.example:2222/v1");
 		expect(registry.getProviderDiscoveryState("ollama")?.optional).toBe(false);
 	});
 

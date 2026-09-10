@@ -184,7 +184,7 @@ export interface StoredCredentialBlock {
 /**
  * Identity slice of a disabled (soft-deleted) credential tombstone — cause and
  * account identity only, never token material. Surfaced so auto-disabled
- * accounts (e.g. an expired Anthropic OAuth grant) stay visible in `omp usage`
+ * accounts (e.g. an expired Anthropic OAuth grant) stay visible in `bbcli usage`
  * instead of silently vanishing until the user notices missing quota.
  */
 export interface DisabledCredentialSummary {
@@ -623,8 +623,8 @@ export type AuthStorageOptions = {
 	 * so the TUI can show where a token came from (broker URL or local SQLite path).
 	 *
 	 * Examples:
-	 * - `"local ~/.omp/agent/agent.db"`
-	 * - `"broker http://omp.internal:8765"`
+	 * - `"local ~/.bbcli/agent/agent.db"`
+	 * - `"broker http://bbcli.internal:8765"`
 	 */
 	sourceLabel?: string;
 	/**
@@ -7056,7 +7056,7 @@ export class AuthStorage {
 	}
 
 	/**
-	 * Disabled credential tombstones for display surfaces (`omp usage`,
+	 * Disabled credential tombstones for display surfaces (`bbcli usage`,
 	 * broker `GET /v1/credentials/disabled`). Empty when the backing store
 	 * keeps no tombstones or the remote broker predates the endpoint.
 	 */
@@ -7069,7 +7069,7 @@ export class AuthStorage {
 	 * Force the backing store to revalidate its credential snapshot, then
 	 * reload. Remote broker stores re-fetch the snapshot; local stores are
 	 * always current, so only the reload runs. Callers that pair live
-	 * per-credential data with stored identities (`omp usage`) use this so a
+	 * per-credential data with stored identities (`bbcli usage`) use this so a
 	 * disk-cached snapshot cannot misattribute fresh reports.
 	 */
 	async revalidateCredentials(): Promise<void> {

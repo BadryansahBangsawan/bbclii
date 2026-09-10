@@ -85,7 +85,7 @@ if (!process.argv.includes(socketClosedChildFlag)) {
 		});
 
 		it("keeps the process alive when Bun surfaces worker IPC EPIPE as an uncaught exception", async () => {
-			const marker = `/tmp/omp-postmortem-uncaught-ipc-${process.pid}-${Date.now()}`;
+			const marker = `/tmp/bbcli-postmortem-uncaught-ipc-${process.pid}-${Date.now()}`;
 			const child = Bun.spawn([process.execPath, "run", import.meta.path, uncaughtIpcChildFlag, marker], {
 				stdin: "ignore",
 				stdout: "pipe",
@@ -122,7 +122,7 @@ if (!process.argv.includes(socketClosedChildFlag)) {
 		});
 
 		it("awaits cleanup and exits successfully when a registered stdio peer disconnects", async () => {
-			const marker = `/tmp/omp-postmortem-stdio-${process.pid}-${Date.now()}`;
+			const marker = `/tmp/bbcli-postmortem-stdio-${process.pid}-${Date.now()}`;
 			const child = Bun.spawn([process.execPath, "run", import.meta.path, childFlag, marker], {
 				stdin: "pipe",
 				stdout: "pipe",
@@ -152,7 +152,7 @@ if (!process.argv.includes(socketClosedChildFlag)) {
 		});
 
 		it("keeps waiting for active cleanup when another stdio EPIPE arrives", async () => {
-			const marker = `/tmp/omp-postmortem-stdio-race-${process.pid}-${Date.now()}`;
+			const marker = `/tmp/bbcli-postmortem-stdio-race-${process.pid}-${Date.now()}`;
 			const child = Bun.spawn([process.execPath, "run", import.meta.path, raceChildFlag, marker], {
 				stdin: "pipe",
 				stdout: "pipe",

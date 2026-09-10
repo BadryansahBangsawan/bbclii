@@ -4,16 +4,16 @@
  * When a user configures an extension via `extensions:` (in settings) or
  * `--extension`/`-e` (on the CLI), the docs promise that the package's
  * sibling directories — `skills/`, `hooks/pre|post/`, `tools/`, `commands/`,
- * `rules/`, `prompts/`, and `.mcp.json` — are picked up by omp's standard
- * discovery surfaces. The native `omp` provider in `builtin.ts` only walks
- * `.omp/` and `~/.omp/agent/`, so without this provider those sub-trees are
+ * `rules/`, `prompts/`, and `.mcp.json` — are picked up by bbcli's standard
+ * discovery surfaces. The native `bbcli` provider in `builtin.ts` only walks
+ * `.bbcli/` and `~/.bbcli/agent/`, so without this provider those sub-trees are
  * silently ignored.
  *
- * Provider priority is set below the native `omp` provider (100) so an
- * extension package never shadows the user's own `.omp/` configuration on
+ * Provider priority is set below the native `bbcli` provider (100) so an
+ * extension package never shadows the user's own `.bbcli/` configuration on
  * dedup.
  *
- * @see ./omp-extension-roots.ts
+ * @see ./bbcli-extension-roots.ts
  * @see ../../docs/extension-loading.md
  */
 import * as path from "node:path";
@@ -37,10 +37,10 @@ import {
 	parseRequestIdFormat,
 	scanSkillsFromDir,
 } from "./helpers";
-import { listOmpExtensionRoots, type OmpExtensionRoot } from "./omp-extension-roots";
+import { listOmpExtensionRoots, type OmpExtensionRoot } from "./bbcli-extension-roots";
 import { resolvePluginStdioPaths } from "./substitute-plugin-root";
 
-const PROVIDER_ID = "omp-plugins";
+const PROVIDER_ID = "bbcli-plugins";
 const DISPLAY_NAME = "OMP Extension Packages";
 const DESCRIPTION =
 	"Sub-discovery (skills, hooks, tools, commands, rules, prompts, .mcp.json) inside extension packages";
@@ -309,8 +309,8 @@ async function loadMCPServers(ctx: LoadContext): Promise<LoadResult<MCPServer>> 
 
 		const parsed = tryParseJson<{ mcpServers?: Record<string, unknown> }>(raw);
 		if (!parsed) {
-			warnings.push(`[omp-plugins] Invalid JSON in ${mcpPath}`);
-			logger.warn(`[omp-plugins] Invalid JSON in ${mcpPath}`);
+			warnings.push(`[bbcli-plugins] Invalid JSON in ${mcpPath}`);
+			logger.warn(`[bbcli-plugins] Invalid JSON in ${mcpPath}`);
 			continue;
 		}
 		const servers = expandEnvVarsDeep(parsed.mcpServers);
@@ -320,7 +320,7 @@ async function loadMCPServers(ctx: LoadContext): Promise<LoadResult<MCPServer>> 
 			if (!serverCfg || typeof serverCfg !== "object" || Array.isArray(serverCfg)) continue;
 			const cfg = serverCfg as RawMcpServer;
 			if (typeof cfg.command !== "string" && typeof cfg.url !== "string") {
-				warnings.push(`[omp-plugins] Skipping MCP server "${serverName}" in ${mcpPath}: missing command or url`);
+				warnings.push(`[bbcli-plugins] Skipping MCP server "${serverName}" in ${mcpPath}: missing command or url`);
 				continue;
 			}
 			// Root relative command/cwd at the plugin's config directory, not the

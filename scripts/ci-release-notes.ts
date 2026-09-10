@@ -239,7 +239,7 @@ async function main(): Promise<void> {
 		const upcomingVersion = version.replace(/-canary\.\d+$/, "");
 		await Bun.write(
 			outputPath,
-			`This is a canary prerelease of ${upcomingVersion}. Install it with \`omp update --canary\`.\n`,
+			`This is a canary prerelease of ${upcomingVersion}. Install it with \`bbcli update --canary\`.\n`,
 		);
 		console.log(`Wrote canary release notes to ${outputPath}.`);
 		return;

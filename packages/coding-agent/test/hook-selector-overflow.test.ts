@@ -47,8 +47,8 @@ describe("HookSelectorComponent", () => {
 
 	it("wraps outlined option text without omitting the tail", () => {
 		const options = [
-			"Option A: Move to OMP-native only by migrating reusable shared AI instructions into .omp/AGENTS.md, .omp/rules, .omp/skills, and .omp/agents while deliberately not creating a root .github directory.",
-			"Option B: Keep dual support by migrating canonical instructions into .omp while also maintaining a root .github/copilot-instructions.md compatibility bridge for editors that do not understand OMP resources yet.",
+			"Option A: Move to OMP-native only by migrating reusable shared AI instructions into .bbcli/AGENTS.md, .bbcli/rules, .bbcli/skills, and .bbcli/agents while deliberately not creating a root .github directory.",
+			"Option B: Keep dual support by migrating canonical instructions into .bbcli while also maintaining a root .github/copilot-instructions.md compatibility bridge for editors that do not understand OMP resources yet.",
 		];
 		const component = new HookSelectorComponent(
 			"Which migration stance should be used?",
@@ -74,10 +74,10 @@ describe("HookSelectorComponent", () => {
 			{
 				label: "Use existing local credentials",
 				description:
-					"Authenticate via the provider keys and OAuth state already configured under ~/.omp without opening a new browser-based setup flow.",
+					"Authenticate via the provider keys and OAuth state already configured under ~/.bbcli without opening a new browser-based setup flow.",
 			},
 			{
-				label: "Set up Oh My Pi in terminal",
+				label: "Set up BBCLI in terminal",
 				description:
 					"Launch the local terminal UI to add provider keys, select models, and keep the current editor session waiting for the configured credentials.",
 			},

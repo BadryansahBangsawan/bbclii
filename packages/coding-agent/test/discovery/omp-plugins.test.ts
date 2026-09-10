@@ -1,11 +1,11 @@
 /**
  * Regression tests for #1496.
  *
- * The native `omp` discovery provider only walks `.omp/` and `~/.omp/agent/`.
+ * The native `bbcli` discovery provider only walks `.bbcli/` and `~/.bbcli/agent/`.
  * Extension packages registered via `extensions:` in settings or
  * `--extension` on the CLI ship their own `skills/`, `hooks/`, `tools/`,
- * `commands/`, `rules/`, `prompts/`, and `.mcp.json`. The `omp-plugins`
- * provider (`src/discovery/omp-plugins.ts`) is what wires those sub-trees
+ * `commands/`, `rules/`, `prompts/`, and `.mcp.json`. The `bbcli-plugins`
+ * provider (`src/discovery/bbcli-plugins.ts`) is what wires those sub-trees
  * into the standard capability surfaces.
  *
  * The provider is invoked directly so the `LoadContext` uses a tempdir as
@@ -34,11 +34,11 @@ import {
 	listOmpExtensionRoots,
 	setInvocationConfiguredExtensions,
 	withOmpExtensionRootScope,
-} from "@bbcli/pi-coding-agent/discovery/omp-extension-roots";
+} from "@bbcli/pi-coding-agent/discovery/bbcli-extension-roots";
 import { discoverExtensionPaths } from "@bbcli/pi-coding-agent/extensibility/extensions/loader";
 import { getConfigRootDir, removeSyncWithRetries, setAgentDir } from "@bbcli/pi-utils";
 
-const PROVIDER_ID = "omp-plugins";
+const PROVIDER_ID = "bbcli-plugins";
 
 let tempDir: string;
 let home: string;
@@ -69,7 +69,7 @@ async function loadFromPlugin<T>(capabilityId: string, ctx: LoadContext): Promis
 function buildExtensionPackage(packageDir: string, skillName = "my-skill"): void {
 	writeFile(
 		path.join(packageDir, "package.json"),
-		JSON.stringify({ name: path.basename(packageDir), omp: { extensions: ["./src/main.ts"] } }),
+		JSON.stringify({ name: path.basename(packageDir), bbcli: { extensions: ["./src/main.ts"] } }),
 	);
 	writeFile(path.join(packageDir, "src", "main.ts"), "export default function (_pi) {}\n");
 	writeFile(
@@ -93,7 +93,7 @@ function buildExtensionPackage(packageDir: string, skillName = "my-skill"): void
 beforeEach(() => {
 	clearCache();
 	clearOmpExtensionCliRoots();
-	tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "omp-plugins-"));
+	tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-plugins-"));
 	home = path.join(tempDir, "home");
 	project = path.join(tempDir, "project");
 	ext = path.join(tempDir, "my-extension");
@@ -101,7 +101,7 @@ beforeEach(() => {
 	fs.mkdirSync(project, { recursive: true });
 	fs.mkdirSync(path.join(project, ".git"), { recursive: true });
 	buildExtensionPackage(ext);
-	setAgentDir(path.join(home, ".omp", "agent"));
+	setAgentDir(path.join(home, ".bbcli", "agent"));
 });
 
 afterEach(() => {
@@ -142,25 +142,25 @@ async function expectExtensionSubDirectoriesLoaded(context: LoadContext): Promis
 }
 
 test("project settings.json#extensions surfaces every sub-directory", async () => {
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [ext] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [ext] }));
 	await expectExtensionSubDirectoriesLoaded(ctx());
 });
 
 test("user settings.json#extensions also feeds sub-discovery", async () => {
-	writeFile(path.join(home, ".omp", "agent", "settings.json"), JSON.stringify({ extensions: [ext] }));
+	writeFile(path.join(home, ".bbcli", "agent", "settings.json"), JSON.stringify({ extensions: [ext] }));
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	expect(skills.map(s => s.name)).toContain("my-skill");
 });
 
 test("project config.yml#extensions surfaces every sub-directory (#9768)", async () => {
-	writeFile(path.join(project, ".omp", "config.yml"), `extensions:\n  - "${ext}"\n`);
+	writeFile(path.join(project, ".bbcli", "config.yml"), `extensions:\n  - "${ext}"\n`);
 	await expectExtensionSubDirectoriesLoaded(ctx());
 });
 
 test("user config.yaml#extensions feeds sub-discovery", async () => {
 	// User scope also honors the legacy-compatible `config.yaml` filename.
-	writeFile(path.join(home, ".omp", "agent", "config.yaml"), `extensions:\n  - "${ext}"\n`);
+	writeFile(path.join(home, ".bbcli", "agent", "config.yaml"), `extensions:\n  - "${ext}"\n`);
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	expect(skills.map(s => s.name)).toContain("my-skill");
@@ -173,9 +173,9 @@ test("project config.yml#extensions replaces lower-precedence configured roots",
 	buildExtensionPackage(userExt, "user-skill");
 	buildExtensionPackage(projectSettingsExt, "project-settings-skill");
 	buildExtensionPackage(projectConfigExt, "project-config-skill");
-	writeFile(path.join(home, ".omp", "agent", "config.yml"), `extensions:\n  - "${userExt}"\n`);
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [projectSettingsExt] }));
-	writeFile(path.join(project, ".omp", "config.yml"), `extensions:\n  - "${projectConfigExt}"\n`);
+	writeFile(path.join(home, ".bbcli", "agent", "config.yml"), `extensions:\n  - "${userExt}"\n`);
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [projectSettingsExt] }));
+	writeFile(path.join(project, ".bbcli", "config.yml"), `extensions:\n  - "${projectConfigExt}"\n`);
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	const names = skills.map(skill => skill.name);
@@ -189,7 +189,7 @@ test("effective extensions replace persisted roots for overlays and runtime over
 	const overrideExt = path.join(tempDir, "override-extension");
 	buildExtensionPackage(persistedExt, "persisted-skill");
 	buildExtensionPackage(overrideExt, "override-skill");
-	writeFile(path.join(project, ".omp", "config.yml"), `extensions:\n  - "${persistedExt}"\n`);
+	writeFile(path.join(project, ".bbcli", "config.yml"), `extensions:\n  - "${persistedExt}"\n`);
 
 	const context: LoadContext = {
 		...ctx(),
@@ -211,8 +211,8 @@ test("effective extensions replace persisted roots for overlays and runtime over
 test("empty project config.yml#extensions suppresses user roots", async () => {
 	const userExt = path.join(tempDir, "user-extension");
 	buildExtensionPackage(userExt, "user-skill");
-	writeFile(path.join(home, ".omp", "agent", "config.yml"), `extensions:\n  - "${userExt}"\n`);
-	writeFile(path.join(project, ".omp", "config.yml"), "extensions: []\n");
+	writeFile(path.join(home, ".bbcli", "agent", "config.yml"), `extensions:\n  - "${userExt}"\n`);
+	writeFile(path.join(project, ".bbcli", "config.yml"), "extensions: []\n");
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	expect(skills.map(skill => skill.name)).not.toContain("user-skill");
@@ -221,8 +221,8 @@ test("empty project config.yml#extensions suppresses user roots", async () => {
 test("user YAML config suppresses its legacy settings.json migration source", async () => {
 	const legacyExt = path.join(tempDir, "legacy-extension");
 	buildExtensionPackage(legacyExt, "legacy-skill");
-	writeFile(path.join(home, ".omp", "agent", "settings.json"), JSON.stringify({ extensions: [legacyExt] }));
-	writeFile(path.join(home, ".omp", "agent", "config.yml"), "theme:\n  dark: default\n");
+	writeFile(path.join(home, ".bbcli", "agent", "settings.json"), JSON.stringify({ extensions: [legacyExt] }));
+	writeFile(path.join(home, ".bbcli", "agent", "config.yml"), "theme:\n  dark: default\n");
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	expect(skills.map(skill => skill.name)).not.toContain("legacy-skill");
@@ -260,16 +260,16 @@ test("explicit-only CLI roots replace stale state and exclude every ambient pack
 	const stale = path.join(tempDir, "stale-extension");
 	const projectExt = path.join(tempDir, "project-extension");
 	const userExt = path.join(tempDir, "user-extension");
-	const installed = path.join(home, ".omp", "plugins", "node_modules", "installed-extension");
+	const installed = path.join(home, ".bbcli", "plugins", "node_modules", "installed-extension");
 	buildExtensionPackage(stale, "stale-skill");
 	buildExtensionPackage(projectExt, "project-skill");
 	buildExtensionPackage(userExt, "user-skill");
 	buildExtensionPackage(installed, "installed-skill");
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [projectExt] }));
-	writeFile(path.join(home, ".omp", "agent", "settings.json"), JSON.stringify({ extensions: [userExt] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [projectExt] }));
+	writeFile(path.join(home, ".bbcli", "agent", "settings.json"), JSON.stringify({ extensions: [userExt] }));
 	writeFile(
-		path.join(home, ".omp", "plugins", "package.json"),
-		JSON.stringify({ name: "omp-plugins", dependencies: { "installed-extension": "1.0.0" } }),
+		path.join(home, ".bbcli", "plugins", "package.json"),
+		JSON.stringify({ name: "bbcli-plugins", dependencies: { "installed-extension": "1.0.0" } }),
 	);
 
 	injectOmpExtensionCliRoots([stale], home, project);
@@ -296,16 +296,16 @@ test("explicit-only CLI roots replace stale state and exclude every ambient pack
 test("invocation scopes isolate concurrent SDK roots and merge ambient roots only when requested", async () => {
 	const otherExplicit = path.join(tempDir, "other-explicit-extension");
 	const projectExt = path.join(tempDir, "project-extension");
-	const installed = path.join(home, ".omp", "plugins", "node_modules", "installed-extension");
+	const installed = path.join(home, ".bbcli", "plugins", "node_modules", "installed-extension");
 	const staleCli = path.join(tempDir, "stale-cli-extension");
 	buildExtensionPackage(otherExplicit, "other-explicit-skill");
 	buildExtensionPackage(projectExt, "project-skill");
 	buildExtensionPackage(installed, "installed-skill");
 	buildExtensionPackage(staleCli, "stale-cli-skill");
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [projectExt] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [projectExt] }));
 	writeFile(
-		path.join(home, ".omp", "plugins", "package.json"),
-		JSON.stringify({ name: "omp-plugins", dependencies: { "installed-extension": "1.0.0" } }),
+		path.join(home, ".bbcli", "plugins", "package.json"),
+		JSON.stringify({ name: "bbcli-plugins", dependencies: { "installed-extension": "1.0.0" } }),
 	);
 	injectOmpExtensionCliRoots([staleCli], home, project);
 
@@ -369,13 +369,13 @@ test("explicit-only mode drops the configured lane and installed roots (#9769)",
 	// still carries a nonempty configured array (round-8 leak).
 	const explicitExt = path.join(tempDir, "explicit-extension");
 	const configuredExt = path.join(tempDir, "configured-extension");
-	const installed = path.join(home, ".omp", "plugins", "node_modules", "installed-extension");
+	const installed = path.join(home, ".bbcli", "plugins", "node_modules", "installed-extension");
 	buildExtensionPackage(explicitExt, "explicit-skill");
 	buildExtensionPackage(configuredExt, "configured-skill");
 	buildExtensionPackage(installed, "installed-skill");
 	writeFile(
-		path.join(home, ".omp", "plugins", "package.json"),
-		JSON.stringify({ name: "omp-plugins", dependencies: { "installed-extension": "1.0.0" } }),
+		path.join(home, ".bbcli", "plugins", "package.json"),
+		JSON.stringify({ name: "bbcli-plugins", dependencies: { "installed-extension": "1.0.0" } }),
 	);
 
 	const mergeRoots = await listOmpExtensionRoots({
@@ -404,12 +404,12 @@ test("explicit-only mode drops the configured lane and installed roots (#9769)",
 });
 
 test("configured lane takes its level from the authority's configuredLevel, not the disk scan (#9769)", async () => {
-	// A project provider Settings can't see on the `.omp` disk scan (e.g.
+	// A project provider Settings can't see on the `.bbcli` disk scan (e.g.
 	// `.claude/settings.json`) still yields a project-level root because the
 	// session carries the Settings-resolved provenance in the struct.
 	const configuredExt = path.join(tempDir, "provenance-extension");
 	buildExtensionPackage(configuredExt, "provenance-skill");
-	// Nothing on `.omp` disk configures it — the old deepEquals scan would label it `user`.
+	// Nothing on `.bbcli` disk configures it — the old deepEquals scan would label it `user`.
 
 	const asProject = await listOmpExtensionRoots({
 		...ctx(),
@@ -432,15 +432,15 @@ test("scopeless reload with session roots equals the construction-time scoped lo
 	// 2×2 grid of explicit-only × has-configured.
 	const explicitExt = path.join(tempDir, "invariant-explicit");
 	const configuredExt = path.join(tempDir, "invariant-configured");
-	const installed = path.join(home, ".omp", "plugins", "node_modules", "invariant-installed");
+	const installed = path.join(home, ".bbcli", "plugins", "node_modules", "invariant-installed");
 	buildExtensionPackage(explicitExt, "invariant-explicit-skill");
 	buildExtensionPackage(configuredExt, "invariant-configured-skill");
 	buildExtensionPackage(installed, "invariant-installed-skill");
 	// Persist the configured lane at project scope so its provenance resolves to `project`.
-	writeFile(path.join(project, ".omp", "config.yml"), `extensions:\n  - "${configuredExt}"\n`);
+	writeFile(path.join(project, ".bbcli", "config.yml"), `extensions:\n  - "${configuredExt}"\n`);
 	writeFile(
-		path.join(home, ".omp", "plugins", "package.json"),
-		JSON.stringify({ name: "omp-plugins", dependencies: { "invariant-installed": "1.0.0" } }),
+		path.join(home, ".bbcli", "plugins", "package.json"),
+		JSON.stringify({ name: "bbcli-plugins", dependencies: { "invariant-installed": "1.0.0" } }),
 	);
 
 	for (const mode of ["merge", "explicit-only"] as const) {
@@ -478,7 +478,7 @@ test("loadCapability extensionRoots surfaces override extensions outside any sco
 test("file-extension entrypoints contribute zero sub-surface (the file has no siblings to scan)", async () => {
 	const standaloneFile = path.join(tempDir, "standalone.ts");
 	fs.writeFileSync(standaloneFile, "export default function (_pi) {}\n");
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [standaloneFile] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [standaloneFile] }));
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	expect(skills).toHaveLength(0);
@@ -490,7 +490,7 @@ test("relative paths in settings resolve against the project cwd", async () => {
 	const target = path.join(project, relative);
 	fs.mkdirSync(path.dirname(target), { recursive: true });
 	fs.cpSync(ext, target, { recursive: true });
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [`./${relative}`] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [`./${relative}`] }));
 
 	const skills = await loadFromPlugin<{ name: string }>(skillCapability.id, ctx());
 	expect(skills.map(s => s.name)).toContain("my-skill");
@@ -501,7 +501,7 @@ test(".mcp.json with bare entries (no command/url) records a warning and is skip
 		path.join(ext, ".mcp.json"),
 		JSON.stringify({ mcpServers: { broken: {}, ok: { command: "x", args: [] } } }),
 	);
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [ext] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [ext] }));
 
 	const result = await pluginProvider(mcpCapability.id).load(ctx());
 	expect(result.items.map(s => (s as { name: string }).name)).toEqual(["ok"]);
@@ -540,7 +540,7 @@ test(".mcp.json expands environment placeholders recursively", async () => {
 				},
 			}),
 		);
-		writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [ext] }));
+		writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [ext] }));
 
 		const servers = await loadFromPlugin<{
 			name: string;
@@ -581,7 +581,7 @@ test("relative path-like command and cwd resolve against the plugin config direc
 			},
 		}),
 	);
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [ext] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [ext] }));
 
 	const servers = await loadFromPlugin<{ name: string; command?: string; cwd?: string }>(mcpCapability.id, ctx());
 	const local = servers.find(s => s.name === "local");
@@ -606,7 +606,7 @@ test("path-like command stays rooted at the plugin package root even with a subd
 			},
 		}),
 	);
-	writeFile(path.join(project, ".omp", "settings.json"), JSON.stringify({ extensions: [ext] }));
+	writeFile(path.join(project, ".bbcli", "settings.json"), JSON.stringify({ extensions: [ext] }));
 
 	const servers = await loadFromPlugin<{ name: string; command?: string; cwd?: string }>(mcpCapability.id, ctx());
 	const local = servers.find(s => s.name === "local");
@@ -614,21 +614,21 @@ test("path-like command stays rooted at the plugin package root even with a subd
 	expect(local?.cwd).toBe(path.join(ext, "work"));
 });
 
-test("installed plugins under `<plugins>/node_modules/` are surfaced (e.g. via `omp plugin link`/`install`)", async () => {
+test("installed plugins under `<plugins>/node_modules/` are surfaced (e.g. via `bbcli plugin link`/`install`)", async () => {
 	// Simulate what `plugin install` / `plugin link` produces: a plugins root
 	// with `package.json#dependencies` and a populated `node_modules/<pkg>/`.
-	const pluginsDir = path.join(home, ".omp", "plugins");
+	const pluginsDir = path.join(home, ".bbcli", "plugins");
 	const nodeModules = path.join(pluginsDir, "node_modules");
 	const installed = path.join(nodeModules, "my-installed-ext");
 	fs.mkdirSync(installed, { recursive: true });
 	fs.cpSync(ext, installed, { recursive: true });
 	writeFile(
 		path.join(pluginsDir, "package.json"),
-		JSON.stringify({ name: "omp-plugins", dependencies: { "my-installed-ext": "1.0.0" } }),
+		JSON.stringify({ name: "bbcli-plugins", dependencies: { "my-installed-ext": "1.0.0" } }),
 	);
-	// Plugin's own package.json must carry an `omp`/`pi` manifest for the
+	// Plugin's own package.json must carry an `bbcli`/`pi` manifest for the
 	// loader to recognise it; the buildExtensionPackage fixture already wrote
-	// one with `omp.extensions`, which is sufficient.
+	// one with `bbcli.extensions`, which is sufficient.
 
 	const skills = await loadFromPlugin<{ name: string; path: string }>(skillCapability.id, ctx());
 	const found = skills.find(s => s.name === "my-skill" && s.path.includes("my-installed-ext"));
@@ -636,7 +636,7 @@ test("installed plugins under `<plugins>/node_modules/` are surfaced (e.g. via `
 });
 
 test("project-scoped installed plugins surface project-level sub-discovery", async () => {
-	const pluginsDir = path.join(project, ".omp", "plugins");
+	const pluginsDir = path.join(project, ".bbcli", "plugins");
 	const installed = path.join(pluginsDir, "node_modules", "my-project-ext");
 	fs.mkdirSync(installed, { recursive: true });
 	fs.cpSync(ext, installed, { recursive: true });
@@ -657,13 +657,13 @@ test("project-scoped installed plugins surface project-level sub-discovery", asy
 });
 
 test("disabled installed plugins do not contribute sub-discovery", async () => {
-	const pluginsDir = path.join(home, ".omp", "plugins");
+	const pluginsDir = path.join(home, ".bbcli", "plugins");
 	const installed = path.join(pluginsDir, "node_modules", "my-disabled-ext");
 	fs.mkdirSync(installed, { recursive: true });
 	fs.cpSync(ext, installed, { recursive: true });
 	writeFile(
 		path.join(pluginsDir, "package.json"),
-		JSON.stringify({ name: "omp-plugins", dependencies: { "my-disabled-ext": "1.0.0" } }),
+		JSON.stringify({ name: "bbcli-plugins", dependencies: { "my-disabled-ext": "1.0.0" } }),
 	);
 	writeFile(
 		path.join(pluginsDir, "bbcli-plugins.lock.json"),
@@ -675,13 +675,13 @@ test("disabled installed plugins do not contribute sub-discovery", async () => {
 });
 
 test("linked plugins (only in lockfile, not in package.json#dependencies) are surfaced", async () => {
-	// `omp plugin link ./local-ext` creates a symlink under
+	// `bbcli plugin link ./local-ext` creates a symlink under
 	// `<plugins>/node_modules/<pkg>` plus a lockfile entry, but it never
 	// touches `<plugins>/package.json#dependencies`. The discovery path must
-	// still find the package — otherwise the documented `omp install
+	// still find the package — otherwise the documented `bbcli install
 	// ./local-extension` workflow leaves the sibling skills/hooks/tools
 	// invisible (see PR #1498 review).
-	const pluginsDir = path.join(home, ".omp", "plugins");
+	const pluginsDir = path.join(home, ".bbcli", "plugins");
 	const nodeModules = path.join(pluginsDir, "node_modules");
 	fs.mkdirSync(nodeModules, { recursive: true });
 	const linkTarget = path.join(nodeModules, "my-linked-ext");

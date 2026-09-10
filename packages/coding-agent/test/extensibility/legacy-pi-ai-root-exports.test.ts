@@ -11,12 +11,12 @@ import {
 } from "@bbcli/pi-coding-agent/extensibility/legacy-pi-ai-shim";
 
 // Issue #6859: pi extensions import runtime helpers from the `@earendil-works/pi-ai`
-// (aliased to `@bbcli/pi-ai`) package root that omp's barrel no longer forwards.
+// (aliased to `@bbcli/pi-ai`) package root that bbcli's barrel no longer forwards.
 // `isContextOverflow` moved under `@bbcli/pi-ai/error` and the JSON-repair
 // helpers moved to `@bbcli/pi-utils`, so `export * from "@bbcli/pi-ai"` left
 // them off the shim surface and a named import tripped Bun's static
 // "No matching export" check during plugin validation (e.g.
-// `omp plugin install pi-blackhole`). This pins the bridged root surface so it
+// `bbcli plugin install pi-blackhole`). This pins the bridged root surface so it
 // cannot silently regress the way #6583 / #6648 did one symbol at a time.
 function createErrorMessage(errorMessage: string): AssistantMessage {
 	return {

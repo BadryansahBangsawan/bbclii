@@ -105,6 +105,7 @@ interface PluginPackageSnapshot {
 interface RuntimePackageJson {
 	name?: unknown;
 	version: string;
+	bbcli?: PluginManifest;
 	omp?: PluginManifest;
 	pi?: PluginManifest;
 }
@@ -180,7 +181,7 @@ export class PluginManager {
 					pkgJsonPath,
 					JSON.stringify(
 						{
-							name: "omp-plugins",
+							name: "bbcli-plugins",
 							private: true,
 							dependencies: {},
 						},
@@ -245,7 +246,7 @@ export class PluginManager {
 		}
 
 		const name = typeof pluginPkg.name === "string" && pluginPkg.name.length > 0 ? pluginPkg.name : fallbackName;
-		const manifest: PluginManifest = pluginPkg.omp || pluginPkg.pi || { version: pluginPkg.version };
+		const manifest: PluginManifest = pluginPkg.bbcli || pluginPkg.omp || pluginPkg.pi || { version: pluginPkg.version };
 		manifest.version = pluginPkg.version;
 		const runtimeState = config.plugins[name] || {
 			version: pluginPkg.version,
@@ -336,7 +337,7 @@ export class PluginManager {
 			throw err;
 		}
 
-		const backupRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), "omp-plugin-backup-"));
+		const backupRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), "bbcli-plugin-backup-"));
 		const backupPath = path.join(backupRoot, "package");
 		await fs.promises.cp(packagePath, backupPath, { recursive: true, verbatimSymlinks: true });
 		return { actualName, packagePath, backupRoot, backupPath };
@@ -571,7 +572,7 @@ export class PluginManager {
 			}
 
 			const pkgPath = path.join(getPluginsNodeModules(), actualName, "package.json");
-			let pkg: { name: string; version: string; omp?: PluginManifest; pi?: PluginManifest };
+			let pkg: { name: string; version: string; bbcli?: PluginManifest; omp?: PluginManifest; pi?: PluginManifest };
 			try {
 				pkg = await Bun.file(pkgPath).json();
 			} catch (err) {
@@ -580,7 +581,7 @@ export class PluginManager {
 				}
 				throw err;
 			}
-			const manifest: PluginManifest = pkg.omp || pkg.pi || { version: pkg.version };
+			const manifest: PluginManifest = pkg.bbcli || pkg.omp || pkg.pi || { version: pkg.version };
 			manifest.version = pkg.version;
 
 			// Resolve enabled features
@@ -709,7 +710,7 @@ export class PluginManager {
 
 	/**
 	 * Resolve a plugin from the active project plugin root
-	 * (`<anchor>/.omp/plugins`). Project npm/link/marketplace installs all record
+	 * (`<anchor>/.bbcli/plugins`). Project npm/link/marketplace installs all record
 	 * their runtime state and `node_modules` symlink there — invisible to the
 	 * user-root lookup — so this reads the project's own `package.json`
 	 * dependencies plus `bbcli-plugins.lock.json`, and resolves the package from
@@ -772,7 +773,7 @@ export class PluginManager {
 		const absolutePath = path.resolve(this.#cwd, localPath);
 
 		const pkgFilePath = path.join(absolutePath, "package.json");
-		let pkg: { name?: string; version: string; omp?: PluginManifest; pi?: PluginManifest };
+		let pkg: { name?: string; version: string; bbcli?: PluginManifest; omp?: PluginManifest; pi?: PluginManifest };
 		try {
 			pkg = await Bun.file(pkgFilePath).json();
 		} catch (err) {
@@ -805,7 +806,7 @@ export class PluginManager {
 
 		await fs.promises.symlink(absolutePath, linkPath);
 
-		const manifest: PluginManifest = pkg.omp || pkg.pi || { version: pkg.version };
+		const manifest: PluginManifest = pkg.bbcli || pkg.omp || pkg.pi || { version: pkg.version };
 		manifest.version = pkg.version;
 
 		// Add to runtime config
@@ -983,7 +984,13 @@ export class PluginManager {
 			const pluginPkgPath = path.join(pluginPath, "package.json");
 			const fromDependencies = name in deps;
 
-			let pluginPkg: { version: string; description?: string; omp?: PluginManifest; pi?: PluginManifest };
+			let pluginPkg: {
+				version: string;
+				description?: string;
+				bbcli?: PluginManifest;
+				omp?: PluginManifest;
+				pi?: PluginManifest;
+			};
 			try {
 				pluginPkg = await Bun.file(pluginPkgPath).json();
 			} catch (err) {
@@ -1017,15 +1024,15 @@ export class PluginManager {
 				}
 				throw err;
 			}
-			const hasManifest = !!(pluginPkg.omp || pluginPkg.pi);
-			const manifest: PluginManifest | undefined = pluginPkg.omp || pluginPkg.pi;
+			const manifest: PluginManifest | undefined = pluginPkg.bbcli || pluginPkg.omp || pluginPkg.pi;
+			const hasManifest = !!manifest;
 
 			checks.push({
 				name: `plugin:${name}`,
 				status: hasManifest ? "ok" : "warning",
 				message: hasManifest
 					? `v${pluginPkg.version}${pluginPkg.description ? ` - ${pluginPkg.description}` : ""}`
-					: `v${pluginPkg.version} - No omp/pi manifest (not an omp plugin)`,
+					: `v${pluginPkg.version} - No bbcli/pi manifest (not a bbcli plugin)`,
 			});
 
 			// Check tools path exists if specified

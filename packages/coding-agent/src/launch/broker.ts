@@ -1420,8 +1420,8 @@ export async function startDaemonBrokerFromEnvironment(options: DaemonBrokerStar
 	await fs.mkdir(runtimeDir, { recursive: true, mode: 0o700 });
 	const lease = await acquireBrokerLease(runtimeDir);
 	if (!lease) return;
-	setProcessName("omp daemon broker");
-	// Record the scope's project dir so `omp ps` can map this hash-keyed runtime
+	setProcessName("bbcli daemon broker");
+	// Record the scope's project dir so `bbcli ps` can map this hash-keyed runtime
 	// dir back to its project (and derive the Windows pipe name) offline.
 	void writeDaemonScopeMeta(runtimeDir, projectDir).catch(error => {
 		logger.warn("Failed to record daemon scope metadata", {

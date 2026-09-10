@@ -174,7 +174,7 @@ async function openBrowserHandle(kind: BrowserKind, opts: AcquireBrowserOptions)
 		};
 	}
 	if (kind.kind === "headless") {
-		// Every real omp process (session, subagent, worker — anything with a CLI
+		// Every real bbcli process (session, subagent, worker — anything with a CLI
 		// worker host) MUST go through the project-shared broker-owned Chromium:
 		// per-process launches are what produced launch storms and orphaned
 		// process trees. The process-local launch survives only for hosts that
@@ -233,8 +233,8 @@ async function openBrowserHandle(kind: BrowserKind, opts: AcquireBrowserOptions)
 			if (err instanceof Error && err.name === "AbortError") throw err;
 			throw new ToolError(
 				autoStarted
-					? `omp browser relay is serving at ${cdpUrl} but its extension never connected. Install it with \`omp browser-relay install\` and check the toolbar badge shows "on".`
-					: `omp browser relay is not reachable at ${cdpUrl}. Start it with \`omp browser-relay\` (or check the endpoint), and make sure the OMP Browser Relay extension is loaded in Chrome.`,
+					? `bbcli browser relay is serving at ${cdpUrl} but its extension never connected. Install it with \`bbcli browser-relay install\` and check the toolbar badge shows "on".`
+					: `bbcli browser relay is not reachable at ${cdpUrl}. Start it with \`bbcli browser-relay\` (or check the endpoint), and make sure the OMP Browser Relay extension is loaded in Chrome.`,
 			);
 		}
 		const puppeteer = await loadPuppeteer();
@@ -341,7 +341,7 @@ async function disposeBrowserHandle(handle: BrowserHandle, opts: ReleaseBrowserO
 			// The broker owns the Chromium; this process only drops its CDP
 			// connection. `kill` is scoped to spawned-app browsers — stopping the
 			// shared daemon here would tear down every other session's tabs. The
-			// daemon dies with the last omp client in the project (broker idle
+			// daemon dies with the last bbcli client in the project (broker idle
 			// teardown), or via an explicit hub stop.
 			if (handle.browser.connected) {
 				try {
@@ -413,7 +413,7 @@ async function openSharedHeadlessHandle(
 		});
 		if (!shared) {
 			throw new ToolError(
-				"Shared browser daemon unavailable (broker start or Chromium launch failed); check `hub ps` for omp.browser.* daemons and ~/.omp/logs for details",
+				"Shared browser daemon unavailable (broker start or Chromium launch failed); check `hub ps` for bbcli.browser.* daemons and ~/.bbcli/logs for details",
 			);
 		}
 		const puppeteer = await loadPuppeteer();
@@ -429,7 +429,7 @@ async function openSharedHeadlessHandle(
 			protocolTimeout: BROWSER_PROTOCOL_TIMEOUT_MS,
 		});
 		// Attaching to the shared daemon is the natural point to sweep targets
-		// left behind by omp processes that died without teardown — bounds
+		// left behind by bbcli processes that died without teardown — bounds
 		// accumulation without a background timer. Best-effort and detached so a
 		// slow reap never delays the open (issue #10022).
 		void reapOrphanSharedTargets(browser, { projectDir: shared.projectDir, daemonName: shared.daemonName });

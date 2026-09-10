@@ -153,7 +153,7 @@ describe("fetchMarketplace", () => {
 	let tmpDir: string;
 
 	beforeEach(() => {
-		tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "omp-fetcher-test-"));
+		tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-fetcher-test-"));
 	});
 
 	afterEach(() => {
@@ -181,27 +181,27 @@ describe("fetchMarketplace", () => {
 		await expect(fetchMarketplace(fakeSrc, tmpDir)).rejects.toThrow(/Marketplace catalog not found/);
 	});
 
-	it("loads catalog from .omp-plugin/marketplace.json when present", async () => {
-		const root = path.join(tmpDir, "omp-only");
-		fs.mkdirSync(path.join(root, ".omp-plugin"), { recursive: true });
+	it("loads catalog from .bbcli-plugin/marketplace.json when present", async () => {
+		const root = path.join(tmpDir, "bbcli-only");
+		fs.mkdirSync(path.join(root, ".bbcli-plugin"), { recursive: true });
 		const catalog = {
-			name: "omp-only-marketplace",
+			name: "bbcli-only-marketplace",
 			owner: { name: "Test" },
-			plugins: [{ name: "omp-plugin", source: "./plugins/omp-plugin", description: "x" }],
+			plugins: [{ name: "bbcli-plugin", source: "./plugins/bbcli-plugin", description: "x" }],
 		};
-		fs.writeFileSync(path.join(root, ".omp-plugin", "marketplace.json"), JSON.stringify(catalog));
+		fs.writeFileSync(path.join(root, ".bbcli-plugin", "marketplace.json"), JSON.stringify(catalog));
 
 		const result = await fetchMarketplace(root, tmpDir);
-		expect(result.catalog.name).toBe("omp-only-marketplace");
-		expect(result.catalog.plugins[0].name).toBe("omp-plugin");
+		expect(result.catalog.name).toBe("bbcli-only-marketplace");
+		expect(result.catalog.plugins[0].name).toBe("bbcli-plugin");
 	});
 
-	it("prefers .omp-plugin/marketplace.json over .claude-plugin/marketplace.json when both exist", async () => {
+	it("prefers .bbcli-plugin/marketplace.json over .claude-plugin/marketplace.json when both exist", async () => {
 		const root = path.join(tmpDir, "both-catalogs");
-		fs.mkdirSync(path.join(root, ".omp-plugin"), { recursive: true });
+		fs.mkdirSync(path.join(root, ".bbcli-plugin"), { recursive: true });
 		fs.mkdirSync(path.join(root, ".claude-plugin"), { recursive: true });
 		const ompCatalog = {
-			name: "from-omp-plugin",
+			name: "from-bbcli-plugin",
 			owner: { name: "Test" },
 			plugins: [{ name: "p", source: "./p", description: "x" }],
 		};
@@ -210,14 +210,14 @@ describe("fetchMarketplace", () => {
 			owner: { name: "Test" },
 			plugins: [{ name: "p", source: "./p", description: "x" }],
 		};
-		fs.writeFileSync(path.join(root, ".omp-plugin", "marketplace.json"), JSON.stringify(ompCatalog));
+		fs.writeFileSync(path.join(root, ".bbcli-plugin", "marketplace.json"), JSON.stringify(ompCatalog));
 		fs.writeFileSync(path.join(root, ".claude-plugin", "marketplace.json"), JSON.stringify(claudeCatalog));
 
 		const result = await fetchMarketplace(root, tmpDir);
-		expect(result.catalog.name).toBe("from-omp-plugin");
+		expect(result.catalog.name).toBe("from-bbcli-plugin");
 	});
 
-	it("falls back to .claude-plugin/marketplace.json when .omp-plugin is absent", async () => {
+	it("falls back to .claude-plugin/marketplace.json when .bbcli-plugin is absent", async () => {
 		// The shared fixture only ships .claude-plugin/marketplace.json — confirms
 		// the legacy path still loads unchanged.
 		const result = await fetchMarketplace(FIXTURE_DIR, tmpDir);
@@ -228,7 +228,7 @@ describe("fetchMarketplace", () => {
 		const empty = path.join(tmpDir, "empty-dir");
 		fs.mkdirSync(empty, { recursive: true });
 		await expect(fetchMarketplace(empty, tmpDir)).rejects.toThrow(
-			/\.omp-plugin[\\/]marketplace\.json.*\.claude-plugin[\\/]marketplace\.json/,
+			/\.bbcli-plugin[\\/]marketplace\.json.*\.claude-plugin[\\/]marketplace\.json/,
 		);
 	});
 

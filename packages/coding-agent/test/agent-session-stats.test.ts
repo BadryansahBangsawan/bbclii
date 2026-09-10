@@ -182,7 +182,7 @@ describe("AgentSession session stats", () => {
 			throw new Error("Expected bundled model with a context window");
 		}
 
-		using tempDir = TempDir.createSync("@omp-session-stats-");
+		using tempDir = TempDir.createSync("@bbcli-session-stats-");
 		const sessionFile = `${tempDir.path()}/repro.jsonl`;
 		await Bun.write(
 			sessionFile,

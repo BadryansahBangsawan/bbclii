@@ -121,7 +121,7 @@ describe("LSP diagnostics freshness", () => {
 	let tempDir: TempDir;
 
 	beforeEach(() => {
-		tempDir = TempDir.createSync("@omp-lsp-freshness-");
+		tempDir = TempDir.createSync("@bbcli-lsp-freshness-");
 	});
 
 	afterEach(() => {
@@ -694,7 +694,7 @@ describe("LSP diagnostics freshness", () => {
 			...TEST_SERVER,
 			rootMarkers: ["package.json", "tsconfig.json", "jsconfig.json"],
 		};
-		const orphanDir = TempDir.createSync("@omp-lsp-orphan-");
+		const orphanDir = TempDir.createSync("@bbcli-lsp-orphan-");
 		try {
 			const filePath = path.join(orphanDir.path(), "scratch.ts");
 			const uri = fileToUri(filePath);

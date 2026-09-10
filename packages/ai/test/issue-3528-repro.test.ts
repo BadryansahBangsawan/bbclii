@@ -2,7 +2,7 @@
  * Regression guard for llama.cpp warm-prefix invalidation on auto-learn
  * capture-at-stop and any other assistant continuation (#3528).
  *
- * `omp-llm-request-15179edfab4dc557.json` plus the rr-session captures from the
+ * `bbcli-llm-request-15179edfab4dc557.json` plus the rr-session captures from the
  * reporter showed:
  *
  *  - System prompt and tool catalogue were byte-stable across requests 3–12.

@@ -19,7 +19,7 @@ const statusLines = new StatusLineTestComponents();
 
 beforeEach(async () => {
 	settingsState = beginSettingsTest();
-	projectDir = fs.mkdtempSync(path.join(os.tmpdir(), "omp-status-line-settings-cache-"));
+	projectDir = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-status-line-settings-cache-"));
 	setProjectDir(projectDir);
 	await Settings.init({ inMemory: true, cwd: projectDir });
 	await initTheme();

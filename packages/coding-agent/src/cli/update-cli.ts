@@ -1,8 +1,8 @@
 /**
  * Update CLI command handler.
  *
- * Handles `omp update` to check for and install updates.
- * Uses the installer that owns the active omp executable when it can be detected.
+ * Handles `bbcli update` to check for and install updates.
+ * Uses the installer that owns the active bbcli executable when it can be detected.
  */
 import { createHash } from "node:crypto";
 import * as fs from "node:fs";
@@ -25,7 +25,7 @@ import {
 
 const REPO = "BadryansahBangsawan/bbclii";
 const PACKAGE = "@bbcli/pi-coding-agent";
-const HOMEBREW_FORMULA = "can1357/tap/omp";
+const HOMEBREW_FORMULA = "BadryansahBangsawan/bbcli/bbcli";
 const MISE_TOOL = "github:BadryansahBangsawan/bbclii";
 const NIX_STORE_DIR = "/nix/store";
 /**
@@ -503,10 +503,10 @@ function isPathInDirectory(filePath: string, directoryPath: string): boolean {
 	if (isPathInDirectoryLexical(filePath, directoryPath)) return true;
 	// Layer realpath resolution on top of the lexical guard. On Windows, ~/.bun
 	// is a junction when Bun is installed via Scoop, so `bun pm bin -g` and the
-	// PATH-resolved omp path can refer to the same directory through different
+	// PATH-resolved bbcli path can refer to the same directory through different
 	// strings. path.resolve does not traverse junctions/symlinks; realpath does.
 	// Resolve both the file and its parent directory: the file catches manager
-	// links like Homebrew's `bin/omp -> Cellar/.../bin/omp`; the parent fallback
+	// links like Homebrew's `bin/bbcli -> Cellar/.../bin/bbcli`; the parent fallback
 	// still tolerates fresh install paths where the file does not exist yet.
 	const dirReal = tryRealpath(path.resolve(directoryPath));
 	if (!dirReal) return false;
@@ -549,7 +549,7 @@ interface UpdateMethodResolutionOptions {
 	/** Bun's configured global package directory, independent of its bin directory. */
 	bunGlobalDir?: string;
 	/**
-	 * Whether the resolved omp path is a plain file (the standalone binary)
+	 * Whether the resolved bbcli path is a plain file (the standalone binary)
 	 * rather than a package-manager symlink. Stops a binary install from being
 	 * misrouted to npm/bun when the global bin dir overlaps the installer's
 	 * target directory.
@@ -614,8 +614,8 @@ function resolveUpdateMethod(
 	// a binary install through npm/bun, whose reinstall then collides with the
 	// existing file (npm EEXIST). Fall through to binary replacement instead.
 	// On Windows every launcher is a regular file, so ownership keys off the
-	// manager's own artifacts instead: npm's script shims (`omp`, `omp.cmd`,
-	// `omp.ps1`) and bun's `omp.bunx` sidecar. A bare `.exe` with neither is the
+	// manager's own artifacts instead: npm's script shims (`bbcli`, `bbcli.cmd`,
+	// `bbcli.ps1`) and bun's `bbcli.bunx` sidecar. A bare `.exe` with neither is the
 	// standalone binary a binary-only release installed over the launcher —
 	// routing that back through bun reinstalls a package which no longer owns
 	// the launcher, and bun silently tolerates failing to overwrite the running
@@ -797,18 +797,90 @@ async function fetchLatestManifest(
 	return { version: data.version, manifest: data };
 }
 
+function githubApiHeaders(): Record<string, string> {
+	const headers: Record<string, string> = {
+		Accept: "application/vnd.github+json",
+		"X-GitHub-Api-Version": "2022-11-28",
+	};
+	const token = $env.GITHUB_TOKEN || $env.GH_TOKEN;
+	if (token) headers.Authorization = `Bearer ${token}`;
+	return headers;
+}
+
+function versionFromReleaseTag(tagName: string): string | undefined {
+	const version = tagName.replace(/^v/, "");
+	return version.length > 0 ? version : undefined;
+}
+
+async function fetchGitHubLatestVersion(timeoutMs: number, channel: UpdateChannel): Promise<string | undefined> {
+	const headers = githubApiHeaders();
+	try {
+		if (channel === "canary") {
+			const response = await fetch(`${GITHUB_API}/repos/${REPO}/releases`, {
+				headers,
+				signal: withTimeoutSignal(timeoutMs),
+			});
+			if (response.status === 404) return undefined;
+			if (!response.ok) {
+				throw new Error(`Failed to fetch GitHub releases: ${response.statusText}`);
+			}
+			const data: unknown = await response.json();
+			if (!Array.isArray(data)) return undefined;
+			for (const rel of data) {
+				if (
+					isRecord(rel) &&
+					rel.prerelease === true &&
+					typeof rel.tag_name === "string" &&
+					/-canary\./.test(rel.tag_name)
+				) {
+					return versionFromReleaseTag(rel.tag_name);
+				}
+			}
+			return undefined;
+		}
+
+		const response = await fetch(`${GITHUB_API}/repos/${REPO}/releases/latest`, {
+			headers,
+			signal: withTimeoutSignal(timeoutMs),
+		});
+		if (response.status === 404) return undefined;
+		if (!response.ok) {
+			throw new Error(`Failed to fetch GitHub release metadata: ${response.statusText}`);
+		}
+		const data: unknown = await response.json();
+		if (!isRecord(data) || typeof data.tag_name !== "string") return undefined;
+		return versionFromReleaseTag(data.tag_name);
+	} catch (err) {
+		if (isTimeoutError(err)) {
+			throw new Error(`Timed out fetching GitHub release info after ${Math.round(timeoutMs / 1000)}s`, {
+				cause: err,
+			});
+		}
+		if (isUnsupportedProxyError(err)) throw new Error(unsupportedProxyMessage(), { cause: err });
+		throw err;
+	}
+}
+
 /**
- * Get the latest release info from the npm registry, following `omp.rename`
- * pointers ({@link resolveReleaseRename}) when the package has moved to a new
- * npm name. Version, dist, and install names all come from the final manifest
- * in the chain. Uses npm instead of GitHub API to avoid unauthenticated rate
- * limiting.
+ * Get the latest release info from GitHub first, then the npm registry,
+ * following `omp.rename` pointers ({@link resolveReleaseRename}) when the
+ * package has moved to a new npm name. Version, dist, and install names all
+ * come from the final manifest in the chain when npm is used.
  */
 export async function getLatestRelease(
 	options: { timeoutMs?: number; channel?: UpdateChannel } = {},
 ): Promise<ReleaseInfo> {
 	const timeoutMs = options.timeoutMs ?? RELEASE_METADATA_TIMEOUT_MS;
 	const channel = options.channel ?? "stable";
+	const githubVersion = await fetchGitHubLatestVersion(timeoutMs, channel);
+	if (githubVersion) {
+		return {
+			tag: `v${githubVersion}`,
+			version: githubVersion,
+			packages: { ...CURRENT_PACKAGES },
+		};
+	}
+
 	const packages: ReleasePackages = { ...CURRENT_PACKAGES };
 	const visited = new Set([packages.pkg]);
 	let latest = await fetchLatestManifest(packages.pkg, timeoutMs, channel);
@@ -950,7 +1022,7 @@ async function removeCacheEntries(paths: string[]): Promise<number> {
  *
  * Bun stores package cache entries as both a package marker directory
  * (`react/19.2.6@@@1`) and a materialized package directory
- * (`react@19.2.6@@@1`). Global `omp` updates can leave one full copy per
+ * (`react@19.2.6@@@1`). Global `bbcli` updates can leave one full copy per
  * release. The marker and materialized entries are removed together so the
  * cache stays internally consistent.
  */
@@ -1051,7 +1123,7 @@ async function pruneBunCacheAfterGlobalInstall(): Promise<BunInstallCachePruneRe
 	const packageNames = globalNodeModulesDir
 		? await collectInstalledPackageNames(globalNodeModulesDir)
 		: new Set<string>();
-	if (packageNames.size === 0 && !path.basename(cacheDir).toLowerCase().includes("omp")) return undefined;
+	if (packageNames.size === 0 && !path.basename(cacheDir).toLowerCase().includes("bbcli")) return undefined;
 	return await pruneBunInstallCache(cacheDir, packageNames.size === 0 ? undefined : packageNames);
 }
 
@@ -1128,15 +1200,15 @@ function getBinaryName(): string {
 }
 
 /**
- * Resolve the path that `omp` maps to in the user's PATH.
+ * Resolve the path that `bbcli` maps to in the user's PATH.
  */
 function resolveOmpPath(): string | undefined {
 	return $which(APP_NAME) ?? undefined;
 }
 
 /**
- * Parse the version a launcher reports from `omp --version` output
- * (`omp/X.Y.Z`, or a prerelease such as `omp/X.Y.Z-canary.1`).
+ * Parse the version a launcher reports from `bbcli --version` output
+ * (`bbcli/X.Y.Z`, or a prerelease such as `bbcli/X.Y.Z-canary.1`).
  *
  * The prerelease suffix is preserved so a correctly installed canary build
  * verifies as up to date instead of appearing to report a stale `X.Y.Z` and
@@ -1182,7 +1254,7 @@ async function validateExistingUpdateTarget(targetPath: string): Promise<void> {
 }
 
 /**
- * Run the PATH-resolved omp binary and check if it reports the expected version.
+ * Run the PATH-resolved bbcli binary and check if it reports the expected version.
  */
 async function verifyInstalledVersion(expectedVersion: string): Promise<InstalledVersionVerification> {
 	const ompPath = resolveOmpPath();
@@ -1355,7 +1427,7 @@ function buildVersionedPackageInstallArgs(
 }
 
 /**
- * Build the bun argv used to globally install a specific omp version.
+ * Build the bun argv used to globally install a specific bbcli version.
  *
  * The version is selected by hitting {@link NPM_REGISTRY} directly in
  * {@link getLatestRelease}, so the install MUST observe the same catalog:
@@ -1367,7 +1439,7 @@ function buildVersionedPackageInstallArgs(
  * - `--no-cache` tells bun to ignore its on-disk manifest snapshot so it
  *   re-fetches metadata from that registry on every invocation.
  *
- * Together these two flags make `omp update` produce exactly the registry
+ * Together these two flags make `bbcli update` produce exactly the registry
  * lookup the version check just performed. See #1686.
  *
  * Also pins {@link NATIVES_PACKAGE} and the platform-specific
@@ -1401,10 +1473,10 @@ export function buildBunInstallArgs(
 /**
  * Build the npm argv used to update npm-managed global installs.
  *
- * `force` is set only for rename migrations: npm refuses to write the `omp`
+ * `force` is set only for rename migrations: npm refuses to write the `bbcli`
  * bin while the old package still owns it (`EEXIST`), and the migration
  * installs the new package BEFORE removing the old one so a failed install
- * never leaves the user without a working `omp`.
+ * never leaves the user without a working `bbcli`.
  */
 export function buildNpmInstallArgs(
 	expectedVersion: string,
@@ -1455,11 +1527,11 @@ export function buildRenameCleanupPackages(
 
 /** Injectable shell steps for {@link migrateRenamedInstall}; commands return process exit codes. */
 export interface RenameMigrationSteps {
-	/** Globally install the new package names. MUST be idempotent: re-running re-links the `omp` bin. */
+	/** Globally install the new package names. MUST be idempotent: re-running re-links the `bbcli` bin. */
 	install(): Promise<number>;
 	/** Remove the old-name globals. */
 	removeOld(): Promise<number>;
-	/** Check the PATH-resolved `omp` against the expected version. */
+	/** Check the PATH-resolved `bbcli` against the expected version. */
 	verify(): Promise<InstalledVersionVerification>;
 }
 
@@ -1495,13 +1567,13 @@ function packageManagerMigrationSteps(manager: "bun" | "npm", release: ReleaseIn
 
 /**
  * Migrate a package-manager install across an `omp.rename` hop without a
- * window where no working `omp` exists:
+ * window where no working `bbcli` exists:
  *
  * 1. Install the new package FIRST. Nothing has been removed yet, so a
  *    failure here leaves the old install fully functional.
  * 2. Remove the old-name globals. Failure is non-fatal: a stale package
  *    wastes disk, but the bin already points at the new install.
- * 3. Verify the PATH-resolved `omp`. If the removal deleted the shared bin
+ * 3. Verify the PATH-resolved `bbcli`. If the removal deleted the shared bin
  *    link (manager-dependent), re-run the idempotent install to restore it
  *    and verify again; only a repeated failure aborts, with a recovery hint.
  */
@@ -1559,6 +1631,10 @@ async function updateViaBun(release: ReleaseInfo): Promise<InstalledVersionVerif
 			}
 		}
 		const pkgPath = path.join(tmpDir, "packages", "coding-agent");
+		const rootInstall = await $`bun install`.cwd(tmpDir).nothrow();
+		if (rootInstall.exitCode !== 0) {
+			throw new Error(`bun install failed with exit code ${rootInstall.exitCode}`);
+		}
 		const result = await $`bun install -g ${pkgPath}`.nothrow();
 		if (result.exitCode !== 0) {
 			throw new Error(`bun install failed with exit code ${result.exitCode}`);
@@ -1693,6 +1769,23 @@ export async function updateViaManager(
 	);
 }
 
+async function updateViaHomebrew(expectedVersion: string, force: boolean): Promise<void> {
+	console.log(chalk.dim("Updating Homebrew formulae..."));
+	const update = await $`brew update`.nothrow();
+	if (update.exitCode !== 0) {
+		throw new Error(`brew update failed with exit code ${update.exitCode}`);
+	}
+
+	console.log(chalk.dim("Updating via Homebrew..."));
+	const args = buildHomebrewUpdateArgs(force);
+	const result = await $`brew ${args}`.nothrow();
+	if (result.exitCode !== 0) {
+		throw new Error(`brew ${args[0]} failed with exit code ${result.exitCode}`);
+	}
+
+	await printVerification(expectedVersion);
+}
+
 async function updateViaMise(expectedVersion: string, force: boolean): Promise<void> {
 	console.log(chalk.dim("Updating via mise..."));
 	const args = buildMiseUpgradeArgs();
@@ -1735,7 +1828,7 @@ export async function updateViaBinaryAt(
 ): Promise<void> {
 	if (options.validateExistingTarget) await validateExistingUpdateTarget(targetPath);
 	const binaryName = options.binaryName ?? getBinaryName();
-	// Unique per attempt so two overlapping `omp update` runs never share a temp
+	// Unique per attempt so two overlapping `bbcli update` runs never share a temp
 	// or backup path. A fixed temp name (`<binary>.new`) let the second run's
 	// pre-download unlink delete the first run's still-downloading temp file; the
 	// first kept writing to its open fd (size + digest still passed), then chmod
@@ -1765,7 +1858,7 @@ export async function updateViaBinaryAt(
 	console.log(chalk.dim(`Verified ${asset.digest}`));
 
 	// Serialize the target swap and stale-artifact sweep per target so two
-	// overlapping `omp update` runs never replace the same binary concurrently
+	// overlapping `bbcli update` runs never replace the same binary concurrently
 	// or reclaim each other's live backup/temp files. The download above writes
 	// to a unique temp path and is safe to overlap; only the swap is shared.
 	const verification = await withFileLock(targetPath, async () => {
@@ -1798,7 +1891,7 @@ export async function updateViaBinaryAt(
 /**
  * In-place forwarder bodies, by shim extension, for launchers that cannot be
  * renamed aside during a script-shim takeover; each execs the sibling
- * `omp.exe`. Rewriting matters for the shims that outrank `.exe` at command
+ * `bbcli.exe`. Rewriting matters for the shims that outrank `.exe` at command
  * resolution: PowerShell prefers `.ps1` and Git Bash resolves the
  * extensionless sh shim first, so leaving the old body behind would keep
  * launching the replaced install.
@@ -1814,8 +1907,8 @@ const SHIM_FORWARDERS: Record<string, string> = {
  * Take over a Windows script-launcher install for a binary-only release.
  *
  * npm-managed Windows installs are launched through script shims
- * (`omp`/`omp.cmd`/`omp.ps1`) that cannot be overwritten with a native
- * executable. The release binary is installed as `omp.exe` beside them and
+ * (`bbcli`/`bbcli.cmd`/`bbcli.ps1`) that cannot be overwritten with a native
+ * executable. The release binary is installed as `bbcli.exe` beside them and
  * the shims are then renamed aside: cmd.exe would already prefer `.exe` via
  * PATHEXT, but PowerShell resolves `.ps1` first, so the takeover only sticks
  * once the shims are out of the way. A working launcher exists at every
@@ -2044,9 +2137,10 @@ export async function checkForAvailableUpdate(
 }
 
 async function installHostNatives(srcDir: string): Promise<void> {
-	if (process.platform !== "linux" && process.platform !== "darwin") return;
+	if (process.platform !== "linux" && process.platform !== "darwin" && process.platform !== "win32") return;
 	if (process.arch !== "x64" && process.arch !== "arm64") return;
-	const tag = `${process.platform === "darwin" ? "darwin" : "linux"}-${process.arch}`;
+	const osTag = process.platform === "darwin" ? "darwin" : process.platform === "win32" ? "win32" : "linux";
+	const tag = `${osTag}-${process.arch}`;
 	const nativeDir = path.join(srcDir, "packages", "natives", "native");
 	const version = await readPackageVersion(path.join(srcDir, "packages", "natives", "package.json"));
 	if (!version) return;
@@ -2059,17 +2153,29 @@ async function installHostNatives(srcDir: string): Promise<void> {
 	}
 	if (names.some(name => name.startsWith(`pi_natives.${tag}`) && name.endsWith(".node"))) return;
 
-	const url = `https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz`;
+	const urls = [
+		`https://registry.npmjs.org/@bbcli/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz`,
+		`https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz`,
+	];
 	console.log(chalk.dim(`Fetching native addon ${tag}@${version}...`));
 	const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-natives-"));
 	try {
-		const response = await fetch(url, { signal: withTimeoutSignal(BINARY_DOWNLOAD_TIMEOUT_MS) });
-		if (!response.ok) {
-			console.log(chalk.yellow(`warning: could not download ${url}`));
+		let tgz: string | undefined;
+		for (const url of urls) {
+			try {
+				const response = await fetch(url, { signal: withTimeoutSignal(BINARY_DOWNLOAD_TIMEOUT_MS) });
+				if (!response.ok) continue;
+				tgz = path.join(tmp, "natives.tgz");
+				await Bun.write(tgz, await response.arrayBuffer());
+				break;
+			} catch {
+				continue;
+			}
+		}
+		if (!tgz) {
+			console.log(chalk.yellow(`warning: could not download natives for ${tag}@${version}`));
 			return;
 		}
-		const tgz = path.join(tmp, "natives.tgz");
-		await Bun.write(tgz, await response.arrayBuffer());
 		const extracted = await $`tar -xzf ${tgz} -C ${tmp}`.nothrow();
 		if (extracted.exitCode !== 0) {
 			console.log(chalk.yellow("warning: failed to extract native addon tarball"));
@@ -2196,7 +2302,7 @@ export async function runUpdateCommand(opts: {
 		return;
 	}
 
-	// Choose update method based on the prioritized omp binary in PATH. For
+	// Choose update method based on the prioritized bbcli binary in PATH. For
 	// binary-only releases the package managers are never consulted: a bun/npm
 	// symlink resolves to method "binary" and is replaced in place, keeping the
 	// same PATH entry live.
@@ -2213,15 +2319,15 @@ export async function runUpdateCommand(opts: {
 			console.log(chalk.dim("Update the flake input or profile that provides bbcli, then rebuild."));
 			return;
 		} else if (target.method === "brew") {
-			console.log(chalk.yellow("bbcli is not distributed via Homebrew; re-run the installer."));
-			return;
+			await updateViaHomebrew(release.version, opts.force);
 		} else if (target.method === "mise") {
 			await updateViaMise(release.version, opts.force);
 		} else if (target.method === "npm") {
-			console.log(chalk.yellow("bbcli is not published to npm; use bun or --binary."));
-			return;
+			await updateViaManager(release, target.path, packageManagerUpdateSteps("npm", release, allowPrerelease));
 		} else if (target.method === "bun") {
-			if (forceBinary) {
+			if (isSourceCheckout(getSourceInstallDir())) {
+				await updateViaSourceCheckout(getSourceInstallDir(), { check: opts.check, force: opts.force });
+			} else if (forceBinary) {
 				// Reachable in forced mode only through a Windows script
 				// launcher resolved from PATH (the bun/npm bin-dir probes are
 				// skipped), so the launcher path is always known.

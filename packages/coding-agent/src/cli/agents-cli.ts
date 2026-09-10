@@ -1,11 +1,11 @@
 /**
  * Agents CLI command handlers.
  *
- * Handles `omp agents unpack` for writing bundled agent definitions to disk.
+ * Handles `bbcli agents unpack` for writing bundled agent definitions to disk.
  */
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import { getAgentDir, getProjectDir, isEnoent } from "@bbcli/pi-utils";
+import { CONFIG_DIR_NAME, getAgentDir, getProjectDir, isEnoent } from "@bbcli/pi-utils";
 import chalk from "@bbcli/pi-utils/chalk";
 import { YAML } from "bun";
 import { theme } from "../modes/theme/theme";
@@ -46,7 +46,7 @@ function resolveTargetDir(flags: AgentsCommandArgs["flags"]): string {
 	}
 
 	if (flags.project) {
-		return path.resolve(getProjectDir(), ".omp", "agents");
+		return path.join(getProjectDir(), CONFIG_DIR_NAME, "agents");
 	}
 
 	return path.join(getAgentDir(), "agents");

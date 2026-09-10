@@ -121,7 +121,7 @@ describe("bash shortcut command", () => {
 	});
 
 	it("persists standalone and bare cd before the next user-shell command", async () => {
-		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-bash-cd-source-"));
+		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-bash-cd-source-"));
 		const childDir = path.join(sourceDir, "child");
 		await fs.mkdir(childDir);
 		try {
@@ -192,7 +192,7 @@ describe("bash shortcut command", () => {
 	});
 
 	it("does not adopt cwd from a non-cd bash command", async () => {
-		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-bash-cwd-sync-"));
+		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-bash-cwd-sync-"));
 		const childDir = path.join(sourceDir, "child");
 		await fs.mkdir(childDir);
 		try {
@@ -229,7 +229,7 @@ describe("bash shortcut command", () => {
 	});
 
 	it("rejects simple cd while streaming before queuing a bash block", async () => {
-		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-bash-cd-streaming-"));
+		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-bash-cd-streaming-"));
 		try {
 			const { ctx, executeBash, pendingMessagesContainer, present, state } = createCwdContext(sourceDir, true);
 			const controller = new CommandController(ctx);
@@ -248,7 +248,7 @@ describe("bash shortcut command", () => {
 	});
 
 	it("does not adopt cwd or warn for a non-cd command while streaming", async () => {
-		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-bash-cwd-deferred-"));
+		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-bash-cwd-deferred-"));
 		const childDir = path.join(sourceDir, "child");
 		await fs.mkdir(childDir);
 		try {
@@ -312,7 +312,7 @@ describe("bash shortcut command", () => {
 	});
 
 	it("finalizes successful output before reporting a standalone cd refresh failure", async () => {
-		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "omp-bash-cwd-refresh-error-"));
+		const sourceDir = await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-bash-cwd-refresh-error-"));
 		const childDir = path.join(sourceDir, "child");
 		await fs.mkdir(childDir);
 		try {

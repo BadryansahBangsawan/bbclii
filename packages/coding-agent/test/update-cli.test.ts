@@ -44,7 +44,7 @@ import { getThemeByName, setThemeInstance } from "../src/modes/theme/theme";
 const tempDirs: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-	const dir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "omp-update-test-")));
+	const dir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "bbcli-update-test-")));
 	tempDirs.push(dir);
 	return dir;
 }
@@ -127,8 +127,8 @@ describe("parseReportedVersion", () => {
 		// Regression: dropping `-canary.1` made a correctly installed canary
 		// build look like a stale `X.Y.Z` launcher, triggering a binary repair
 		// that rejects the prerelease GitHub release.
-		expect(parseReportedVersion("omp/18.0.6-canary.1")).toBe("18.0.6-canary.1");
-		expect(parseReportedVersion("omp/18.0.5")).toBe("18.0.5");
+		expect(parseReportedVersion("bbcli/18.0.6-canary.1")).toBe("18.0.6-canary.1");
+		expect(parseReportedVersion("bbcli/18.0.5")).toBe("18.0.5");
 		expect(parseReportedVersion("not a version")).toBeUndefined();
 	});
 
@@ -163,20 +163,20 @@ describe("update-cli libc detection", () => {
 describe("update-cli install target detection", () => {
 	it("leaves Nix store installations under Nix management", () => {
 		const method = resolveUpdateMethodForTest(
-			"/nix/store/0123456789-omp-17.2.15/bin/bbcli",
+			"/nix/store/0123456789-bbcli-17.2.15/bin/bbcli",
 			"/nix/store/9876543210-bun-1.3.14/bin",
 		);
 
 		expect(method).toBe("nix");
 	});
 
-	it("uses bun update when prioritized omp is inside bun global bin", () => {
+	it("uses bun update when prioritized bbcli is inside bun global bin", () => {
 		const method = resolveUpdateMethodForTest("/Users/test/.bun/bin/bbcli", "/Users/test/.bun/bin");
 
 		expect(method).toBe("bun");
 	});
 
-	it("uses npm update when prioritized omp is inside an npm global bin", () => {
+	it("uses npm update when prioritized bbcli is inside an npm global bin", () => {
 		const method = resolveUpdateMethodForTest("/Users/test/.npm-global/bin/bbcli", undefined, {
 			npmBinDir: "/Users/test/.npm-global/bin",
 		});
@@ -302,7 +302,7 @@ describe("update-cli install target detection", () => {
 		const dir = await makeTempDir();
 		const bunDir = path.join(dir, ".bun");
 		const bunBinDir = path.join(bunDir, "bin");
-		const standalonePath = path.join(bunDir, "custom", "omp");
+		const standalonePath = path.join(bunDir, "custom", "bbcli");
 		const aliasPath = path.join(bunBinDir, "bbcli");
 		await fs.mkdir(bunBinDir, { recursive: true });
 		await Bun.write(standalonePath, "binary");
@@ -327,7 +327,7 @@ describe("update-cli install target detection", () => {
 		// beside a root-owned symlink (EACCES) or replaces it with a split-brain
 		// copy that shadows the shared install (#8732).
 		const dir = await makeTempDir();
-		const sharedBinDir = path.join(dir, "opt", "omp", "bin");
+		const sharedBinDir = path.join(dir, "opt", "bbcli", "bin");
 		const standalonePath = path.join(sharedBinDir, "bbcli");
 		const launcherDir = path.join(dir, "usr", "local", "bin");
 		const launcherPath = path.join(launcherDir, "bbcli");
@@ -452,7 +452,7 @@ describe("update-cli install target detection", () => {
 		expect(await Bun.file(checkoutCli).text()).toBe("linked checkout");
 	});
 
-	it("uses binary update when prioritized omp is outside bun global bin", () => {
+	it("uses binary update when prioritized bbcli is outside bun global bin", () => {
 		const method = resolveUpdateMethodForTest("/Users/test/.local/bin/bbcli", "/Users/test/.bun/bin");
 
 		expect(method).toBe("binary");
@@ -464,9 +464,9 @@ describe("update-cli install target detection", () => {
 		expect(method).toBe("binary");
 	});
 
-	it("uses Homebrew update when prioritized omp resolves into the Homebrew formula", async () => {
+	it("uses Homebrew update when prioritized bbcli resolves into the Homebrew formula", async () => {
 		const dir = await makeTempDir();
-		const prefix = path.join(dir, "opt", "omp");
+		const prefix = path.join(dir, "opt", "bbcli");
 		const linkedBin = path.join(dir, "bin");
 		await fs.mkdir(path.join(prefix, "bin"), { recursive: true });
 		await fs.mkdir(linkedBin, { recursive: true });
@@ -480,7 +480,7 @@ describe("update-cli install target detection", () => {
 		expect(method).toBe("brew");
 	});
 
-	it("uses mise update when prioritized omp is in an active mise bin path", () => {
+	it("uses mise update when prioritized bbcli is in an active mise bin path", () => {
 		const method = resolveUpdateMethodForTest(
 			"/Users/test/.local/share/mise/installs/github-BadryansahBangsawan-bbclii/latest/bin/bbcli",
 			undefined,
@@ -492,7 +492,7 @@ describe("update-cli install target detection", () => {
 		expect(method).toBe("mise");
 	});
 
-	it("uses mise update when prioritized omp is a mise shim", () => {
+	it("uses mise update when prioritized bbcli is a mise shim", () => {
 		const method = resolveUpdateMethodForTest("/Users/test/.local/share/mise/shims/bbcli", undefined, {
 			miseDataDir: "/Users/test/.local/share/mise",
 		});
@@ -503,8 +503,8 @@ describe("update-cli install target detection", () => {
 
 describe("update-cli package manager commands", () => {
 	it("targets the Homebrew tap formula and switches to reinstall for forced updates", () => {
-		expect(buildHomebrewUpdateArgs(false)).toEqual(["upgrade", "can1357/tap/omp"]);
-		expect(buildHomebrewUpdateArgs(true)).toEqual(["reinstall", "can1357/tap/omp"]);
+		expect(buildHomebrewUpdateArgs(false)).toEqual(["upgrade", "can1357/tap/bbcli"]);
+		expect(buildHomebrewUpdateArgs(true)).toEqual(["reinstall", "can1357/tap/bbcli"]);
 	});
 
 	it("targets the mise GitHub backend tool and force-reinstalls the checked version when requested", () => {
@@ -525,40 +525,40 @@ describe("update-cli package manager commands", () => {
 
 describe("update-cli npm rename contract", () => {
 	it("parses a well-formed omp.rename pointer and rejects malformed ones", () => {
-		expect(resolveReleaseRename({ omp: { rename: { package: "@new/omp", natives: "@new/natives" } } })).toEqual({
-			pkg: "@new/omp",
+		expect(resolveReleaseRename({ omp: { rename: { package: "@new/bbcli", natives: "@new/natives" } } })).toEqual({
+			pkg: "@new/bbcli",
 			natives: "@new/natives",
 		});
-		expect(resolveReleaseRename({ omp: { rename: { package: "@new/omp" } } })).toEqual({
-			pkg: "@new/omp",
+		expect(resolveReleaseRename({ omp: { rename: { package: "@new/bbcli" } } })).toEqual({
+			pkg: "@new/bbcli",
 			natives: undefined,
 		});
 		expect(resolveReleaseRename({ omp: { rename: { package: "" } } })).toBeUndefined();
-		expect(resolveReleaseRename({ omp: { rename: "@new/omp" } })).toBeUndefined();
+		expect(resolveReleaseRename({ omp: { rename: "@new/bbcli" } })).toBeUndefined();
 		expect(resolveReleaseRename({ omp: {} })).toBeUndefined();
 		expect(resolveReleaseRename(undefined)).toBeUndefined();
 	});
 
 	it("installs renamed package names in lock-step, with no old-name leftovers in the argv", () => {
-		const packages = { pkg: "@new/omp", natives: "@new/natives" };
+		const packages = { pkg: "@new/bbcli", natives: "@new/natives" };
 
 		const bunArgs = buildBunInstallArgs("17.0.0", "linux-x64", packages);
-		expect(bunArgs).toContain("@new/omp@17.0.0");
+		expect(bunArgs).toContain("@new/bbcli@17.0.0");
 		expect(bunArgs).toContain("@new/natives@17.0.0");
 		expect(bunArgs).toContain("@new/natives-linux-x64@17.0.0");
 		expect(bunArgs.some(arg => arg.startsWith("@bbcli/"))).toBe(false);
 
-		expect(buildNpmInstallArgs("17.0.0", "linux-x64", packages)).toContain("@new/omp@17.0.0");
+		expect(buildNpmInstallArgs("17.0.0", "linux-x64", packages)).toContain("@new/bbcli@17.0.0");
 	});
 
 	it("adds --force to npm argv only for rename migrations so the old package's bin can be clobbered", () => {
-		const packages = { pkg: "@new/omp", natives: "@new/natives" };
+		const packages = { pkg: "@new/bbcli", natives: "@new/natives" };
 		expect(buildNpmInstallArgs("17.0.0", "linux-x64", packages, { force: true })).toContain("--force");
 		expect(buildNpmInstallArgs("16.3.15", "win32-x64")).not.toContain("--force");
 	});
 
 	it("removes the old agent package and its natives companions when both names moved", () => {
-		const packages = { pkg: "@new/omp", natives: "@new/natives" };
+		const packages = { pkg: "@new/bbcli", natives: "@new/natives" };
 		expect(buildRenameCleanupPackages(packages, "darwin-arm64")).toEqual([
 			"@bbcli/pi-coding-agent",
 			"@bbcli/pi-natives",
@@ -571,7 +571,7 @@ describe("update-cli npm rename contract", () => {
 	});
 
 	it("keeps the natives packages on an agent-only rename so cleanup cannot strip the addon the new install pinned", () => {
-		const packages = { pkg: "@new/omp", natives: "@bbcli/pi-natives" };
+		const packages = { pkg: "@new/bbcli", natives: "@bbcli/pi-natives" };
 		expect(buildRenameCleanupPackages(packages, "darwin-arm64")).toEqual(["@bbcli/pi-coding-agent"]);
 		expect(buildRenameCleanupPackages(packages, "linux-arm")).toEqual(["@bbcli/pi-coding-agent"]);
 	});
@@ -581,7 +581,7 @@ describe("migrateRenamedInstall transaction", () => {
 	const release: ReleaseInfo = {
 		tag: "v999.1.0",
 		version: "999.1.0",
-		packages: { pkg: "@new/omp", natives: "@new/natives" },
+		packages: { pkg: "@new/bbcli", natives: "@new/natives" },
 	};
 
 	function scriptedSteps(script: { install: number[]; removeOld?: number; verify: boolean[] }): {
@@ -678,7 +678,7 @@ describe("migrateRenamedInstall transaction", () => {
 
 describe("update-cli bun install command", () => {
 	it("pins the official npm registry and bypasses the manifest cache so a stale mirror or snapshot cannot mask a freshly published version", () => {
-		// Regression: omp queries https://registry.npmjs.org/<pkg>/latest directly.
+		// Regression: bbcli queries https://registry.npmjs.org/<pkg>/latest directly.
 		// The install MUST hit the same registry, otherwise:
 		//   - a lagging mirror (corp proxy, Taobao, …) rejects the version with
 		//     `No version matching "X" (but package exists)`,
@@ -1109,7 +1109,7 @@ describe("update-cli binary replacement", () => {
 				expectedVersion: "15.1.8",
 				verifyInstalledVersion: async () => ({ ok: false, path: targetPath }),
 			}),
-		).rejects.toThrow("restored previous omp binary");
+		).rejects.toThrow("restored previous bbcli binary");
 
 		expect(await Bun.file(targetPath).text()).toBe("old binary");
 		expect(await Bun.file(tempPath).exists()).toBe(false);
@@ -1252,7 +1252,7 @@ describe("update-cli binary-only release gating", () => {
 
 	it("returns undefined when the manifest carries no dist field", () => {
 		expect(resolveReleaseDist({ version: "1.2.3" })).toBeUndefined();
-		expect(resolveReleaseDist({ omp: {} })).toBeUndefined();
+		expect(resolveReleaseDist({ bbcli: {} })).toBeUndefined();
 		expect(resolveReleaseDist(undefined)).toBeUndefined();
 	});
 
@@ -1370,7 +1370,7 @@ describe("update-cli script-shim takeover", () => {
 
 	it("drops bun's launcher metadata when the standalone binary takes the .exe over", async () => {
 		// After the takeover the launcher is no longer bun-managed. A leftover
-		// `omp.bunx` would keep classifying the install as bun-managed and send
+		// `bbcli.bunx` would keep classifying the install as bun-managed and send
 		// the next update through `bun install -g`, which cannot overwrite the
 		// running `.exe` and would pin the install to the old version.
 		const dir = await makeTempDir();
@@ -1423,7 +1423,7 @@ describe("update-cli script-shim takeover", () => {
 				fetchImpl: makeFetch(exe),
 				githubToken: "test-token",
 			}),
-		).rejects.toThrow(/still reports 17\.2\.12 \(expected 18\.0\.0\); restored previous omp launcher/);
+		).rejects.toThrow(/still reports 17\.2\.12 \(expected 18\.0\.0\); restored previous bbcli launcher/);
 
 		expect(await Bun.file(path.join(dir, "bbcli.exe")).exists()).toBe(false);
 		for (const name in shims) {
@@ -1478,7 +1478,7 @@ describe("update-cli script-shim takeover", () => {
 					fetchImpl: makeFetch(exe),
 					githubToken: "test-token",
 				}),
-			).rejects.toThrow("restored previous omp launcher");
+			).rejects.toThrow("restored previous bbcli launcher");
 		} finally {
 			renameSpy.mockRestore();
 		}
@@ -1526,7 +1526,7 @@ describe("update-cli concurrent binary updates", () => {
 		return { dir, targetPath };
 	}
 
-	// Regression for #8434: two overlapping `omp update` runs must not share a
+	// Regression for #8434: two overlapping `bbcli update` runs must not share a
 	// temp path. Run A downloads slowly and only finishes after run B has fully
 	// installed. With the old fixed `<binary>.new` temp name, B's pre-download
 	// unlink deleted A's temp file, so A's chmod failed with ENOENT even though
@@ -1648,7 +1648,7 @@ describe("update-cli manager update recovery", () => {
 	it("takes the launcher over when the manager install left nothing on PATH", async () => {
 		// npm retires the global bin shims before unpacking and restores them
 		// only if its own rollback succeeds; a locked file (the loaded native
-		// addon on Windows) can leave the user with no `omp` at all.
+		// addon on Windows) can leave the user with no `bbcli` at all.
 		vi.spyOn(console, "log").mockImplementation(() => {});
 		const { steps, calls } = scriptedSteps({ install: new Error("npm install failed with exit code 1") });
 
