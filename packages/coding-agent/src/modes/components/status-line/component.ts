@@ -430,7 +430,7 @@ export class StatusLineComponent implements Component {
 	 * round-trips because the same {@link AgentSession} ref is reused.
 	 */
 	#activeMeters: WeakMap<AgentSession, ActiveMeter> = new WeakMap();
-	#planModeStatus: { enabled: boolean; paused: boolean } | null = null;
+	#planModeStatus: { enabled: boolean; paused: boolean; ultraplan?: boolean } | null = null;
 	#loopModeStatus: SegmentContext["loopMode"] = null;
 	#goalModeStatus: { enabled: boolean; paused: boolean } | null = null;
 	#vibeModeStatus: { enabled: boolean } | null = null;
@@ -710,7 +710,7 @@ export class StatusLineComponent implements Component {
 		return meter;
 	}
 
-	setPlanModeStatus(status: { enabled: boolean; paused: boolean } | undefined): void {
+	setPlanModeStatus(status: { enabled: boolean; paused: boolean; ultraplan?: boolean } | undefined): void {
 		this.#planModeStatus = status ?? null;
 	}
 

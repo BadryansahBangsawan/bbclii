@@ -10,6 +10,7 @@ function createHarness(
 ) {
 	const oldImage: ImageContent = { type: "image", data: "b2xk", mimeType: "image/png" };
 	const handlePlanModeCommand = vi.fn(async (_prompt?: string, _input?: Attachments) => true);
+	const handleUltraplanCommand = vi.fn(async (_prompt?: string, _input?: Attachments) => true);
 	const handleVibeModeCommand = vi.fn(async (_prompt?: string, _input?: Attachments) => true);
 	const handleGoalModeCommand = vi.fn(async (_prompt?: string, _input?: Attachments) => true);
 	const handleGuidedGoalCommand = vi.fn(async (_prompt?: string, _input?: Attachments) => true);
@@ -69,6 +70,7 @@ function createHarness(
 		showWarning: vi.fn(),
 		showError,
 		handlePlanModeCommand,
+		handleUltraplanCommand,
 		handleVibeModeCommand,
 		handleGoalModeCommand,
 		handleGuidedGoalCommand,

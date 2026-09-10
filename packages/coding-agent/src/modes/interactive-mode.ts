@@ -3052,6 +3052,7 @@ export class InteractiveMode implements InteractiveModeContext {
 				? {
 						enabled: this.planModeEnabled,
 						paused: this.planModePaused,
+						ultraplan: this.session.getPlanModeState()?.ultraplan === true,
 					}
 				: undefined;
 		this.statusLine.setPlanModeStatus(status);
@@ -3432,7 +3433,11 @@ export class InteractiveMode implements InteractiveModeContext {
 		}
 		if (sessionContext.mode === "plan") {
 			const planFilePath = sessionContext.modeData?.planFilePath as string | undefined;
-			await this.#enterPlanMode({ planFilePath, preserveRestoredModel: true });
+			await this.#enterPlanMode({
+				planFilePath,
+				preserveRestoredModel: true,
+				ultraplan: sessionContext.modeData?.ultraplan === true,
+			});
 		} else if (sessionContext.mode === "plan_paused") {
 			this.planModePaused = true;
 			this.#planModeHasEntered = true;
@@ -3444,6 +3449,7 @@ export class InteractiveMode implements InteractiveModeContext {
 		planFilePath?: string;
 		workflow?: "parallel" | "iterative";
 		preserveRestoredModel?: boolean;
+		ultraplan?: boolean;
 	}): Promise<void> {
 		if (this.planModeEnabled) {
 			return;
@@ -3496,6 +3502,7 @@ export class InteractiveMode implements InteractiveModeContext {
 			enabled: true,
 			planFilePath,
 			workflow: options?.workflow ?? "parallel",
+			ultraplan: options?.ultraplan === true,
 			reentry: this.#planModeHasEntered,
 		});
 		try {
@@ -3517,8 +3524,12 @@ export class InteractiveMode implements InteractiveModeContext {
 			await this.#applyPlanModeModel();
 		}
 		this.#updatePlanModeStatus();
-		this.sessionManager.appendModeChange("plan", { planFilePath });
-		this.showStatus(`Plan mode enabled. Plan file: ${planFilePath}`);
+		this.sessionManager.appendModeChange("plan", { planFilePath, ultraplan: options?.ultraplan === true });
+		this.showStatus(
+			options?.ultraplan
+				? `Ultraplan enabled. Plan file: ${planFilePath}`
+				: `Plan mode enabled. Plan file: ${planFilePath}`,
+		);
 	}
 
 	async #restorePlanPreviousModel(prev: { model: Model; thinkingLevel?: ConfiguredThinkingLevel }): Promise<void> {
@@ -4346,6 +4357,69 @@ export class InteractiveMode implements InteractiveModeContext {
 		return false;
 	}
 
+	async handleUltraplanCommand(
+		initialPrompt?: string,
+		input?: Pick<SubmittedUserInput, "images" | "imageLinks">,
+	): Promise<boolean> {
+		if (this.goalModeEnabled || this.goalModePaused) {
+			this.showWarning("Exit goal mode first.");
+			return false;
+		}
+		if (this.vibeModeEnabled) {
+			this.showWarning("Exit vibe mode first.");
+			return false;
+		}
+		if (this.teamModeEnabled) {
+			this.showWarning("Exit team mode first.");
+			return false;
+		}
+		if (this.planModeEnabled) {
+			const current = this.session.getPlanModeState();
+			const planFilePath = current?.planFilePath ?? this.planModePlanFilePath ?? (await this.#getPlanFilePath());
+			this.session.setPlanModeState({
+				enabled: true,
+				planFilePath,
+				workflow: "parallel",
+				ultraplan: true,
+				reentry: current?.reentry ?? this.#planModeHasEntered,
+			});
+			this.sessionManager.appendModeChange("plan", { planFilePath, ultraplan: true });
+			this.#updatePlanModeStatus();
+			if (this.session.isStreaming) {
+				await this.session.sendPlanModeContext({ deliverAs: "steer" });
+			}
+			this.showStatus(`Ultraplan enabled. Plan file: ${planFilePath}`);
+		} else {
+			if (!this.session.settings.get("plan.enabled")) {
+				this.showWarning("Plan mode is disabled. Enable it in settings (plan.enabled).");
+				return false;
+			}
+			await this.#enterPlanMode({ workflow: "parallel", ultraplan: true });
+		}
+		if (!initialPrompt) return false;
+		if (isKnownSkillCommand(this, initialPrompt)) {
+			await invokeSkillCommandFromText(this, initialPrompt, "steer", {
+				images: input?.images,
+				propagateErrors: true,
+			});
+			return true;
+		}
+		if (this.session.isStreaming) {
+			const images = input?.images?.length ? input.images : undefined;
+			await this.withLocalSubmission(
+				initialPrompt,
+				() => this.session.prompt(initialPrompt, { streamingBehavior: "steer", images }),
+				{ imageCount: images?.length ?? 0 },
+			);
+			return true;
+		}
+		if (this.onInputCallback) {
+			this.onInputCallback(this.startPendingSubmission({ text: initialPrompt, ...input }, { preserveDraft: true }));
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * `/vibe` toggle. Entering installs the ephemeral vibe tools, strips the
 	 * active toolset down to `read`, optional parent-owned `todo`, plus those
@@ -5005,7 +5079,7 @@ export class InteractiveMode implements InteractiveModeContext {
 		const planState = this.session.getPlanModeState();
 		if (planState?.enabled && planState.planFilePath !== planFilePath) {
 			this.session.setPlanModeState({ ...planState, planFilePath });
-			this.sessionManager.appendModeChange("plan", { planFilePath });
+			this.sessionManager.appendModeChange("plan", { planFilePath, ultraplan: planState.ultraplan === true });
 		}
 
 		const contextUsage = this.#getPlanApprovalContextUsage();

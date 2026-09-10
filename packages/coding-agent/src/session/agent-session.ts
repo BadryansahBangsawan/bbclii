@@ -5968,6 +5968,7 @@ export class AgentSession {
 			isHashlineEditMode: this.#resolveActiveEditMode() === "hashline",
 			reentry: state.reentry ?? false,
 			iterative: state.workflow === "iterative",
+			ultraplan: state.ultraplan === true,
 			scoutAvailable: this.#isScoutAvailable(),
 		});
 

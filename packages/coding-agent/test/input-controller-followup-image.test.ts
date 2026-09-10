@@ -67,6 +67,7 @@ function createContext(opts: {
 
 	const handleGoalModeCommand = vi.fn(async (_prompt?: string, _input?: unknown) => true);
 	const handlePlanModeCommand = vi.fn(async (_prompt?: string, _input?: unknown) => true);
+	const handleUltraplanCommand = vi.fn(async (_prompt?: string, _input?: unknown) => true);
 	const handleVibeModeCommand = vi.fn(async (_prompt?: string, _input?: unknown) => true);
 	const ctx = {
 		editor,
@@ -92,6 +93,7 @@ function createContext(opts: {
 		goalModePaused: false,
 		handleGoalModeCommand,
 		handlePlanModeCommand,
+		handleUltraplanCommand,
 		handleVibeModeCommand,
 		withLocalSubmission: async (_text: string, fn: () => unknown) => fn(),
 	} as unknown as InteractiveModeContext;

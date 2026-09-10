@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Added `/ultraplan [prompt]`, an aggressive plan mode that fans parallel scouts before approval and does not toggle off.
+
 ## [18.1.16] - 2026-09-10
 
 ### Added

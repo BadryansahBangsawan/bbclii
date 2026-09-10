@@ -220,6 +220,27 @@ export const BUILTIN_MODE_SLASH_COMMANDS: ReadonlyArray<SlashCommandSpec> = [
 		},
 	},
 	{
+		name: "ultraplan",
+		icon: "plan",
+		description: "Aggressive plan mode: parallel scouts, then approve before execute",
+		inlineHint: "[prompt]",
+		allowArgs: true,
+		getTuiAutocompleteDescription: runtime => {
+			if (!runtime.ctx.settings.get("plan.enabled" as SettingPath)) return "Ultraplan: disabled in settings";
+			if (runtime.ctx.planModeEnabled) {
+				const planFile = runtime.ctx.planModePlanFilePath;
+				return `Ultraplan: on${planFile ? ` (${path.basename(planFile)})` : ""}`;
+			}
+			if (runtime.ctx.goalModeEnabled) return "Ultraplan: blocked by goal mode";
+			return "Ultraplan: off";
+		},
+		handleTui: async (command, runtime) => {
+			await runWithDetachedModeDraft(command, runtime, () =>
+				runtime.ctx.handleUltraplanCommand(command.args || undefined, runtime.input),
+			);
+		},
+	},
+	{
 		name: "plan-review",
 		icon: "plan",
 		description: "Re-open the plan review for the latest plan (plan mode only)",

@@ -82,6 +82,7 @@ export interface SegmentContext {
 	planMode: {
 		enabled: boolean;
 		paused: boolean;
+		ultraplan?: boolean;
 	} | null;
 	prewalk: {
 		enabled: boolean;

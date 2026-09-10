@@ -70,9 +70,9 @@ New request primary; existing plan reference only. NEVER reconcile old plan whil
 ## Workflow — parallel
 
 <procedure>
-1. **Understand** — request and supporting code.{{#if scoutAvailable}}{{#if taskAvailable}} Scope spans areas → parallel `scout` subagents via `task`, distinct focuses: implementations, related components, test patterns.{{/if}}{{/if}} Find reusable code before proposing new.
+1. **Understand** — request and supporting code.{{#if scoutAvailable}}{{#if taskAvailable}}{{#if ultraplan}} Scope spans 2+ areas → MUST fan parallel `scout` subagents via `task` (distinct focuses: implementations, related components, test patterns). NEVER sequential scout-then-idle. Single-file/well-scoped → glob/grep/read is enough; record that choice in Assumptions.{{else}} Scope spans areas → parallel `scout` subagents via `task`, distinct focuses: implementations, related components, test patterns.{{/if}}{{/if}}{{/if}} Find reusable code before proposing new.
 2. **Design** — draft approach from findings, briefly weigh tradeoffs, commit. Large/cross-cutting → MAY spawn critique subagent before commitment.
-3. **Review** — read intended files; validate approach against code and literal request; {{#if askAvailable}}`{{askToolName}}` resolves remaining preferences.{{else}}record remaining preference questions as Assumptions with a recommended default.{{/if}}
+3. **Review** — {{#if ultraplan}}MUST re-read intended files after scouts return{{else}}read intended files{{/if}}; validate approach against code and literal request; {{#if askAvailable}}`{{askToolName}}` resolves remaining preferences.{{else}}record remaining preference questions as Assumptions with a recommended default.{{/if}}
 4. **Write** — plan per **Plan contents**.
 </procedure>
 {{/if}}
