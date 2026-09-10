@@ -21,7 +21,11 @@ describe("parseArgs — Windows extension paths", () => {
 
 describe("parseArgs — trusted extension allowlist", () => {
 	it("accepts repeatable native absolute paths", () => {
-		const parsed = parseArgs(["--trusted-extension", "/opt/bbcli/policy.ts", "--trusted-extension=/opt/bbcli/audit.ts"]);
+		const parsed = parseArgs([
+			"--trusted-extension",
+			"/opt/bbcli/policy.ts",
+			"--trusted-extension=/opt/bbcli/audit.ts",
+		]);
 
 		expect(parsed.trustedExtensions).toEqual(["/opt/bbcli/policy.ts", "/opt/bbcli/audit.ts"]);
 	});

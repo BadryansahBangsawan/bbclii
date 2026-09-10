@@ -4487,7 +4487,8 @@ export const SETTINGS_SCHEMA = {
 			tab: "tools",
 			group: "GitHub",
 			label: "GitHub View Cache",
-			description: "Cache rendered issue/PR view output in ~/.bbcli/cache/github-cache.db so repeated reads are free",
+			description:
+				"Cache rendered issue/PR view output in ~/.bbcli/cache/github-cache.db so repeated reads are free",
 		},
 	},
 

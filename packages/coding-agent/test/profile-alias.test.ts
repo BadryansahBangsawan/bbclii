@@ -298,7 +298,9 @@ describe("profile alias installer", () => {
 		// was interrupted or hand-edited. Appending a fresh block would let the
 		// *next* install splice from the stale start through the new end, deleting
 		// the user config in between. Refuse and preserve the file untouched.
-		const original = ["# >>> bbcli profile alias: bbcli-work >>>", "bbcli-work() {", "export SECRET=keepme"].join("\n");
+		const original = ["# >>> bbcli profile alias: bbcli-work >>>", "bbcli-work() {", "export SECRET=keepme"].join(
+			"\n",
+		);
 		const files = new Map<string, string>([["/home/me/.zshrc", original]]);
 		let wrote = false;
 

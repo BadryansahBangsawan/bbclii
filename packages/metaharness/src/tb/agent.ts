@@ -121,6 +121,7 @@ web_search:
 	const writeConfig = await vm.exec(
 		`mkdir -p "$HOME/.bbcli/agent"\ncat > "$HOME/.bbcli/agent/models.yml" <<'OMP_MODELS_EOF'\n${modelsYaml}OMP_MODELS_EOF\ncat > "$HOME/.bbcli/agent/config.yml" <<'OMP_CONFIG_EOF'\n${configYaml}OMP_CONFIG_EOF`,
 	);
-	if (writeConfig.exitCode !== 0) throw new Error(`Could not install bbcli configuration: ${writeConfig.stderr.trim()}`);
+	if (writeConfig.exitCode !== 0)
+		throw new Error(`Could not install bbcli configuration: ${writeConfig.stderr.trim()}`);
 	return entrypoint;
 }

@@ -119,7 +119,9 @@ describe("generateCompletion — fish", () => {
 	});
 
 	it("maps value sources to fish completion args", () => {
-		expect(out).toContain("-l model -d 'Model to use' -x -a '(command bbcli __complete models -- (commandline -ct))'");
+		expect(out).toContain(
+			"-l model -d 'Model to use' -x -a '(command bbcli __complete models -- (commandline -ct))'",
+		);
 		expect(out).toContain("-l thinking -d 'Effort' -x -a 'low high'");
 		expect(out).toContain("-l tools -d 'Tools' -x -a 'read bash'");
 		expect(out).toContain("-s r -l resume -d 'Resume' -x -a '(command bbcli __complete sessions");

@@ -246,7 +246,9 @@ export class PluginManager {
 		}
 
 		const name = typeof pluginPkg.name === "string" && pluginPkg.name.length > 0 ? pluginPkg.name : fallbackName;
-		const manifest: PluginManifest = pluginPkg.bbcli || pluginPkg.omp || pluginPkg.pi || { version: pluginPkg.version };
+		const manifest: PluginManifest = pluginPkg.bbcli ||
+			pluginPkg.omp ||
+			pluginPkg.pi || { version: pluginPkg.version };
 		manifest.version = pluginPkg.version;
 		const runtimeState = config.plugins[name] || {
 			version: pluginPkg.version,
