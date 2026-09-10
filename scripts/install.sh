@@ -254,6 +254,28 @@ ensure_install_dir_on_path() {
 }
 
 
+# origin = official OMP (bbcli update), bbclii = this fork (local features).
+configure_source_remotes() {
+    src="$1"
+    omp="https://github.com/can1357/oh-my-pi.git"
+    fork="https://github.com/${REPO}.git"
+    origin_url="$(git -C "$src" remote get-url origin 2>/dev/null || true)"
+    bbclii_url="$(git -C "$src" remote get-url bbclii 2>/dev/null || true)"
+    if echo "$origin_url" | grep -q "BadryansahBangsawan/bbclii" && [ -z "$bbclii_url" ]; then
+        git -C "$src" remote rename origin bbclii
+        origin_url=""
+    fi
+    if [ -z "$(git -C "$src" remote get-url origin 2>/dev/null || true)" ]; then
+        git -C "$src" remote add origin "$omp"
+    elif ! echo "$(git -C "$src" remote get-url origin)" | grep -q "can1357/oh-my-pi"; then
+        git -C "$src" remote set-url origin "$omp"
+    fi
+    if [ -z "$(git -C "$src" remote get-url bbclii 2>/dev/null || true)" ]; then
+        git -C "$src" remote add bbclii "$fork"
+    fi
+    git -C "$src" fetch origin main >/dev/null 2>&1 || true
+}
+
 # Install via bun: clone the workspace (catalog: deps cannot resolve from a
 # lone package), bun install at the repo root, then write a launcher.
 install_via_bun() {
@@ -265,28 +287,34 @@ install_via_bun() {
 
     SRC_DIR="${BBCLI_SRC_DIR:-$HOME/.bbcli/src}"
     mkdir -p "$(dirname "$SRC_DIR")"
-    rm -rf "$SRC_DIR"
 
-    if [ -n "$REF" ]; then
-        if git clone --depth 1 --branch "$REF" "https://github.com/${REPO}.git" "$SRC_DIR" >/dev/null 2>&1; then
-            :
+    if [ -d "$SRC_DIR/packages/coding-agent" ]; then
+        echo "Using existing source checkout $SRC_DIR"
+    else
+        rm -rf "$SRC_DIR"
+        if [ -n "$REF" ]; then
+            if git clone --branch "$REF" "https://github.com/${REPO}.git" "$SRC_DIR" >/dev/null 2>&1; then
+                :
+            else
+                git clone "https://github.com/${REPO}.git" "$SRC_DIR"
+                (cd "$SRC_DIR" && git checkout "$REF")
+            fi
         else
             git clone "https://github.com/${REPO}.git" "$SRC_DIR"
-            (cd "$SRC_DIR" && git checkout "$REF")
         fi
-    else
-        git clone --depth 1 "https://github.com/${REPO}.git" "$SRC_DIR"
-    fi
 
-    # Pull LFS files
-    if has_git_lfs; then
-        (cd "$SRC_DIR" && git lfs pull)
+        # Pull LFS files
+        if has_git_lfs; then
+            (cd "$SRC_DIR" && git lfs pull)
+        fi
     fi
 
     if [ ! -d "$SRC_DIR/packages/coding-agent" ]; then
         echo "Expected package at ${SRC_DIR}/packages/coding-agent"
         exit 1
     fi
+
+    configure_source_remotes "$SRC_DIR"
 
     (cd "$SRC_DIR" && bun install) || {
         echo "Failed to install from source"
@@ -307,6 +335,7 @@ EOF
 
     echo ""
     echo "✓ Installed bbcli via bun"
+    echo "  origin = official OMP; local features kept; bbcli update merges origin/main"
     ensure_install_dir_on_path
     echo "Run 'bbcli' to get started!"
 }

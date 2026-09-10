@@ -5,6 +5,7 @@
 ### Changed
 
 - Source-install `bbcli update` merges `origin` instead of fast-forward-only, so local features stay when `origin` is official OMP.
+- `npm i -g @badryansah99/bbcli` source-installs into `~/.bbcli/src` (keeps an existing checkout), sets `origin` to official OMP, and falls back to the GitHub binary. `bbcli update` merges `origin/main`.
 
 ### Fixed
 
