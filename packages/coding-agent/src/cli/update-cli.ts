@@ -1964,6 +1964,137 @@ function persistChannel(channel: UpdateChannel): void {
 	}
 }
 
+function getSourceInstallDir(): string {
+	const override = process.env.BBCLI_SRC_DIR?.trim();
+	if (override) return path.resolve(override);
+	return path.join(os.homedir(), ".bbcli", "src");
+}
+
+function isSourceCheckout(srcDir: string): boolean {
+	return (
+		fs.existsSync(path.join(srcDir, ".git")) &&
+		fs.existsSync(path.join(srcDir, "packages", "coding-agent", "src", "cli.ts"))
+	);
+}
+
+function launcherPointsAtSource(ompPath: string | undefined, srcDir: string): boolean {
+	if (!ompPath) return false;
+	try {
+		const body = fs.readFileSync(ompPath, "utf8");
+		const posixNeedle = path.join("packages", "coding-agent").split(path.sep).join("/");
+		return body.includes(srcDir) || body.includes(posixNeedle);
+	} catch {
+		return false;
+	}
+}
+
+function isSourceInstall(ompPath: string | undefined, srcDir: string): boolean {
+	return isSourceCheckout(srcDir) && launcherPointsAtSource(ompPath, srcDir);
+}
+
+async function readPackageVersion(pkgJsonPath: string): Promise<string | undefined> {
+	try {
+		const parsed: unknown = await Bun.file(pkgJsonPath).json();
+		if (parsed && typeof parsed === "object" && "version" in parsed && typeof parsed.version === "string") {
+			return parsed.version;
+		}
+	} catch (err) {
+		if (!isEnoent(err)) throw err;
+	}
+	return undefined;
+}
+
+async function installHostNatives(srcDir: string): Promise<void> {
+	if (process.platform !== "linux" && process.platform !== "darwin") return;
+	if (process.arch !== "x64" && process.arch !== "arm64") return;
+	const tag = `${process.platform === "darwin" ? "darwin" : "linux"}-${process.arch}`;
+	const nativeDir = path.join(srcDir, "packages", "natives", "native");
+	const version = await readPackageVersion(path.join(srcDir, "packages", "natives", "package.json"));
+	if (!version) return;
+	let names: string[] = [];
+	try {
+		names = fs.readdirSync(nativeDir);
+	} catch (err) {
+		if (!isEnoent(err)) throw err;
+		fs.mkdirSync(nativeDir, { recursive: true });
+	}
+	if (names.some(name => name.startsWith(`pi_natives.${tag}`) && name.endsWith(".node"))) return;
+
+	const url = `https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz`;
+	console.log(chalk.dim(`Fetching native addon ${tag}@${version}...`));
+	const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-natives-"));
+	try {
+		const response = await fetch(url, { signal: withTimeoutSignal(BINARY_DOWNLOAD_TIMEOUT_MS) });
+		if (!response.ok) {
+			console.log(chalk.yellow(`warning: could not download ${url}`));
+			return;
+		}
+		const tgz = path.join(tmp, "natives.tgz");
+		await Bun.write(tgz, await response.arrayBuffer());
+		const extracted = await $`tar -xzf ${tgz} -C ${tmp}`.nothrow();
+		if (extracted.exitCode !== 0) {
+			console.log(chalk.yellow("warning: failed to extract native addon tarball"));
+			return;
+		}
+		const pkgDir = path.join(tmp, "package");
+		for (const name of fs.readdirSync(pkgDir)) {
+			if (!name.endsWith(".node")) continue;
+			fs.copyFileSync(path.join(pkgDir, name), path.join(nativeDir, name));
+		}
+	} finally {
+		fs.rmSync(tmp, { recursive: true, force: true });
+	}
+}
+
+async function updateViaSourceCheckout(srcDir: string, opts: { check: boolean; force: boolean }): Promise<void> {
+	console.log(chalk.dim(`Source install: ${srcDir}`));
+	const fetchResult = await $`git fetch origin`.cwd(srcDir).nothrow();
+	if (fetchResult.exitCode !== 0) {
+		throw new Error(`git fetch failed with exit code ${fetchResult.exitCode}`);
+	}
+	const branch = (await $`git rev-parse --abbrev-ref HEAD`.cwd(srcDir).text()).trim();
+	const remoteRef = `origin/${branch === "HEAD" ? "main" : branch}`;
+	const localSha = (await $`git rev-parse HEAD`.cwd(srcDir).text()).trim();
+	const remoteProbe = await $`git rev-parse ${remoteRef}`.cwd(srcDir).quiet().nothrow();
+	if (remoteProbe.exitCode !== 0) {
+		throw new Error(`No upstream ref ${remoteRef}`);
+	}
+	const remoteSha = remoteProbe.text().trim();
+	const icon = theme?.status?.success ?? "✔";
+	if (localSha === remoteSha && !opts.force) {
+		console.log(chalk.green(`${icon} Already up to date`));
+		return;
+	}
+	if (opts.check) {
+		console.log(chalk.cyan(`New commits on ${remoteRef} (${remoteSha.slice(0, 7)})`));
+		return;
+	}
+	const nativesVersionBefore = await readPackageVersion(path.join(srcDir, "packages", "natives", "package.json"));
+	const merge = await $`git merge --ff-only ${remoteRef}`.cwd(srcDir).nothrow();
+	if (merge.exitCode !== 0) {
+		throw new Error("git update failed (not fast-forward). Re-run the installer.");
+	}
+	const bunInstall = await $`bun install`.cwd(srcDir).nothrow();
+	if (bunInstall.exitCode !== 0) {
+		throw new Error(`bun install failed with exit code ${bunInstall.exitCode}`);
+	}
+	const nativesVersionAfter = await readPackageVersion(path.join(srcDir, "packages", "natives", "package.json"));
+	if (nativesVersionAfter !== nativesVersionBefore) {
+		const nativeDir = path.join(srcDir, "packages", "natives", "native");
+		try {
+			for (const name of fs.readdirSync(nativeDir)) {
+				if (name.endsWith(".node")) fs.rmSync(path.join(nativeDir, name));
+			}
+		} catch (err) {
+			if (!isEnoent(err)) throw err;
+		}
+	}
+	await installHostNatives(srcDir);
+	const version = (await readPackageVersion(path.join(srcDir, "packages", "coding-agent", "package.json"))) ?? VERSION;
+	const newSha = (await $`git rev-parse HEAD`.cwd(srcDir).text()).trim();
+	console.log(chalk.green(`${icon} Updated to ${version} (${newSha.slice(0, 7)})`));
+	console.log(chalk.dim(`Restart ${APP_NAME} to load the new code.`));
+}
 /**
  * Run the update command.
  */
@@ -1973,6 +2104,17 @@ export async function runUpdateCommand(opts: {
 	channel?: UpdateChannel;
 }): Promise<void> {
 	console.log(chalk.dim(`Current version: ${VERSION}`));
+	const srcDir = getSourceInstallDir();
+	if (isSourceInstall(resolveOmpPath(), srcDir)) {
+		try {
+			await updateViaSourceCheckout(srcDir, { check: opts.check, force: opts.force });
+		} catch (err) {
+			console.error(chalk.red(`Update failed: ${err}`));
+			process.exit(1);
+		}
+		return;
+	}
+
 	const persistedChannel = readPersistedChannel() ?? "stable";
 	const channel = opts.channel ?? persistedChannel;
 	const isChannelSwitch = opts.channel !== undefined && opts.channel !== persistedChannel;
