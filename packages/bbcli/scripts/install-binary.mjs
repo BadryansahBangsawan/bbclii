@@ -49,9 +49,49 @@ function get(target, redirects = 0) {
 	});
 }
 
+function latestReleaseTag() {
+	const { promise, resolve, reject } = Promise.withResolvers();
+	https
+		.get(`https://api.github.com/repos/${REPO}/releases/latest`, {
+			headers: { "User-Agent": "bbcli-npm", Accept: "application/vnd.github+json" },
+		}, res => {
+			if (res.statusCode !== 200) {
+				res.resume();
+				reject(new Error(`HTTP ${res.statusCode} latest release`));
+				return;
+			}
+			const chunks = [];
+			res.on("data", c => chunks.push(c));
+			res.on("end", () => {
+				try {
+					const tagName = JSON.parse(Buffer.concat(chunks).toString("utf8")).tag_name;
+					if (typeof tagName !== "string" || !tagName) {
+						reject(new Error("latest release missing tag_name"));
+						return;
+					}
+					resolve(tagName);
+				} catch (err) {
+					reject(err);
+				}
+			});
+			res.on("error", reject);
+		})
+		.on("error", reject);
+	return promise;
+}
+
+
 try {
 	console.log(`bbcli: fetching ${asset} @${tag}...`);
-	await get(url);
+	try {
+		await get(url);
+	} catch (first) {
+		const latest = await latestReleaseTag();
+		if (latest === tag) throw first;
+		const fallbackUrl = `https://github.com/${REPO}/releases/download/${latest}/${asset}`;
+		console.log(`bbcli: ${tag} missing, fetching ${asset} @${latest}...`);
+		await get(fallbackUrl);
+	}
 	fs.chmodSync(dest, 0o755);
 	if (process.platform !== "win32") {
 		const localDir = path.join(os.homedir(), ".local", "bin");
