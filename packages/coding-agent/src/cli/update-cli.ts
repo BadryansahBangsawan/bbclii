@@ -2117,6 +2117,13 @@ async function gitRemoteHeadSha(srcDir: string, timeoutMs: number): Promise<stri
 	}
 }
 
+/** True when `sha` is already in this checkout's history (merged or equal). */
+async function sourceCheckoutContains(srcDir: string, sha: string): Promise<boolean> {
+	const ancestor = await $`git merge-base --is-ancestor ${sha} HEAD`.cwd(srcDir).quiet().nothrow();
+	return ancestor.exitCode === 0;
+}
+
+
 /** Latest available version/SHA, or undefined when already current or the check fails. */
 export async function checkForAvailableUpdate(
 	currentVersion: string,
@@ -2127,9 +2134,9 @@ export async function checkForAvailableUpdate(
 	if (isSourceInstall(resolveOmpPath(), srcDir)) {
 		const local = await $`git rev-parse HEAD`.cwd(srcDir).quiet().nothrow();
 		if (local.exitCode !== 0) return undefined;
-		const localSha = local.text().trim();
 		const remoteSha = await gitRemoteHeadSha(srcDir, timeoutMs);
-		if (!remoteSha || remoteSha === localSha) return undefined;
+		if (!remoteSha) return undefined;
+		if (await sourceCheckoutContains(srcDir, remoteSha)) return undefined;
 		return remoteSha.slice(0, 7);
 	}
 	const release = await getLatestRelease({ timeoutMs, channel: options.channel });
@@ -2206,7 +2213,7 @@ async function updateViaSourceCheckout(srcDir: string, opts: { check: boolean; f
 	}
 	const remoteSha = remoteProbe.text().trim();
 	const icon = theme?.status?.success ?? "✔";
-	if (localSha === remoteSha && !opts.force) {
+	if ((await sourceCheckoutContains(srcDir, remoteSha)) && !opts.force) {
 		console.log(chalk.green(`${icon} Already up to date`));
 		return;
 	}
@@ -2215,9 +2222,15 @@ async function updateViaSourceCheckout(srcDir: string, opts: { check: boolean; f
 		return;
 	}
 	const nativesVersionBefore = await readPackageVersion(path.join(srcDir, "packages", "natives", "package.json"));
-	const merge = await $`git merge --ff-only ${remoteRef}`.cwd(srcDir).nothrow();
+	let merge = await $`git merge --ff-only ${remoteRef}`.cwd(srcDir).nothrow();
 	if (merge.exitCode !== 0) {
-		throw new Error("git update failed (not fast-forward). Re-run the installer.");
+		merge = await $`git merge --no-edit ${remoteRef}`.cwd(srcDir).nothrow();
+		if (merge.exitCode !== 0) {
+			await $`git merge --abort`.cwd(srcDir).nothrow();
+			throw new Error(
+				"git update failed (merge conflicts with local commits). Resolve in the source checkout, then retry.",
+			);
+		}
 	}
 	const bunInstall = await $`bun install`.cwd(srcDir).nothrow();
 	if (bunInstall.exitCode !== 0) {

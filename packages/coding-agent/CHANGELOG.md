@@ -2,12 +2,18 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Source-install `bbcli update` merges `origin` instead of fast-forward-only, so local features stay when `origin` is official OMP.
+
 ### Fixed
 
 - Marketplace plugins that share a repository root now load only their declared skills instead of every skill in the repository ([#11513](https://github.com/can1357/oh-my-pi/issues/11513)).
+
 ### Added
 
 - Added `/ultraplan [prompt]`, an aggressive plan mode that fans parallel scouts before approval and does not toggle off.
+
 
 ## [18.1.16] - 2026-09-10
 
