@@ -50,6 +50,14 @@ irm https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scripts/in
 
 Then run `bbcli`.
 
+**npm**
+
+```sh
+npm i -g @badryansah99/bbcli
+```
+
+Then `bbcli update` for later versions.
+
 macOS · Linux · Windows · bun ≥ 1.3.14
 
 ### Shell completions
