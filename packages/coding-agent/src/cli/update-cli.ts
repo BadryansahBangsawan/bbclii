@@ -2200,13 +2200,13 @@ async function installHostNatives(srcDir: string): Promise<void> {
 
 async function updateViaSourceCheckout(srcDir: string, opts: { check: boolean; force: boolean }): Promise<void> {
 	console.log(chalk.dim(`Source install: ${srcDir}`));
-	const fetchResult = await $`git fetch origin`.cwd(srcDir).nothrow();
+	const branch = (await $`git rev-parse --abbrev-ref HEAD`.cwd(srcDir).text()).trim();
+	const remoteBranch = branch === "HEAD" ? "main" : branch;
+	const fetchResult = await $`git fetch origin ${remoteBranch}`.cwd(srcDir).nothrow();
 	if (fetchResult.exitCode !== 0) {
 		throw new Error(`git fetch failed with exit code ${fetchResult.exitCode}`);
 	}
-	const branch = (await $`git rev-parse --abbrev-ref HEAD`.cwd(srcDir).text()).trim();
-	const remoteRef = `origin/${branch === "HEAD" ? "main" : branch}`;
-	const localSha = (await $`git rev-parse HEAD`.cwd(srcDir).text()).trim();
+	const remoteRef = `origin/${remoteBranch}`;
 	const remoteProbe = await $`git rev-parse ${remoteRef}`.cwd(srcDir).quiet().nothrow();
 	if (remoteProbe.exitCode !== 0) {
 		throw new Error(`No upstream ref ${remoteRef}`);
