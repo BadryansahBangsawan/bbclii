@@ -16,7 +16,7 @@
 		"url": "git+https://github.com/BadryansahBangsawan/bbclii.git",
 		"directory": "packages/bbcli"
 	},
-	"files": ["bin", "scripts"],
+	"files": ["bin", "scripts", "README.md"],
 	"engines": {
 		"node": ">=18"
 	},
