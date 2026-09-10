@@ -309,7 +309,7 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 	// Update @bbcli/* catalog entries in root package.json
 	console.log("Updating root catalog versions...");
 	let rootPkgRaw = await Bun.file("package.json").text();
-	rootPkgRaw = rootPkgRaw.replace(/("@oh-my-pi\/[^"]+":\s*)"[^"]+"/g, `$1"${version}"`);
+	rootPkgRaw = rootPkgRaw.replace(/("@(?:bbcli|oh-my-pi)\/[^"]+":\s*)"[^"]+"/g, `$1"${version}"`);
 	await Bun.write("package.json", rootPkgRaw);
 	console.log("  Updated root catalog @bbcli/* entries");
 
@@ -365,7 +365,6 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 
 	// 4. Regenerate lockfiles and generated configs
 	console.log("Regenerating lockfiles...");
-	await $`rm -f bun.lock`;
 	await $`bun install`;
 	await $`cargo generate-lockfile`;
 	await generateNixBunDeps(nixBunDepsGenerator);

@@ -22,7 +22,7 @@
     },
     "packages/agent": {
       "name": "@bbcli/pi-agent-core",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "dependencies": {
         "@bbcli/pi-ai": "catalog:",
         "@bbcli/pi-catalog": "catalog:",
@@ -41,7 +41,7 @@
     },
     "packages/ai": {
       "name": "@bbcli/pi-ai",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "dependencies": {
         "@bbcli/omptype": "catalog:",
         "@bbcli/pi-catalog": "catalog:",
@@ -63,7 +63,7 @@
     },
     "packages/catalog": {
       "name": "@bbcli/pi-catalog",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "dependencies": {
         "@bbcli/omptype": "catalog:",
         "@bbcli/pi-utils": "catalog:",
@@ -76,7 +76,7 @@
     },
     "packages/coding-agent": {
       "name": "@bbcli/pi-coding-agent",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "bin": {
         "bbcli": "src/cli.ts",
       },
@@ -166,7 +166,7 @@
     },
     "packages/mnemopi": {
       "name": "@bbcli/pi-mnemopi",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "bin": {
         "mnemopi": "src/cli.ts",
       },
@@ -192,7 +192,7 @@
     },
     "packages/natives": {
       "name": "@bbcli/pi-natives",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "devDependencies": {
         "@napi-rs/cli": "catalog:",
         "@types/bun": "catalog:",
@@ -207,7 +207,7 @@
     },
     "packages/omptype": {
       "name": "@bbcli/omptype",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "devDependencies": {
         "@ark/attest": "0.56.3",
         "@ark/schema": "0.56.2",
@@ -220,7 +220,7 @@
     },
     "packages/snapcompact": {
       "name": "@bbcli/snapcompact",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "dependencies": {
         "@bbcli/pi-ai": "catalog:",
         "@bbcli/pi-catalog": "catalog:",
@@ -234,7 +234,7 @@
     },
     "packages/stats": {
       "name": "@bbcli/stats",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "bin": {
         "bbcli-stats": "./src/index.ts",
       },
@@ -259,7 +259,7 @@
     },
     "packages/tui": {
       "name": "@bbcli/pi-tui",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "dependencies": {
         "@bbcli/pi-natives": "catalog:",
         "@bbcli/pi-utils": "catalog:",
@@ -294,7 +294,7 @@
     },
     "packages/utils": {
       "name": "@bbcli/pi-utils",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "dependencies": {
         "@bbcli/pi-natives": "catalog:",
       },
@@ -304,7 +304,7 @@
     },
     "packages/wire": {
       "name": "@bbcli/pi-wire",
-      "version": "18.1.15",
+      "version": "18.1.16",
       "devDependencies": {
         "@types/bun": "catalog:",
       },
@@ -337,18 +337,18 @@
     "@babel/parser": "^7.29.7",
     "@babel/traverse": "^7.29.7",
     "@babel/types": "^7.29.7",
-    "@bbcli/omptype": "18.1.15",
-    "@bbcli/pi-agent-core": "18.1.15",
-    "@bbcli/pi-ai": "18.1.15",
-    "@bbcli/pi-catalog": "18.1.15",
-    "@bbcli/pi-coding-agent": "18.1.15",
-    "@bbcli/pi-mnemopi": "18.1.15",
-    "@bbcli/pi-natives": "18.1.15",
-    "@bbcli/pi-tui": "18.1.15",
-    "@bbcli/pi-utils": "18.1.15",
-    "@bbcli/pi-wire": "18.1.15",
-    "@bbcli/snapcompact": "18.1.15",
-    "@bbcli/stats": "18.1.15",
+    "@bbcli/omptype": "18.1.16",
+    "@bbcli/pi-agent-core": "18.1.16",
+    "@bbcli/pi-ai": "18.1.16",
+    "@bbcli/pi-catalog": "18.1.16",
+    "@bbcli/pi-coding-agent": "18.1.16",
+    "@bbcli/pi-mnemopi": "18.1.16",
+    "@bbcli/pi-natives": "18.1.16",
+    "@bbcli/pi-tui": "18.1.16",
+    "@bbcli/pi-utils": "18.1.16",
+    "@bbcli/pi-wire": "18.1.16",
+    "@bbcli/snapcompact": "18.1.16",
+    "@bbcli/stats": "18.1.16",
     "@huggingface/transformers": "^4.2.0",
     "@napi-rs/cli": "3.7.2",
     "@opentelemetry/api": "^1.9.1",

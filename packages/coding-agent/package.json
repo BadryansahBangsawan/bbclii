@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@bbcli/pi-coding-agent",
-  "version": "18.1.15",
+  "version": "18.1.16",
   "description": "Coding agent CLI with read, bash, edit, write tools and session management",
   "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",

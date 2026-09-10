@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@bbcli/pi-mnemopi",
-  "version": "18.1.15",
+  "version": "18.1.16",
   "description": "Local SQLite memory engine for BBCLI agents",
   "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",

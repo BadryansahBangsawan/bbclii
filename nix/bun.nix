@@ -121,6 +121,22 @@
     url = "https://registry.npmjs.org/@babel/types/-/types-7.29.8.tgz";
     hash = "sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==";
   };
+  "@bbcli/browser-relay" = copyPathToStore ../packages/browser-relay;
+  "@bbcli/collab-web" = copyPathToStore ../packages/collab-web;
+  "@bbcli/omptype" = copyPathToStore ../packages/omptype;
+  "@bbcli/pi-agent-core" = copyPathToStore ../packages/agent;
+  "@bbcli/pi-ai" = copyPathToStore ../packages/ai;
+  "@bbcli/pi-catalog" = copyPathToStore ../packages/catalog;
+  "@bbcli/pi-coding-agent" = copyPathToStore ../packages/coding-agent;
+  "@bbcli/pi-metaharness" = copyPathToStore ../packages/metaharness;
+  "@bbcli/pi-mnemopi" = copyPathToStore ../packages/mnemopi;
+  "@bbcli/pi-natives" = copyPathToStore ../packages/natives;
+  "@bbcli/pi-tui" = copyPathToStore ../packages/tui;
+  "@bbcli/pi-utils" = copyPathToStore ../packages/utils;
+  "@bbcli/pi-wire" = copyPathToStore ../packages/wire;
+  "@bbcli/snapcompact" = copyPathToStore ../packages/snapcompact;
+  "@bbcli/stats" = copyPathToStore ../packages/stats;
+  "@bbcli/typescript-edit-benchmark" = copyPathToStore ../packages/typescript-edit-benchmark;
   "@bgotink/kdl@0.4.0" = fetchurl {
     url = "https://registry.npmjs.org/@bgotink/kdl/-/kdl-0.4.0.tgz";
     hash = "sha512-F0uJCjo5FQvFdcGF5QbYVNfcGiRWlocuzyIdQxottZF2+gu6L2xjMGEu9PIpse2hifAca/19vIospgaETCKxIg==";
@@ -641,22 +657,6 @@
     url = "https://registry.npmjs.org/@octokit/types/-/types-18.0.0.tgz";
     hash = "sha512-l6bAF43PNxkJp6g+W4PjoUSSkxHomXw2nOum5CTftJz1NlV3vu93NImgOYtLf6CbBUb5j+fiuzW0PPQ5JTSvZA==";
   };
-  "@bbcli/browser-relay" = copyPathToStore ../packages/browser-relay;
-  "@bbcli/collab-web" = copyPathToStore ../packages/collab-web;
-  "@bbcli/stats" = copyPathToStore ../packages/stats;
-  "@bbcli/omptype" = copyPathToStore ../packages/omptype;
-  "@bbcli/pi-agent-core" = copyPathToStore ../packages/agent;
-  "@bbcli/pi-ai" = copyPathToStore ../packages/ai;
-  "@bbcli/pi-catalog" = copyPathToStore ../packages/catalog;
-  "@bbcli/pi-coding-agent" = copyPathToStore ../packages/coding-agent;
-  "@bbcli/pi-metaharness" = copyPathToStore ../packages/metaharness;
-  "@bbcli/pi-mnemopi" = copyPathToStore ../packages/mnemopi;
-  "@bbcli/pi-natives" = copyPathToStore ../packages/natives;
-  "@bbcli/pi-tui" = copyPathToStore ../packages/tui;
-  "@bbcli/pi-utils" = copyPathToStore ../packages/utils;
-  "@bbcli/pi-wire" = copyPathToStore ../packages/wire;
-  "@bbcli/snapcompact" = copyPathToStore ../packages/snapcompact;
-  "@bbcli/typescript-edit-benchmark" = copyPathToStore ../packages/typescript-edit-benchmark;
   "@opentelemetry/api-logs@0.220.0" = fetchurl {
     url = "https://registry.npmjs.org/@opentelemetry/api-logs/-/api-logs-0.220.0.tgz";
     hash = "sha512-CmVa4ImJ+ynfrPMNaAXHET6Bhb44SwzmfyVJFq9ni2jgXJR/l7C6gfVFddNmHP+ZOkP9cf4f9DBe68qVLTHc9w==";

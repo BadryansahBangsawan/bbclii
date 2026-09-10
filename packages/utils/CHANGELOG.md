@@ -2,10 +2,11 @@
 
 ## [Unreleased]
 
+## [18.1.16] - 2026-09-10
+
 ### Changed
 
 - Config identity is now `bbcli` / `~/.bbcli`, with a one-time migration from `~/.omp`.
-
 
 ## [18.1.13] - 2026-09-07
 

@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@bbcli/pi-wire",
-  "version": "18.1.15",
+  "version": "18.1.16",
   "description": "Shared wire protocol types for BBCLI packages",
   "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",

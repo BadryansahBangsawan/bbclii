@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@bbcli/pi-catalog",
-  "version": "18.1.15",
+  "version": "18.1.16",
   "description": "Model catalog for bbcli: bundled model database, provider discovery descriptors, model identity, classification, and equivalence",
   "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",
