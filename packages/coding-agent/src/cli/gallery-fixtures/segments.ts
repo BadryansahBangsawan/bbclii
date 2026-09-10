@@ -47,6 +47,7 @@ export function createGallerySegmentContext(sessionOptions?: GallerySessionOptio
 		goalMode: null,
 		vibeMode: null,
 		teamMode: null,
+		vim: null,
 		collab: { role: "host", participantCount: 3 },
 		usageStats: {
 			input: 12_400,
@@ -239,6 +240,25 @@ function variantsFor(id: StatusLineSegmentId): readonly SegmentVariantSpec[] {
 			return [
 				{ label: "host active", context: { collab: { role: "host", participantCount: 3 } } },
 				{ label: "guest active", context: { collab: { role: "guest", participantCount: 3 } } },
+			];
+		case "vim":
+			return [
+				{
+					label: "normal",
+					context: { vim: { mode: "normal", pending: "", selectedLines: 0, display: "text" } },
+				},
+				{
+					label: "insert",
+					context: { vim: { mode: "insert", pending: "", selectedLines: 0, display: "text" } },
+				},
+				{
+					label: "visual with count",
+					context: { vim: { mode: "visual-line", pending: "2d", selectedLines: 4, display: "text" } },
+				},
+				{
+					label: "icon mode",
+					context: { vim: { mode: "normal", pending: "", selectedLines: 0, display: "icon" } },
+				},
 			];
 		default:
 			return [{ label: "canonical" }];

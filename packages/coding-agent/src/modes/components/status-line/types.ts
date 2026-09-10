@@ -102,6 +102,16 @@ export interface SegmentContext {
 		enabled: boolean;
 		size: number;
 	} | null;
+	/** Modal editing state, or null when `tui.vimMode` is off. */
+	vim: {
+		mode: "insert" | "normal" | "visual" | "visual-line";
+		/** Half-typed operator/count (`"2d"`), empty when nothing is pending. */
+		pending: string;
+		/** Lines spanned by the active Visual selection; 0 outside Visual modes. */
+		selectedLines: number;
+		/** `tui.vimModeDisplay`: how the mode renders in the status line. */
+		display: "text" | "icon" | "none";
+	} | null;
 	collab: CollabStatus | null;
 	// Cached values for performance (computed once per render)
 	usageStats: {

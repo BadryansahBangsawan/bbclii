@@ -55,7 +55,7 @@
     },
     "packages/bbcli": {
       "name": "@badryansah99/bbcli",
-      "version": "18.1.16",
+      "version": "18.1.18",
       "bin": {
         "bbcli": "bin/bbcli.js",
       },

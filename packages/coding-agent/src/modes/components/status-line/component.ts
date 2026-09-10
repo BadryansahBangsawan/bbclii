@@ -435,6 +435,7 @@ export class StatusLineComponent implements Component {
 	#goalModeStatus: { enabled: boolean; paused: boolean } | null = null;
 	#vibeModeStatus: { enabled: boolean } | null = null;
 	#teamModeStatus: { enabled: boolean; size: number } | null = null;
+	#vimStatus: SegmentContext["vim"] = null;
 	/**
 	 * Injected aggregator that returns the aggregate tok/s of this session's
 	 * live vibe worker sessions, or null when no workers are streaming. Kept as
@@ -727,6 +728,11 @@ export class StatusLineComponent implements Component {
 
 	setTeamModeStatus(status: { enabled: boolean; size: number } | undefined): void {
 		this.#teamModeStatus = status ?? null;
+	}
+
+	/** Mirror of the editor's modal state; `undefined` clears it (Vim mode off). */
+	setVimStatus(status: NonNullable<SegmentContext["vim"]> | undefined): void {
+		this.#vimStatus = status ?? null;
 	}
 
 	/**
@@ -1871,6 +1877,7 @@ export class StatusLineComponent implements Component {
 			goalMode: this.#goalModeStatus,
 			vibeMode: this.#vibeModeStatus,
 			teamMode: this.#teamModeStatus,
+			vim: this.#vimStatus,
 			collab: this.#collabStatus,
 			usageStats,
 			contextPercent,

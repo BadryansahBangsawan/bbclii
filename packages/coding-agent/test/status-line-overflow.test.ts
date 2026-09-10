@@ -61,6 +61,7 @@ function createCtx(overrides?: {
 		goalMode: null,
 		vibeMode: null,
 		teamMode: null,
+		vim: null,
 		collab: null,
 		usageStats: {
 			input: 0,

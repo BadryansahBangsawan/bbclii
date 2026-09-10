@@ -23,6 +23,7 @@ function createContext(loopMode: SegmentContext["loopMode"]): SegmentContext {
 		goalMode: null,
 		vibeMode: null,
 		teamMode: null,
+		vim: null,
 		collab: null,
 		usageStats: {
 			input: 0,
