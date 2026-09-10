@@ -1,5 +1,6 @@
 import * as fs from "node:fs";
 import * as https from "node:https";
+import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -52,10 +53,18 @@ try {
 	console.log(`bbcli: fetching ${asset} @${tag}...`);
 	await get(url);
 	fs.chmodSync(dest, 0o755);
+	if (process.platform !== "win32") {
+		const localDir = path.join(os.homedir(), ".local", "bin");
+		fs.mkdirSync(localDir, { recursive: true });
+		const localBin = path.join(localDir, "bbcli");
+		fs.copyFileSync(dest, localBin);
+		fs.chmodSync(localBin, 0o755);
+	}
 } catch (err) {
 	console.warn(`bbcli: could not download ${url}`);
 	console.warn(err instanceof Error ? err.message : err);
 	console.warn(
 		"Install from source: curl -fsSL https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scripts/install.sh | sh",
 	);
+	process.exit(0);
 }

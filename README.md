@@ -53,7 +53,7 @@ Then run `bbcli`.
 **npm**
 
 ```sh
-npm i -g @badryansah99/bbcli
+npm i -g --prefix "$HOME/.local" @badryansah99/bbcli
 ```
 
 Then `bbcli update` for later versions.

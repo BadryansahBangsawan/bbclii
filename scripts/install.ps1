@@ -311,9 +311,21 @@ bun "$cli" %*
     Write-Host ""
     Write-Host "[OK] Installed bbcli via bun" -ForegroundColor Green
 
+    # Add to PATH if not already there
+    $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
+    $needsRestart = $UserPath -notlike "*$InstallDir*"
+    if ($needsRestart) {
+        Write-Host "Adding $InstallDir to PATH..."
+        [Environment]::SetEnvironmentVariable("Path", "$UserPath;$InstallDir", "User")
+    }
+
     Configure-BashShell
 
-    Write-Host "Run 'bbcli' to get started!"
+    if ($needsRestart) {
+        Write-Host "Restart your terminal, then run 'bbcli' to get started!"
+    } else {
+        Write-Host "Run 'bbcli' to get started!"
+    }
 }
 
 function Install-Binary {

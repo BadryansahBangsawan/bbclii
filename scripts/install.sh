@@ -214,6 +214,46 @@ install_host_natives() {
 }
 
 
+# Append the bbcli PATH block to $1 if the file exists and is not already marked.
+append_bbcli_path_rc() {
+    _rc="$1"
+    _line="$2"
+    [ -f "$_rc" ] || return 0
+    if grep -q '# bbcli' "$_rc" 2>/dev/null; then
+        return 0
+    fi
+    if grep 'PATH=.*\.local/bin' "$_rc" >/dev/null 2>&1; then
+        return 0
+    fi
+    printf '\n%s\n%s\n' "# bbcli" "$_line" >> "$_rc"
+}
+
+# After a successful install, put INSTALL_DIR on PATH for this process and
+# persist it in the user's shell rc so a new login finds `bbcli`.
+ensure_install_dir_on_path() {
+    export PATH="$INSTALL_DIR:$PATH"
+
+    if [ "$INSTALL_DIR" = "$HOME/.local/bin" ]; then
+        path_line='export PATH="$HOME/.local/bin:$PATH"'
+    else
+        path_line="export PATH=\"${INSTALL_DIR}:\$PATH\""
+    fi
+
+    bashrc="$HOME/.bashrc"
+    zshrc="$HOME/.zshrc"
+    profile="$HOME/.profile"
+
+    if [ ! -f "$bashrc" ] && [ ! -f "$zshrc" ] && [ ! -f "$profile" ]; then
+        printf '%s\n%s\n' "# bbcli" "$path_line" > "$profile"
+        return 0
+    fi
+
+    append_bbcli_path_rc "$bashrc" "$path_line"
+    append_bbcli_path_rc "$zshrc" "$path_line"
+    append_bbcli_path_rc "$profile" "$path_line"
+}
+
+
 # Install via bun: clone the workspace (catalog: deps cannot resolve from a
 # lone package), bun install at the repo root, then write a launcher.
 install_via_bun() {
@@ -267,10 +307,8 @@ EOF
 
     echo ""
     echo "✓ Installed bbcli via bun"
-    case ":$PATH:" in
-        *":$INSTALL_DIR:"*) echo "Run 'bbcli' to get started!" ;;
-        *) echo "Add ${INSTALL_DIR} to your PATH, then run 'bbcli'" ;;
-    esac
+    ensure_install_dir_on_path
+    echo "Run 'bbcli' to get started!"
 }
 
 # Install from a git checkout via bun.
@@ -380,12 +418,8 @@ install_binary() {
 
     echo ""
     echo "✓ Installed bbcli to ${INSTALL_DIR}/bbcli"
-
-    # Check if in PATH
-    case ":$PATH:" in
-        *":$INSTALL_DIR:"*) echo "Run 'bbcli' to get started!" ;;
-        *) echo "Add ${INSTALL_DIR} to your PATH, then run 'bbcli'" ;;
-    esac
+    ensure_install_dir_on_path
+    echo "Run 'bbcli' to get started!"
 }
 
 # Main logic
