@@ -171,6 +171,38 @@ has_git_lfs() {
     command -v git-lfs >/dev/null 2>&1
 }
 
+# Workspace checkouts do not ship prebuilt .node addons. Pull the published
+# same-version leaf from npm (@oh-my-pi until @bbcli natives are published).
+install_host_natives() {
+    src="$1"
+    case "$(uname -s)" in
+        Linux)  tag="linux-$(host_arch)" ;;
+        Darwin) tag="darwin-$(host_arch)" ;;
+        *)      return 0 ;;
+    esac
+    native_dir="$src/packages/natives/native"
+    if ls "$native_dir"/pi_natives."$tag"* >/dev/null 2>&1; then
+        return 0
+    fi
+    version=$(cd "$src" && bun -e 'import p from "./packages/natives/package.json" with { type: "json" }; process.stdout.write(p.version)')
+    if [ -z "$version" ]; then
+        echo "warning: could not read natives package version"
+        return 0
+    fi
+    tmp=$(mktemp -d)
+    url="https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz"
+    echo "Fetching native addon ${tag}@${version}..."
+    if ! curl -fsSL "$url" -o "$tmp/natives.tgz"; then
+        echo "warning: could not download $url"
+        rm -rf "$tmp"
+        return 0
+    fi
+    tar -xzf "$tmp/natives.tgz" -C "$tmp"
+    cp "$tmp"/package/pi_natives.*.node "$native_dir/" 2>/dev/null || true
+    rm -rf "$tmp"
+}
+
+
 # Install via bun: clone the workspace (catalog: deps cannot resolve from a
 # lone package), bun install at the repo root, then write a launcher.
 install_via_bun() {
@@ -209,6 +241,8 @@ install_via_bun() {
         echo "Failed to install from source"
         exit 1
     }
+    install_host_natives "$SRC_DIR"
+
 
     mkdir -p "$INSTALL_DIR"
     rm -f "${INSTALL_DIR}/bbcli"
