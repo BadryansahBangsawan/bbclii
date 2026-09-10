@@ -171,7 +171,8 @@ has_git_lfs() {
     command -v git-lfs >/dev/null 2>&1
 }
 
-# Install via bun (always clone; never install the package from npm)
+# Install via bun: clone the workspace (catalog: deps cannot resolve from a
+# lone package), bun install at the repo root, then write a launcher.
 install_via_bun() {
     echo "Installing via bun..."
     if ! has_git; then
@@ -179,37 +180,51 @@ install_via_bun() {
         exit 1
     fi
 
-    TMP_DIR="$(mktemp -d)"
-    trap 'rm -rf "$TMP_DIR"' EXIT
+    SRC_DIR="${BBCLI_SRC_DIR:-$HOME/.bbcli/src}"
+    mkdir -p "$(dirname "$SRC_DIR")"
+    rm -rf "$SRC_DIR"
 
     if [ -n "$REF" ]; then
-        if git clone --depth 1 --branch "$REF" "https://github.com/${REPO}.git" "$TMP_DIR" >/dev/null 2>&1; then
+        if git clone --depth 1 --branch "$REF" "https://github.com/${REPO}.git" "$SRC_DIR" >/dev/null 2>&1; then
             :
         else
-            git clone "https://github.com/${REPO}.git" "$TMP_DIR"
-            (cd "$TMP_DIR" && git checkout "$REF")
+            git clone "https://github.com/${REPO}.git" "$SRC_DIR"
+            (cd "$SRC_DIR" && git checkout "$REF")
         fi
     else
-        git clone --depth 1 "https://github.com/${REPO}.git" "$TMP_DIR"
+        git clone --depth 1 "https://github.com/${REPO}.git" "$SRC_DIR"
     fi
 
     # Pull LFS files
     if has_git_lfs; then
-        (cd "$TMP_DIR" && git lfs pull)
+        (cd "$SRC_DIR" && git lfs pull)
     fi
 
-    if [ ! -d "$TMP_DIR/packages/coding-agent" ]; then
-        echo "Expected package at ${TMP_DIR}/packages/coding-agent"
+    if [ ! -d "$SRC_DIR/packages/coding-agent" ]; then
+        echo "Expected package at ${SRC_DIR}/packages/coding-agent"
         exit 1
     fi
 
-    bun install -g "$TMP_DIR/packages/coding-agent" || {
+    (cd "$SRC_DIR" && bun install) || {
         echo "Failed to install from source"
         exit 1
     }
+
+    mkdir -p "$INSTALL_DIR"
+    cat > "${INSTALL_DIR}/bbcli" <<EOF
+#!/bin/sh
+export BUN_INSTALL="\${BUN_INSTALL:-\$HOME/.bun}"
+export PATH="\$BUN_INSTALL/bin:\$PATH"
+exec "$SRC_DIR/packages/coding-agent/scripts/bbcli" "\$@"
+EOF
+    chmod +x "${INSTALL_DIR}/bbcli"
+
     echo ""
     echo "✓ Installed bbcli via bun"
-    echo "Run 'bbcli' to get started!"
+    case ":$PATH:" in
+        *":$INSTALL_DIR:"*) echo "Run 'bbcli' to get started!" ;;
+        *) echo "Add ${INSTALL_DIR} to your PATH, then run 'bbcli'" ;;
+    esac
 }
 
 # Install binary from GitHub releases

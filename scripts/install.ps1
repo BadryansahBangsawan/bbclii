@@ -181,55 +181,68 @@ function Install-ViaBun {
         throw "git is required to install bbcli from source"
     }
 
-    $tmpRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("bbcli-install-" + [System.Guid]::NewGuid().ToString("N"))
-    New-Item -ItemType Directory -Force -Path $tmpRoot | Out-Null
+    $srcDir = if ($env:BBCLI_SRC_DIR) { $env:BBCLI_SRC_DIR } else { Join-Path $env:USERPROFILE ".bbcli\src" }
+    if (Test-Path $srcDir) {
+        Remove-Item -Recurse -Force $srcDir
+    }
+    New-Item -ItemType Directory -Force -Path $srcDir | Out-Null
 
-    try {
-        $repoUrl = "https://github.com/$Repo.git"
-        if ($Ref) {
+    $repoUrl = "https://github.com/$Repo.git"
+    if ($Ref) {
+        $cloneOk = $false
+        try {
+            git clone --depth 1 --branch $Ref $repoUrl $srcDir | Out-Null
+            $cloneOk = $true
+        } catch {
             $cloneOk = $false
-            try {
-                git clone --depth 1 --branch $Ref $repoUrl $tmpRoot | Out-Null
-                $cloneOk = $true
-            } catch {
-                $cloneOk = $false
-            }
-
-            if (-not $cloneOk) {
-                git clone $repoUrl $tmpRoot | Out-Null
-                Push-Location $tmpRoot
-                try {
-                    git checkout $Ref | Out-Null
-                } finally {
-                    Pop-Location
-                }
-            }
-        } else {
-            git clone --depth 1 $repoUrl $tmpRoot | Out-Null
         }
 
-        # Pull LFS files
-        if (Test-GitLfsInstalled) {
-            Push-Location $tmpRoot
+        if (-not $cloneOk) {
+            git clone $repoUrl $srcDir | Out-Null
+            Push-Location $srcDir
             try {
-                git lfs pull | Out-Null
+                git checkout $Ref | Out-Null
             } finally {
                 Pop-Location
             }
         }
+    } else {
+        git clone --depth 1 $repoUrl $srcDir | Out-Null
+    }
 
-        $packagePath = Join-Path $tmpRoot "packages\coding-agent"
-        if (-not (Test-Path $packagePath)) {
-            throw "Expected package at $packagePath"
+    if (Test-GitLfsInstalled) {
+        Push-Location $srcDir
+        try {
+            git lfs pull | Out-Null
+        } finally {
+            Pop-Location
         }
+    }
 
-        bun install -g $packagePath
+    $packagePath = Join-Path $srcDir "packages\coding-agent"
+    if (-not (Test-Path $packagePath)) {
+        throw "Expected package at $packagePath"
+    }
+
+    Push-Location $srcDir
+    try {
+        bun install
         if ($LASTEXITCODE -ne 0) {
-            throw "Failed to install from $packagePath via bun"
+            throw "Failed to install from $srcDir via bun"
         }
     } finally {
-        Remove-Item -Recurse -Force $tmpRoot -ErrorAction SilentlyContinue
+        Pop-Location
     }
+
+    New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+    $launcher = Join-Path $InstallDir "bbcli.cmd"
+    $cli = Join-Path $packagePath "src\cli.ts"
+    Set-Content -Path $launcher -Encoding ASCII -Value @"
+@echo off
+set "BUN_INSTALL=%USERPROFILE%\.bun"
+set "PATH=%BUN_INSTALL%\bin;%PATH%"
+bun "$cli" %*
+"@
 
     Write-Host ""
     Write-Host "[OK] Installed bbcli via bun" -ForegroundColor Green
