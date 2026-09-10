@@ -2004,6 +2004,45 @@ async function readPackageVersion(pkgJsonPath: string): Promise<string | undefin
 	return undefined;
 }
 
+async function gitRemoteHeadSha(srcDir: string, timeoutMs: number): Promise<string | undefined> {
+	const proc = Bun.spawn(["git", "ls-remote", "origin", "HEAD"], {
+		cwd: srcDir,
+		stdout: "pipe",
+		stderr: "pipe",
+		env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+	});
+	const killer = setTimeout(() => proc.kill(), timeoutMs);
+	try {
+		const stdout = await new Response(proc.stdout as ReadableStream<Uint8Array>).text();
+		const code = await proc.exited;
+		if (code !== 0) return undefined;
+		const sha = stdout.trim().split(/\s+/)[0];
+		if (!sha || !/^[0-9a-f]{7,40}$/i.test(sha)) return undefined;
+		return sha;
+	} finally {
+		clearTimeout(killer);
+	}
+}
+
+/** Latest available version/SHA, or undefined when already current or the check fails. */
+export async function checkForAvailableUpdate(
+	currentVersion: string,
+	options: { timeoutMs?: number; channel?: UpdateChannel } = {},
+): Promise<string | undefined> {
+	const timeoutMs = options.timeoutMs ?? RELEASE_METADATA_TIMEOUT_MS;
+	const srcDir = getSourceInstallDir();
+	if (isSourceInstall(resolveOmpPath(), srcDir)) {
+		const local = await $`git rev-parse HEAD`.cwd(srcDir).quiet().nothrow();
+		if (local.exitCode !== 0) return undefined;
+		const localSha = local.text().trim();
+		const remoteSha = await gitRemoteHeadSha(srcDir, timeoutMs);
+		if (!remoteSha || remoteSha === localSha) return undefined;
+		return remoteSha.slice(0, 7);
+	}
+	const release = await getLatestRelease({ timeoutMs, channel: options.channel });
+	return Bun.semver.order(release.version, currentVersion) > 0 ? release.version : undefined;
+}
+
 async function installHostNatives(srcDir: string): Promise<void> {
 	if (process.platform !== "linux" && process.platform !== "darwin") return;
 	if (process.arch !== "x64" && process.arch !== "arm64") return;

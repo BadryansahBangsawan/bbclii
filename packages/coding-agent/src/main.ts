@@ -30,7 +30,7 @@ import { processFileArguments } from "./cli/file-processor";
 import { buildInitialMessage } from "./cli/initial-message";
 import { selectSession } from "./cli/session-picker";
 import { applyStartupCwd } from "./cli/startup-cwd";
-import { getLatestRelease } from "./cli/update-cli";
+import { checkForAvailableUpdate } from "./cli/update-cli";
 import { findConfigFile } from "./config";
 import { ModelRegistry } from "./config/model-registry";
 import {
@@ -128,8 +128,7 @@ async function checkForNewVersion(currentVersion: string): Promise<string | unde
 	}
 	try {
 		const channel = settings.get("update.channel");
-		const release = await getLatestRelease({ timeoutMs: 5_000, channel });
-		return Bun.semver.order(release.version, currentVersion) > 0 ? release.version : undefined;
+		return await checkForAvailableUpdate(currentVersion, { timeoutMs: 5_000, channel });
 	} catch {
 		return undefined;
 	}
