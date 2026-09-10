@@ -211,6 +211,7 @@ install_via_bun() {
     }
 
     mkdir -p "$INSTALL_DIR"
+    rm -f "${INSTALL_DIR}/bbcli"
     cat > "${INSTALL_DIR}/bbcli" <<EOF
 #!/bin/sh
 export BUN_INSTALL="\${BUN_INSTALL:-\$HOME/.bun}"
