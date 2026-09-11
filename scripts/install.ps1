@@ -26,6 +26,23 @@ if ($NativeArchitecture -notin @("x64", "arm64")) {
 $BinaryName = "bbcli-windows-$NativeArchitecture.exe"
 $MinimumBunVersion = "1.3.14"
 
+# PowerShell 5.1 raises a terminating NativeCommandError for any line a native
+# executable writes to stderr while $ErrorActionPreference is "Stop", regardless
+# of the process exit code. Tools like bun and git emit normal progress on
+# stderr, so run them with the preference relaxed to "Continue" and let callers
+# gate on $LASTEXITCODE. Global "Stop" stays in effect for the cmdlet-driven
+# operations (Invoke-WebRequest/Invoke-RestMethod) that depend on it.
+function Invoke-Native {
+    param([Parameter(Mandatory = $true)][scriptblock]$Command)
+    $previous = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        & $Command
+    } finally {
+        $ErrorActionPreference = $previous
+    }
+}
+
 function Test-BunInstalled {
     try {
         $null = Get-Command bun -ErrorAction Stop
@@ -169,7 +186,7 @@ function Configure-BashShell {
 
 function Install-Bun {
     Write-Host "Installing bun..."
-    irm bun.sh/install.ps1 | iex
+    Invoke-Native { irm bun.sh/install.ps1 | iex }
     # Refresh PATH
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "Machine")
     Assert-BunVersion $MinimumBunVersion

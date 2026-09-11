@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@bbcli/pi-agent-core",
-  "version": "18.1.16",
+  "version": "18.1.17",
   "description": "General-purpose agent with transport abstraction, state management, and attachment support",
   "homepage": "https://github.com/BadryansahBangsawan/bbclii",
   "author": "Stencil Labs, Inc.",

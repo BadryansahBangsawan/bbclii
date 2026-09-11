@@ -18,6 +18,7 @@ import {
 	instrumentedCompleteSimple,
 	resolveTelemetry,
 } from "@bbcli/pi-agent-core";
+import { sendsImageInputOnWire } from "@bbcli/pi-ai/providers/vision-guard";
 import type { Api, completeSimple, ImageContent, Model, TextContent } from "@bbcli/pi-ai";
 import { logger, prompt, toError } from "@bbcli/pi-utils";
 import { extractTextContent } from "../commit/utils";
@@ -108,13 +109,13 @@ function resolveVisionModel(deps: DescribeAttachedImagesDeps): Model<Api> | unde
 		if (!pattern) return undefined;
 		const expanded = expandRoleAlias(pattern, deps.settings);
 		const model = resolveModelFromString(expanded, available, preferences);
-		return model?.input.includes("image") ? model : undefined;
+		return model && sendsImageInputOnWire(model) ? model : undefined;
 	};
 	return (
 		resolvePattern("@vision") ??
 		resolvePattern("@default") ??
 		resolvePattern(deps.activeModelString) ??
-		available.find(model => model.input.includes("image"))
+		available.find(model => sendsImageInputOnWire(model))
 	);
 }
 

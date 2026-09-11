@@ -2,6 +2,7 @@
 
 import type { Agent, AgentMessage } from "@bbcli/pi-agent-core";
 import type { CompactionPreparation } from "@bbcli/pi-agent-core/compaction";
+import { sendsImageInputOnWire } from "@bbcli/pi-ai/providers/vision-guard";
 import type { AssistantMessage, ImageContent, Message, Model, SimpleStreamOptions, TextContent } from "@bbcli/pi-ai";
 import { isRecord, logger } from "@bbcli/pi-utils";
 import * as snapcompact from "@bbcli/snapcompact";
@@ -228,7 +229,7 @@ export class SessionProviderBoundary {
 		const model = this.#host.model();
 		const shouldDescribe =
 			!!model &&
-			!model.input.includes("image") &&
+			!sendsImageInputOnWire(model) &&
 			!this.#host.settings.get("images.blockImages") &&
 			this.#host.settings.get("images.describeForTextModels");
 		if (!shouldDescribe || !model) return undefined;
