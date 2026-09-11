@@ -1,22 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import * as os from "node:os";
 import * as path from "node:path";
-import { buildModel } from "@oh-my-pi/pi-catalog/build";
-import { resetSettingsForTest, Settings } from "@oh-my-pi/pi-coding-agent/config/settings";
-import { resolveLocalUrlToPath } from "@oh-my-pi/pi-coding-agent/internal-urls";
-import * as modes from "@oh-my-pi/pi-coding-agent/modes";
-import { getSettingsForTab } from "@oh-my-pi/pi-coding-agent/modes/components/settings-defs";
+import { buildModel } from "@bbcli/pi-catalog/build";
+import { resetSettingsForTest, Settings } from "@bbcli/pi-coding-agent/config/settings";
+import { resolveLocalUrlToPath } from "@bbcli/pi-coding-agent/internal-urls";
+import * as modes from "@bbcli/pi-coding-agent/modes";
+import { getSettingsForTab } from "@bbcli/pi-coding-agent/modes/components/settings-defs";
 import {
 	autosaveApprovedPlan,
 	defaultPlanAutosaveDir,
 	planSaveFileName,
 	resolvePlanAutosaveDir,
-} from "@oh-my-pi/pi-coding-agent/plan-mode/plan-autosave";
-import type { PlanModeState } from "@oh-my-pi/pi-coding-agent/plan-mode/state";
-import type { PlanYolo } from "@oh-my-pi/pi-coding-agent/session/agent-session-types";
-import { PrewalkCoordinator, type PrewalkCoordinatorHost } from "@oh-my-pi/pi-coding-agent/session/prewalk";
-import type { SessionManager } from "@oh-my-pi/pi-coding-agent/session/session-manager";
-import { TempDir } from "@oh-my-pi/pi-utils";
+} from "@bbcli/pi-coding-agent/plan-mode/plan-autosave";
+import type { PlanModeState } from "@bbcli/pi-coding-agent/plan-mode/state";
+import type { PlanYolo } from "@bbcli/pi-coding-agent/session/agent-session-types";
+import { PrewalkCoordinator, type PrewalkCoordinatorHost } from "@bbcli/pi-coding-agent/session/prewalk";
+import type { SessionManager } from "@bbcli/pi-coding-agent/session/session-manager";
+import { TempDir } from "@bbcli/pi-utils";
 
 let tempDir: TempDir | undefined;
 
