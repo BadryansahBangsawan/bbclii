@@ -2123,7 +2123,6 @@ async function sourceCheckoutContains(srcDir: string, sha: string): Promise<bool
 	return ancestor.exitCode === 0;
 }
 
-
 /** Latest available version/SHA, or undefined when already current or the check fails. */
 export async function checkForAvailableUpdate(
 	currentVersion: string,
@@ -2168,14 +2167,25 @@ async function installHostNatives(srcDir: string): Promise<void> {
 	const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "bbcli-natives-"));
 	try {
 		let tgz: string | undefined;
+		let warnedMissingBbcliNatives = false;
 		for (const url of urls) {
 			try {
 				const response = await fetch(url, { signal: withTimeoutSignal(BINARY_DOWNLOAD_TIMEOUT_MS) });
-				if (!response.ok) continue;
+				if (!response.ok) {
+					if (!warnedMissingBbcliNatives) {
+						console.log(`bbcli: @bbcli/pi-natives-${tag} not published; using @oh-my-pi`);
+						warnedMissingBbcliNatives = true;
+					}
+					continue;
+				}
 				tgz = path.join(tmp, "natives.tgz");
 				await Bun.write(tgz, await response.arrayBuffer());
 				break;
 			} catch {
+				if (!warnedMissingBbcliNatives) {
+					console.log(`bbcli: @bbcli/pi-natives-${tag} not published; using @oh-my-pi`);
+					warnedMissingBbcliNatives = true;
+				}
 				continue;
 			}
 		}
@@ -2230,6 +2240,13 @@ async function updateViaSourceCheckout(srcDir: string, opts: { check: boolean; f
 			throw new Error(
 				"git update failed (merge conflicts with local commits). Resolve in the source checkout, then retry.",
 			);
+		}
+	}
+	const rebrandScript = path.join(srcDir, "scripts", "rebrand-oh-my-pi-imports.ts");
+	if (await Bun.file(rebrandScript).exists()) {
+		const rebrand = await $`bun scripts/rebrand-oh-my-pi-imports.ts`.cwd(srcDir).nothrow();
+		if (rebrand.exitCode !== 0) {
+			throw new Error("git update failed (rebrand after OMP merge)");
 		}
 	}
 	const bunInstall = await $`bun install`.cwd(srcDir).nothrow();

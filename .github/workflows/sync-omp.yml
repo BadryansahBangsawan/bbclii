@@ -1,0 +1,113 @@
+name: Sync official OMP
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  sync:
+    name: Merge can1357/oh-my-pi and rebrand imports
+    runs-on: ubuntu-22.04
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "bbcli-omp-sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch and merge official OMP
+        id: merge
+        run: |
+          set -euo pipefail
+          if ! git remote get-url omp >/dev/null 2>&1; then
+            git remote add omp https://github.com/can1357/oh-my-pi.git
+          fi
+          git fetch omp main
+
+          if git merge-base --is-ancestor omp/main HEAD; then
+            echo "Already current with omp/main"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git checkout -B sync/omp-main
+
+          if git merge --no-edit omp/main; then
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          body_file="$(mktemp)"
+          {
+            echo "Daily OMP sync hit a merge conflict."
+            echo
+            echo "## Recent omp/main"
+            git log --oneline -20 omp/main
+            echo
+            echo "## merge-tree"
+            git merge-tree "$(git merge-base HEAD omp/main)" HEAD omp/main || true
+          } > "$body_file"
+          git merge --abort
+          gh issue create --title "OMP sync merge conflict" --body-file "$body_file"
+          echo "skip=true" >> "$GITHUB_OUTPUT"
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        if: steps.merge.outputs.skip != 'true'
+        with:
+          bun-version: "1.4"
+
+      - name: Rebrand imports, install, test, push PR
+        if: steps.merge.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+
+          bun scripts/rebrand-oh-my-pi-imports.ts
+
+          if ! bun install --frozen-lockfile; then
+            bun install
+            git add bun.lock
+          fi
+
+          test_note=""
+          if ! bun test packages/coding-agent/test/plan-mode/ultraplan-prompt.test.ts packages/coding-agent/test/interactive-mode-ultraplan.test.ts; then
+            test_note="Ultraplan tests failed after the OMP merge and rebrand. Human fix needed before merge."
+          fi
+
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: rebrand @oh-my-pi imports after OMP merge"
+          fi
+
+          git push -u origin sync/omp-main --force-with-lease
+
+          pr_body_file="$(mktemp)"
+          {
+            echo "Automated daily sync of [can1357/oh-my-pi](https://github.com/can1357/oh-my-pi) \`main\` into this fork."
+            echo
+            echo "Rebranded \`@oh-my-pi/\` TypeScript import specifiers to \`@bbcli/\`. Natives tarball URLs still fall back to \`@oh-my-pi\`."
+            echo
+            echo "Do not merge from Actions — a human should review and merge."
+            if [ -n "$test_note" ]; then
+              echo
+              echo "**${test_note}**"
+            fi
+          } > "$pr_body_file"
+
+          existing="$(gh pr list --head sync/omp-main --base main --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh pr view "$existing"
+          else
+            gh pr create --base main --head sync/omp-main --title "chore: sync official OMP" --body-file "$pr_body_file"
+          fi
