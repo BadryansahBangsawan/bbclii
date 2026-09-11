@@ -121,6 +121,7 @@
     url = "https://registry.npmjs.org/@babel/types/-/types-7.29.8.tgz";
     hash = "sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==";
   };
+  "@badryansah99/bbcli" = copyPathToStore ../packages/bbcli;
   "@bbcli/browser-relay" = copyPathToStore ../packages/browser-relay;
   "@bbcli/collab-web" = copyPathToStore ../packages/collab-web;
   "@bbcli/omptype" = copyPathToStore ../packages/omptype;
@@ -1673,9 +1674,9 @@
     url = "https://registry.npmjs.org/jsonstream-next/-/jsonstream-next-3.0.0.tgz";
     hash = "sha512-aAi6oPhdt7BKyQn1SrIIGZBt0ukKuOUE1qV6kJ3GgioSOYzsRc8z9Hfr1BVmacA/jLe9nARfmgMGgn68BqIAgg==";
   };
-  "katex@0.18.7" = fetchurl {
-    url = "https://registry.npmjs.org/katex/-/katex-0.18.7.tgz";
-    hash = "sha512-h+UCwkZ+4Jz8WQ7MLGfj7UVFrRCizGb912fwF4luGdYsC5paYG1vx+jy+KRcC/XkpjGva/P7nAWuxNnPzRvzHw==";
+  "katex@0.18.5" = fetchurl {
+    url = "https://registry.npmjs.org/katex/-/katex-0.18.5.tgz";
+    hash = "sha512-1FU5H3RjGJVj6GT9fMjf2uMIXmPQp232aXS3UEeQzf0dxefHg/CKMvNB3DuOC46LFG/E5PNxrE8dOwB782FDGg==";
   };
   "kitty-vt-wasm@0.2.0" = fetchurl {
     url = "https://registry.npmjs.org/kitty-vt-wasm/-/kitty-vt-wasm-0.2.0.tgz";
