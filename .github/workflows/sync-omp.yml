@@ -49,18 +49,24 @@ jobs:
             exit 0
           fi
 
+          conflicted="$(git diff --name-only --diff-filter=U || true)"
           body_file="$(mktemp)"
           {
             echo "Daily OMP sync hit a merge conflict."
             echo
+            echo "## Conflicted files"
+            echo "$conflicted"
+            echo
             echo "## Recent omp/main"
             git log --oneline -20 omp/main
             echo
-            echo "## merge-tree"
-            git merge-tree "$(git merge-base HEAD omp/main)" HEAD omp/main || true
+            echo "## merge-tree (truncated)"
+            git merge-tree "$(git merge-base HEAD omp/main)" HEAD omp/main 2>/dev/null | sed -n '1,200p' || true
           } > "$body_file"
-          git merge --abort
-          gh issue create --title "OMP sync merge conflict" --body-file "$body_file"
+          git merge --abort || true
+          if ! gh issue create --title "OMP sync merge conflict" --body-file "$body_file"; then
+            echo "Could not open GitHub issue (check Issues is enabled). Schedule stays green."
+          fi
           echo "skip=true" >> "$GITHUB_OUTPUT"
 
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
