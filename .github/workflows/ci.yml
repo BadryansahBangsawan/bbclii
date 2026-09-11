@@ -647,7 +647,7 @@ jobs:
    # packages/natives/native), so no per-platform runners are needed.
    release_native_leaves:
       name: Publish native leaf packages
-      if: ${{ needs.release_metadata.outputs.is-release == 'true' && !cancelled() &&
+      if: ${{ github.repository == 'can1357/oh-my-pi' && needs.release_metadata.outputs.is-release == 'true' && !cancelled() &&
          needs.release_gate.result == 'success' &&
          needs.release_binary.result == 'success' &&
          needs.release_binary_hosted.result == 'success' &&
@@ -779,11 +779,14 @@ jobs:
               chmod +x bbcli-darwin-arm64
          - name: Verify published macOS arm64 binary
            run: |
-              codesign -dvvv ./bbcli-darwin-arm64
-              codesign --verify --strict --verbose=4 ./bbcli-darwin-arm64
               runtime_dir="$(mktemp -d)"
               HOME="$runtime_dir/home" XDG_DATA_HOME="$runtime_dir/xdg" ./bbcli-darwin-arm64 --version
               HOME="$runtime_dir/home" XDG_DATA_HOME="$runtime_dir/xdg" ./bbcli-darwin-arm64 --smoke-test
+         - name: Verify Developer ID signature
+           if: env.MACOS_SIGNING == 'true'
+           run: |
+              codesign -dvvv ./bbcli-darwin-arm64
+              codesign --verify --strict --verbose=4 ./bbcli-darwin-arm64
          - name: Assert signed release is not ad-hoc
            if: env.MACOS_SIGNING == 'true'
            run: |
@@ -798,7 +801,7 @@ jobs:
 
    release_npm:
       name: Publish to npm
-      if: ${{ needs.release_metadata.outputs.is-release == 'true' && !cancelled() &&
+      if: ${{ github.repository == 'can1357/oh-my-pi' && needs.release_metadata.outputs.is-release == 'true' && !cancelled() &&
          needs.release_binary.result == 'success' &&
          needs.release_binary_hosted.result == 'success' &&
          needs.release_github_verify.result == 'success' &&

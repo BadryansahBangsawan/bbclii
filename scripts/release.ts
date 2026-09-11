@@ -39,12 +39,28 @@ function git(args: readonly string[]) {
 	return $`git -c core.fsmonitor=false -c core.untrackedCache=false -c fetch.pruneTags=false ${args}`;
 }
 
+async function remoteExists(name: string): Promise<boolean> {
+	const result = await git(["remote", "get-url", name]).quiet().nothrow();
+	return result.exitCode === 0;
+}
+
+async function resolveReleasePushRemote(): Promise<string> {
+	const explicit = process.env.BBCLI_RELEASE_REMOTE;
+	if (explicit) return explicit;
+	if (await remoteExists("bbclii")) return "bbclii";
+	console.error(
+		"Error: Set BBCLI_RELEASE_REMOTE or add a bbclii remote; refusing to push release tags to origin (official OMP).",
+	);
+	process.exit(1);
+}
+
 // =============================================================================
 // Shared functions
 // =============================================================================
 
 async function watchCI(): Promise<boolean> {
-	if (process.env.BBCLI_RELEASE_REMOTE && !process.env.GH_REPO) {
+	const pushRemote = process.env.BBCLI_RELEASE_REMOTE ?? ((await remoteExists("bbclii")) ? "bbclii" : undefined);
+	if (pushRemote && pushRemote !== "origin" && !process.env.GH_REPO) {
 		process.env.GH_REPO = "BadryansahBangsawan/bbclii";
 	}
 	const commitSha = (await git(["rev-parse", "HEAD"]).text()).trim();
@@ -262,6 +278,12 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 	}
 	console.log("  Working directory clean");
 
+	const pushRemote = await resolveReleasePushRemote();
+	if (pushRemote !== "origin" && !process.env.GH_REPO) {
+		process.env.GH_REPO = "BadryansahBangsawan/bbclii";
+	}
+	console.log(`  Release remote: ${pushRemote}`);
+
 	const nixBunDepsGenerator = resolveNixBunDepsGenerator();
 	console.log(`  Nix dependency generator: ${nixBunDepsGenerator.kind}`);
 
@@ -429,7 +451,6 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 	const tagRef = `v${version}`;
 	const sha = (await git(["rev-parse", "HEAD"]).text()).trim();
 	await git(["tag", "-f", tagRef]);
-	const pushRemote = process.env.BBCLI_RELEASE_REMOTE ?? "origin";
 	await git(["push", "--atomic", pushRemote, "refs/heads/main:refs/heads/main", `${sha}:refs/tags/${tagRef}`]);
 	console.log();
 
@@ -448,7 +469,7 @@ async function cmdRelease(versionOrBump: string): Promise<void> {
 		console.log(`  git commit -m "chore: bump version to ${version}" -m "<what was fixed>"`);
 		console.log(`  git tag -f v${version}`);
 		console.log(
-			`  git push --atomic ${process.env.BBCLI_RELEASE_REMOTE ?? "origin"} refs/heads/main:refs/heads/main "+$(git rev-parse HEAD):refs/tags/v${version}"`,
+			`  git push --atomic ${pushRemote} refs/heads/main:refs/heads/main "+$(git rev-parse HEAD):refs/tags/v${version}"`,
 		);
 		console.log("  bun scripts/release.ts watch");
 		process.exit(1);

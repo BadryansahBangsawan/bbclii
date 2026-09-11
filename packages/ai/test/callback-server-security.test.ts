@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
+import * as os from "node:os";
 import { OAuthCallbackFlow } from "@bbcli/pi-ai/registry/oauth/callback-server";
 import type { OAuthAuthInfo, OAuthCredentials } from "@bbcli/pi-ai/registry/oauth/types";
 

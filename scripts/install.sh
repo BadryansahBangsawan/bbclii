@@ -194,6 +194,7 @@ install_host_natives() {
     tmp=$(mktemp -d)
     echo "Fetching native addon ${tag}@${version}..."
     downloaded=0
+    first=1
     for url in \
         "https://registry.npmjs.org/@bbcli/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz" \
         "https://registry.npmjs.org/@oh-my-pi/pi-natives-${tag}/-/pi-natives-${tag}-${version}.tgz"
@@ -201,6 +202,10 @@ install_host_natives() {
         if curl -fsSL "$url" -o "$tmp/natives.tgz"; then
             downloaded=1
             break
+        fi
+        if [ "$first" -eq 1 ]; then
+            echo "bbcli: @bbcli/pi-natives-${tag} not published; using @oh-my-pi"
+            first=0
         fi
     done
     if [ "$downloaded" -eq 0 ]; then

@@ -34,11 +34,15 @@ The most capable agent surface that ships. Continuously tuned by real-world use 
 
 ## Install
 
-**macOS · Linux**
+This fork is **`bbcli`**, not `omp`. It tracks [official OMP](https://github.com/can1357/oh-my-pi) and keeps extra features (`/ultraplan`, and others in this tree).
+
+**Recommended (macOS · Linux)** — installs bun if needed, clones this repo to `~/.bbcli/src`, sets `origin` to official OMP:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scripts/install.sh | sh
 ```
+
+Then run `bbcli`. Later versions of OMP: `bbcli update` (merges `origin/main`; fork features stay).
 
 > **Alpine / musl:** the prebuilt musl binary links `libstdc++`/`libgcc` dynamically, which stock Alpine does not ship. Install them first: `apk add libstdc++ libgcc`.
 
@@ -48,17 +52,32 @@ curl -fsSL https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scr
 irm https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scripts/install.ps1 | iex
 ```
 
-Then run `bbcli`.
+**npm** (`@badryansah99/bbcli@18.1.19` or later)
 
-**npm**
+```sh
+npm i -g @badryansah99/bbcli
+```
+
+or, without sudo:
 
 ```sh
 npm i -g --prefix "$HOME/.local" @badryansah99/bbcli
 ```
 
-Then `bbcli update` for later versions.
+- **git + bun present:** source install into `~/.bbcli/src` (existing checkout is kept). `origin` = official OMP, `bbclii` = this fork. Full features including `/ultraplan`. `bbcli update` merges OMP.
+- **no bun:** GitHub **binary** fallback (`v18.1.16` assets). That binary does **not** include fork-only commands. Prefer the curl installer above, which installs bun then source.
+- After a `sync/omp-main` PR is merged, source checkouts pick it up with `git -C ~/.bbcli/src fetch bbclii && git merge --ff-only bbclii/main`. `bbcli update` still merges official OMP and rewrites `@oh-my-pi` TypeScript imports to `@bbcli`.
+- A 404 on `@bbcli/pi-natives-*` is expected (those packages are not published from this fork); install/update falls back to `@oh-my-pi`.
+- Binary installs need a GitHub Release newer than `v18.1.16` for current `bbcli-*` assets. Unsigned darwin binaries still run `--version`.
+
+Do not install `@oh-my-pi/pi-coding-agent` / the `omp` binary if you want this fork's features.
 
 macOS · Linux · Windows · bun ≥ 1.3.14
+
+### `/ultraplan`
+
+`/ultraplan [prompt]` is aggressive plan mode: parallel scout fan-out, then approve before execute. It does not toggle off; `/plan` is the only exit. Status line shows **Ultraplan**.
+
 
 ### Shell completions
 
