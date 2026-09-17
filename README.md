@@ -44,6 +44,15 @@ curl -fsSL https://raw.githubusercontent.com/BadryansahBangsawan/bbclii/main/scr
 
 Then run `bbcli`. Later versions of OMP: `bbcli update` (merges `origin/main`; fork features stay).
 
+**Verify the install** — confirm the fork is active and the native addon loaded:
+
+```sh
+bbcli --version    # prints bbcli/x.y.z (not omp/…)
+bbcli --list-tools | grep grep   # native grep module should appear
+```
+
+If `bbcli` isn't on your PATH after the curl install, add `~/.local/bin` (Linux) or `~/.bbcli/bin` (macOS) to your shell profile and re-open the terminal.
+
 > **Alpine / musl:** the prebuilt musl binary links `libstdc++`/`libgcc` dynamically, which stock Alpine does not ship. Install them first: `apk add libstdc++ libgcc`.
 
 **Windows (PowerShell)**
