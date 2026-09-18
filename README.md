@@ -103,6 +103,8 @@ eval "$(bbcli completions bash)"
 bbcli completions fish > ~/.config/fish/completions/bbcli.fish
 ```
 
+After installing completions, open a new shell (or `exec $SHELL`) so the generated script is picked up — editing an already-open session will not load the new file.
+
 ## Every tool, _benchmaxxed_.
 
 Edits that land on the first attempt. Reads that summarize files instead of dumping their content. Searches that return instantly. Pick any model — omp will get it right.
