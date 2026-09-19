@@ -2,7 +2,7 @@ import type { Dirent } from "node:fs";
 import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
-import { isEnoent } from "@bbcli/pi-utils";
+import { isEnoent, logger } from "@bbcli/pi-utils";
 import { $, type Server } from "bun";
 import {
 	getBehaviorDashboardStats,
@@ -56,6 +56,16 @@ function sanitizeArchivePath(archivePath: string): string | null {
 	if (!normalized || normalized === ".") return null;
 	if (normalized.includes("..") || path.isAbsolute(normalized)) return null;
 	return normalized;
+}
+
+export function resolveDashboardStaticPath(staticDir: string, requestPath: string): string | null {
+	const root = path.resolve(staticDir);
+	const relative = requestPath === "/" || requestPath === "" ? "index.html" : requestPath.replace(/^\/+/, "");
+	const sanitized = sanitizeArchivePath(relative);
+	if (!sanitized) return null;
+	const full = path.resolve(root, sanitized);
+	if (full === root || full.startsWith(root + path.sep)) return full;
+	return null;
 }
 
 async function extractEmbeddedClientArchive(archiveBytes: Buffer, outputDir: string): Promise<void> {
@@ -327,20 +337,22 @@ export async function handleApi(req: Request): Promise<Response> {
  */
 async function handleStatic(requestPath: string): Promise<Response> {
 	const staticDir = await getEmbeddedClientDir();
-	const filePath = requestPath === "/" ? "/index.html" : requestPath;
-	const fullPath = path.join(staticDir, filePath);
-
+	const fullPath = resolveDashboardStaticPath(staticDir, requestPath);
+	if (fullPath === null) {
+		return new Response("Not Found", { status: 404 });
+	}
 	const file = Bun.file(fullPath);
 	if (await file.exists()) {
 		return new Response(file);
 	}
-
-	// SPA fallback
-	const index = Bun.file(path.join(staticDir, "index.html"));
+	const indexPath = resolveDashboardStaticPath(staticDir, "/index.html");
+	if (indexPath === null) {
+		return new Response("Not Found", { status: 404 });
+	}
+	const index = Bun.file(indexPath);
 	if (await index.exists()) {
 		return new Response(index);
 	}
-
 	return new Response("Not Found", { status: 404 });
 }
 
@@ -389,7 +401,7 @@ function createDashboardServer(port: number, hostname: string): Server<undefined
 					headers,
 				});
 			} catch (error) {
-				console.error("Server error:", error);
+				logger.error("Server error", { error });
 				return Response.json(
 					{ error: error instanceof Error ? error.message : "Unknown error" },
 					{ status: 500, headers: dashboardHeaders },

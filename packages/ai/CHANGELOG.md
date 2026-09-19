@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Retry OpenAI Responses once after a replay-safe Bun socket close (including Grok 4.6 / xAI OAuth).
+- Strip Bun's `verbose: true` fetch() hint from user-facing provider errors.
+
+
 ## [18.1.16] - 2026-09-10
 ### Changed
 

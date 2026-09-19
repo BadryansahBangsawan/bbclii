@@ -1,5 +1,10 @@
 import { describe, expect, it } from "bun:test";
-import { extractRetryHint, fetchWithRetry, isUnexpectedSocketCloseMessage } from "@bbcli/pi-utils/fetch-retry";
+import {
+	extractRetryHint,
+	fetchWithRetry,
+	isUnexpectedSocketCloseMessage,
+	stripFetchVerboseAdvice,
+} from "@bbcli/pi-utils/fetch-retry";
 
 describe("isUnexpectedSocketCloseMessage", () => {
 	it.each(["Socket is closed", "Error: Socket is closed.", "The socket connection was closed unexpectedly"])(
@@ -11,6 +16,19 @@ describe("isUnexpectedSocketCloseMessage", () => {
 		expect(isUnexpectedSocketCloseMessage("validation failed because socket is closed to remote control")).toBe(
 			false,
 		);
+	});
+});
+
+const BUN_SOCKET_CLOSE =
+	"The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()";
+
+describe("stripFetchVerboseAdvice", () => {
+	it("strips Bun fetch verbose advice from the socket-close message", () => {
+		expect(stripFetchVerboseAdvice(BUN_SOCKET_CLOSE)).toBe("The socket connection was closed unexpectedly.");
+	});
+
+	it("does not change isUnexpectedSocketCloseMessage matching of the unstripped string", () => {
+		expect(isUnexpectedSocketCloseMessage(BUN_SOCKET_CLOSE)).toBe(true);
 	});
 });
 

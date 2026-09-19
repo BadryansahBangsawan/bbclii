@@ -23,7 +23,7 @@ import * as AIError from "@bbcli/pi-ai/error";
 import { resolveModelPolicy } from "@bbcli/pi-catalog/compat/resolve";
 import { isFireworksFastModelId, toFireworksBaseModelId } from "@bbcli/pi-catalog/fireworks-model-id";
 import { modelsAreEqual } from "@bbcli/pi-catalog/models";
-import { extractRetryHint, logger, prompt } from "@bbcli/pi-utils";
+import { extractRetryHint, isUnexpectedSocketCloseMessage, logger, prompt } from "@bbcli/pi-utils";
 import type { ModelRegistry } from "../config/model-registry";
 import { formatModelStringWithRouting, resolveModelOverride } from "../config/model-resolver";
 
@@ -1344,7 +1344,8 @@ export class TurnRecovery {
 			message.stopReason === "error" &&
 			(HTTP2_STREAM_RESET_ERROR_RE.test(errorMessage) ||
 				AIError.PYTHON_HTTP2_STREAM_RESET_PATTERN.test(errorMessage) ||
-				AIError.PYTHON_HTTP_INCOMPLETE_CHUNK_PATTERN.test(errorMessage)) &&
+				AIError.PYTHON_HTTP_INCOMPLETE_CHUNK_PATTERN.test(errorMessage) ||
+				isUnexpectedSocketCloseMessage(errorMessage)) &&
 			AIError.retriable(id) &&
 			!this.#host.abortInProgress() &&
 			!this.#host.isDisposed() &&

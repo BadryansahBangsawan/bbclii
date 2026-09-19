@@ -357,6 +357,13 @@ function wrapNetworkError(error: unknown): Error {
 		if (error.message === "fetch failed" && error.cause instanceof Error) {
 			return new Error(`Network error: ${error.cause.message}`);
 		}
+		const stripped = stripFetchVerboseAdvice(error.message);
+		if (stripped !== error.message) {
+			const out = new Error(stripped);
+			out.name = error.name;
+			out.cause = error;
+			return out;
+		}
 		return error;
 	}
 	return new Error(String(error));
@@ -449,6 +456,13 @@ export function isUnexpectedSocketCloseMessage(message: string): boolean {
 		/\b(?:the\s+)?socket connection (?:was )?closed unexpectedly\b/i.test(message) ||
 		/^(?:error:\s*)?socket is closed\.?$/i.test(message.trim())
 	);
+}
+
+const FETCH_VERBOSE_ADVICE =
+	/\s*For more information, pass `verbose: true` in the second argument to fetch\(\)\.?\s*$/i;
+
+export function stripFetchVerboseAdvice(message: string): string {
+	return message.replace(FETCH_VERBOSE_ADVICE, "").trimEnd();
 }
 
 const TRANSIENT_MESSAGE_PATTERN =

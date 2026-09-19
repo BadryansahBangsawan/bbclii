@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Continue after a Bun socket close when tool calls already have synthetic unexecuted results, instead of stopping on the fetch() verbose hint.
+
+
 ## [18.1.17] - 2026-09-11
 
 ### Added

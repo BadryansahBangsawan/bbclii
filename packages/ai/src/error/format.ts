@@ -1,3 +1,4 @@
+import { stripFetchVerboseAdvice } from "@bbcli/pi-utils";
 import {
 	type CapturedHttpErrorResponse,
 	finalizeErrorMessage,
@@ -45,5 +46,5 @@ export async function formatMessage(error: unknown, opts: FormatMessageOptions =
 	if (opts.provider === "ollama") {
 		message = rewriteOllamaToolCallJsonError(message);
 	}
-	return message;
+	return stripFetchVerboseAdvice(message);
 }

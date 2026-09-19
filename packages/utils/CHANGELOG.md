@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Strip Bun's `verbose: true` fetch() advice from wrapped network errors.
+
+
 ## [18.1.16] - 2026-09-10
 
 ### Changed

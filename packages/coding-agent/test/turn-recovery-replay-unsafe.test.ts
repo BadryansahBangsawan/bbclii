@@ -822,6 +822,59 @@ describe("TurnRecovery replay-unsafe output classification", () => {
 		});
 	});
 
+	describe("Bun socket close after resolved tool calls", () => {
+		const socketClose =
+			"The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()";
+
+		function socketCloseMessage(content: AssistantMessage["content"]): AssistantMessage {
+			const message = makeMessage(content, model);
+			message.errorMessage = socketClose;
+			return message;
+		}
+
+		function toolCall(id: string): AssistantMessage["content"][number] {
+			return {
+				type: "toolCall",
+				id,
+				name: "bash",
+				arguments: { command: "pwd" },
+			};
+		}
+
+		function syntheticResult(toolCallId: string): ToolResultMessage<SyntheticToolResultDetails> {
+			return {
+				role: "toolResult",
+				toolCallId,
+				toolName: "bash",
+				content: [{ type: "text", text: "Tool call was not executed." }],
+				isError: true,
+				details: { __synthetic: true, source: "assistant_stop_error", executed: false },
+				timestamp: Date.now(),
+			};
+		}
+
+		function recoveryForSocketClose(message: AssistantMessage, tail: readonly AgentMessage[]): TurnRecovery {
+			return new TurnRecovery(createHost(model, modelRegistry, { messages: [message as AgentMessage, ...tail] }));
+		}
+
+		it("continues after a synthetic unexecuted tool result", () => {
+			const message = socketCloseMessage([toolCall("call-1")]);
+			const recovery = recoveryForSocketClose(message, [syntheticResult("call-1")]);
+			expect(recovery.classifyResolvedInterruptedToolTurn(message)).toBe("stream-stall");
+		});
+
+		it("continues after committed text with a synthetic unexecuted tool result", () => {
+			const message = socketCloseMessage([{ type: "text", text: "Partial answer." }, toolCall("call-1")]);
+			const recovery = recoveryForSocketClose(message, [syntheticResult("call-1")]);
+			expect(recovery.classifyResolvedInterruptedToolTurn(message)).toBe("stream-stall");
+		});
+
+		it("does not continue when the tool call has no result", () => {
+			const message = socketCloseMessage([toolCall("call-1")]);
+			expect(recoveryForSocketClose(message, []).classifyResolvedInterruptedToolTurn(message)).toBeUndefined();
+		});
+	});
+
 	describe("premature stream close after resolved tool calls", () => {
 		const completionsClose = "OpenAI completions stream closed before a finish_reason was received";
 		const responsesClose = "OpenAI responses stream closed before a terminal response event was received";

@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Jailed dashboard static file serving so URL paths cannot read files outside the client directory.
+
+
 ## [18.1.17] - 2026-09-10
 
 ### Fixed

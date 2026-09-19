@@ -937,13 +937,15 @@ const streamOpenAIResponsesOnce = (
 };
 
 /**
- * Public entry: retry benign empty completions before they reach the agent
- * loop. Transient stream failures are retried inside the attempt so stateful
- * Responses request metadata remains stable.
+ * Public entry: retry benign empty completions and replay-safe provider errors
+ * (including mid-SSE Bun socket close). streamOpenAIResponsesOnce has no inner
+ * socket retry; postOpenAIStream fetchWithRetry does not cover mid-SSE body errors.
  */
 export const streamOpenAIResponses: StreamFunction<"openai-responses"> = (model, context, options) =>
 	withReplaySafeStreamRetry(model, context, options, streamOpenAIResponsesOnce, {
 		retryEmptyCompletion: true,
+		retryProviderErrors: true,
+		maxProviderErrorRetries: 1,
 	});
 
 function isResponsesPromptCacheableContentBlock(block: unknown): block is ResponseInputContent {
