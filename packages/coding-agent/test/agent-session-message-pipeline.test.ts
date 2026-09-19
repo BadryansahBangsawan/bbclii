@@ -461,6 +461,50 @@ describe("AgentSession message pipeline", () => {
 		expect(capturedOptions?.sessionId).not.toBe(cacheSessionId);
 		expect(capturedOptions?.preferWebsockets).toBe(true);
 		expect(capturedOptions?.providerSessionState).toBe(session.providerSessionState);
+		expect(capturedOptions?.disableReasoning).toBe(true);
+		expect(capturedOptions?.reasoning).toBeUndefined();
+	});
+
+	it("recovers ephemeral reply text from a done message when no text_delta was streamed", async () => {
+		const api = "test-ephemeral-done-only-text";
+		registerCustomApi(api, (_model, _context, _options) => {
+			const stream = new AssistantMessageEventStream();
+			queueMicrotask(() => {
+				const message = createAssistantMessage("Final only");
+				stream.push({ type: "done", reason: "stop", message });
+			});
+			return stream;
+		});
+
+		const model = buildModel({
+			id: "side-model-done-only",
+			name: "Side Model Done Only",
+			api,
+			provider: "test-provider",
+			baseUrl: "",
+			reasoning: false,
+			input: ["text"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+			contextWindow: 4096,
+			maxTokens: 1024,
+		} as ModelSpec<Api>) as Model<Api>;
+		const session = new AgentSession({
+			agent: new Agent({
+				initialState: {
+					model,
+					systemPrompt: ["system prompt"],
+					messages: [],
+					tools: [],
+				},
+			}),
+			sessionManager: SessionManager.inMemory(),
+			settings: Settings.isolated({ "compaction.enabled": false }),
+			modelRegistry: createModelRegistryStub() as never,
+		});
+		sessions.push(session);
+
+		const result = await session.runEphemeralTurn({ promptText: "Question?" });
+		expect(result.replyText).toBe("Final only");
 	});
 
 	it("runs ephemeral side-channel requests through the configured side stream function", async () => {

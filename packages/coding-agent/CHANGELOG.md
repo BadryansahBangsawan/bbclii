@@ -5,6 +5,8 @@
 ### Fixed
 
 - Continue after a Bun socket close when tool calls already have synthetic unexecuted results, instead of stopping on the fetch() verbose hint.
+- Fixed `/btw` sometimes returning no answer or a Bun fetch() error on Grok: side questions skip thinking so a socket close can retry, and they read the final message when the provider skipped text deltas.
+
 
 
 ## [18.1.17] - 2026-09-11

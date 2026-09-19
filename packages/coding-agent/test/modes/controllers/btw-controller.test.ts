@@ -359,6 +359,26 @@ describe("BtwController", () => {
 		expect(erroredController.canBranch()).toBe(false);
 	});
 
+	it("strips Bun fetch verbose advice from /btw error text", async () => {
+		const erroredRun = vi.fn(async () => {
+			throw new Error(
+				"The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+			);
+		});
+		const btwContainer = new Container();
+		const ctx = makeCtx(makeFakeSession(erroredRun), btwContainer);
+		const controller = new BtwController(ctx);
+
+		await controller.start("Question?");
+		await drainBtwRequest();
+
+		const panel = btwContainer.children[0] as BtwPanelComponent | undefined;
+		const rendered = Bun.stripANSI(panel?.render(120).join("\n") ?? "");
+		expect(rendered).toContain("The socket connection was closed unexpectedly");
+		expect(rendered).not.toContain("verbose: true");
+		expect(rendered).not.toContain("fetch()");
+	});
+
 	it("handleBranch returns false and does not call the context when not branchable", async () => {
 		const runEphemeralTurn = vi.fn(async () => ({ replyText: "", assistantMessage: createAssistantMessage("") }));
 		const ctx = makeCtx(makeFakeSession(runEphemeralTurn));

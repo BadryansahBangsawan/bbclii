@@ -94,6 +94,7 @@ import {
 	prompt,
 	Snowflake,
 	stringProperty,
+	stripFetchVerboseAdvice,
 	withTimeout,
 } from "@bbcli/pi-utils";
 import { type AdvisorConfig, loadAdvisorTranscriptCosts } from "../advisor";
@@ -8893,6 +8894,9 @@ export class AgentSession {
 	 * the snapshot + stream pipeline. The snapshot includes any in-flight
 	 * streaming assistant text so the model sees the half-finished response
 	 * rather than missing context.
+	 *
+	 * Reasoning is always off: a thinking delta is replay-unsafe, so a Grok/xAI
+	 * socket close after the first thought cannot retry and `/btw` fails.
 	 */
 	async runEphemeralTurn(args: {
 		promptText: string;
@@ -8921,8 +8925,10 @@ export class AgentSession {
 				promptCacheKey: this.agent.promptCacheKey ?? this.agent.sessionId,
 				preferWebsockets: this.#preferWebsockets,
 				providerSessionState: this.#providerSessionState,
-				reasoning: toReasoningEffort(this.thinkingLevel),
-				disableReasoning: shouldDisableReasoning(this.thinkingLevel),
+				// Side questions must stay short. Thinking deltas commit the attempt
+				// and block socket-close retry on openai-responses (Grok 4.6).
+				reasoning: undefined,
+				disableReasoning: true,
 				hideThinkingSummary: this.agent.hideThinkingSummary,
 				serviceTier: this.#models.effectiveServiceTier(model),
 				signal: args.signal,
@@ -8962,21 +8968,30 @@ export class AgentSession {
 				break;
 			}
 			if (event.type === "error") {
-				throw new Error(event.error.errorMessage || "Ephemeral turn failed");
+				throw new Error(
+					stripFetchVerboseAdvice(event.error.errorMessage || "Ephemeral turn failed") || "Ephemeral turn failed",
+				);
 			}
 		}
 
 		if (!assistantMessage) {
 			throw new Error("Ephemeral turn ended without a final message");
 		}
-		const replyText = this.#deobfuscateFromProvider(providerReplyText);
-		if (args.onTextDelta && replyText.length > emittedReplyText.length) {
-			args.onTextDelta(replyText.slice(emittedReplyText.length));
-		}
 		const sanitizedMessage: AssistantMessage = {
 			...assistantMessage,
 			content: assistantMessage.content.filter(block => block.type !== "toolCall"),
 		};
+		let replyText = this.#deobfuscateFromProvider(providerReplyText);
+		if (!replyText.trim()) {
+			let fromContent = "";
+			for (const block of sanitizedMessage.content) {
+				if (block.type === "text") fromContent += block.text;
+			}
+			replyText = this.#deobfuscateFromProvider(fromContent);
+		}
+		if (args.onTextDelta && replyText.length > emittedReplyText.length) {
+			args.onTextDelta(replyText.slice(emittedReplyText.length));
+		}
 		return {
 			replyText: args.dedupeReply === false ? replyText.trim() : dedupeEphemeralReply(replyText.trim()),
 			assistantMessage: sanitizedMessage,

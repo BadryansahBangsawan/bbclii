@@ -1,5 +1,5 @@
 import type { AssistantMessage } from "@bbcli/pi-ai";
-import { prompt } from "@bbcli/pi-utils";
+import { prompt, stripFetchVerboseAdvice } from "@bbcli/pi-utils";
 import btwUserPrompt from "../../prompts/system/btw-user.md" with { type: "text" };
 import { copyToClipboard } from "../../utils/clipboard";
 import { BtwPanelComponent } from "../components/btw-panel";
@@ -214,7 +214,7 @@ export class BtwController {
 				request.component.markAborted();
 				return;
 			}
-			request.component.markError(error instanceof Error ? error.message : String(error));
+			request.component.markError(stripFetchVerboseAdvice(error instanceof Error ? error.message : String(error)));
 		}
 	}
 
