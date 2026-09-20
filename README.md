@@ -51,7 +51,7 @@ bbcli --version    # prints bbcli/x.y.z (not omp/…)
 bbcli --list-tools | grep grep   # native grep module should appear
 ```
 
-If `bbcli` isn't on your PATH after the curl install, add `~/.local/bin` (Linux) or `~/.bbcli/bin` (macOS) to your shell profile and re-open the terminal.
+If `bbcli` isn't on your PATH after the curl install, add `~/.local/bin` (Linux) or `~/.bbcli/bin` (macOS) to your shell profile and re-open the terminal. If the current session still cannot find `bbcli` after exporting PATH, run `hash -r` (bash) so the shell drops a stale command cache.
 
 > **Alpine / musl:** the prebuilt musl binary links `libstdc++`/`libgcc` dynamically, which stock Alpine does not ship. Install them first: `apk add libstdc++ libgcc`.
 
